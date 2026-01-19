@@ -7,45 +7,48 @@
 
 import SwiftUI
 
-enum Route: Hashable {
-    case myNFT
-    case favoriteNFT
-}
-
 struct ProfileView: View {
-    @State private var path = NavigationPath()
+    @Environment(NavigationRouter.self) var router
     
     var body: some View {
-        NavigationStack(path: $path) {
-            List {
+        VStack {
+            HStack {
+                Spacer()
                 Button {
-                    path.append(Route.myNFT)
+                    router.push(AppRoute.editProfile)
+                } label: {
+                    Image("ic_edit")
+                        .foregroundStyle(.ypBlack)
+                }
+            }
+            .padding(.horizontal, 10)
+            
+            Spacer()
+            
+            VStack {
+                Button {
+                    router.push(AppRoute.myNFT)
                 } label: {
                     ProfileListView(title: "Мои NFT")
                 }
-                .listRowSeparator(.hidden)
+                .padding(.vertical, 10)
                 
                 Button {
-                    path.append(Route.favoriteNFT)
+                    router.push(AppRoute.favoriteNFT)
                 } label: {
                     ProfileListView(title: "Избранные NFT")
                 }
-                .listRowSeparator(.hidden)
+                .padding(.vertical, 10)
             }
-            .listStyle(.plain)
-            .navigationDestination(for: Route.self) { route in
-                switch route {
-                case .myNFT:
-                    MyNFTView()
-                case .favoriteNFT:
-                    FavoriteNFTView()
-                }
-            }
+            .padding(.horizontal, 16)
+                
+            Spacer()
         }
-        
     }
 }
 
 #Preview {
+    let router = NavigationRouter()
     ProfileView()
+        .environment(router)
 }

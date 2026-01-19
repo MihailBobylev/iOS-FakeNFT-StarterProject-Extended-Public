@@ -1,13 +1,13 @@
 //
-//  MyNFTView.swift
+//  ProfileEditingView.swift
 //  iOS-FakeNFT-Extended
 //
-//  Created by Александр Клопков on 18.01.2026.
+//  Created by Александр Клопков on 19.01.2026.
 //
 
 import SwiftUI
 
-struct MyNFTView: View {
+struct ProfileEditingView: View {
     @Environment(NavigationRouter.self) var router
     
     var body: some View {
@@ -24,7 +24,7 @@ struct MyNFTView: View {
             .padding(.horizontal, 9)
             .padding(.top, 11)
             Spacer()
-            Text("My NFT")
+            Text("Profile Editing")
             Spacer()
         }
         .navigationBarBackButtonHidden(true)
@@ -33,6 +33,6 @@ struct MyNFTView: View {
 
 #Preview {
     let router = NavigationRouter()
-    MyNFTView()
+    ProfileEditingView()
         .environment(router)
 }

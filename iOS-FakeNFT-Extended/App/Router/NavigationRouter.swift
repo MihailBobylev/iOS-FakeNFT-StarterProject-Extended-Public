@@ -36,6 +36,16 @@ final class NavigationRouter {
             EmptyView()
         case .webView:
             EmptyView()
+            
+        // Profile
+        case .profile:
+            ProfileView()
+        case .myNFT:
+            MyNFTView()
+        case .favoriteNFT:
+            FavoriteNFTView()
+        case .profileEditing:
+            ProfileEditingView()
         }
     }
 }

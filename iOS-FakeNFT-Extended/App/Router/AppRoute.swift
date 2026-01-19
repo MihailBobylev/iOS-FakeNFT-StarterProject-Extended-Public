@@ -13,4 +13,10 @@ enum AppRoute: Hashable {
     case paymentSuccess
     case editProfile
     case webView
+    
+    // Profile
+    case profile
+    case myNFT
+    case favoriteNFT
+    case profileEditing
 }
