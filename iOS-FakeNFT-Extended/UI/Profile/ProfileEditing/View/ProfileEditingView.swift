@@ -50,99 +50,101 @@ struct ProfileEditingView: View {
             }
             .padding(.horizontal, -5)
             .padding(.top, 11)
-            
-            ZStack {
-                ProfileAvatarView(imageURL: viewModel.model.photo)
-                editButton
-            }
-            .confirmationDialog(
-                "Фото профиля",
-                isPresented: $showPhotoActions,
-                titleVisibility: .visible
-            ) {
-                Button("Изменить фото") {
-                    showEditAlert = true
+            ScrollView {
+                ZStack {
+                    ProfileAvatarView(imageURL: viewModel.model.photo)
+                    editButton
                 }
-                Button("Удалить фото", role: .destructive) {
-                    viewModel.model.photo = nil
+                .confirmationDialog(
+                    "Фото профиля",
+                    isPresented: $showPhotoActions,
+                    titleVisibility: .visible
+                ) {
+                    Button("Изменить фото") {
+                        showEditAlert = true
+                    }
+                    Button("Удалить фото", role: .destructive) {
+                        viewModel.model.photo = nil
+                    }
+                    Button("Отмена", role: .cancel) {}
                 }
-                Button("Отмена", role: .cancel) {}
-            }
-            .alert("Ссылка на фото", isPresented: $showEditAlert) {
-                TextField("Вставьте ссылку", text: $imageURLText)
+                .alert("Ссылка на фото", isPresented: $showEditAlert) {
+                    TextField("Вставьте ссылку", text: $imageURLText)
+                    
+                    Button("Сохранить") {
+                        viewModel.model.photo = URL(string: imageURLText) ?? nil
+                    }
+                    
+                    Button("Отмена", role: .cancel) {}
+                }
                 
-                Button("Сохранить") {
-                    viewModel.model.photo = URL(string: imageURLText) ?? nil
-                }
+                Text("Имя")
+                    .font(.title1Bold)
+                    .foregroundStyle(.ypBlack)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.bottom, 8)
+                TextField("Введите имя", text: $name)
+                    .font(.title2Regular)
+                    .foregroundStyle(.ypBlack)
+                    .padding(.horizontal, 16)
+                    .background(
+                        RoundedRectangle(cornerRadius: 12)
+                            .frame(height: 44)
+                            .foregroundStyle(.ypLightGray)
+                    )
+                    .padding(.bottom, 24)
                 
-                Button("Отмена", role: .cancel) {}
-            }
-            
-            Text("Имя")
-                .font(.title1Bold)
-                .foregroundStyle(.ypBlack)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.bottom, 8)
-            TextField("Введите имя", text: $name)
-                .font(.title2Regular)
-                .foregroundStyle(.ypBlack)
-                .padding(.horizontal, 16)
-                .background(
-                    RoundedRectangle(cornerRadius: 12)
-                        .frame(height: 44)
-                        .foregroundStyle(.ypLightGray)
-                )
-                .padding(.bottom, 24)
+                Text("Описание")
+                    .font(.title1Bold)
+                    .foregroundStyle(.ypBlack)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                TextEditor(text: $description)
+                    .font(.title2Regular)
+                    .foregroundStyle(.ypBlack)
+                    .scrollContentBackground(.hidden)
+                    .background(Color.ypLightGray)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .frame(maxHeight: 132)
+                    .padding(.bottom, 24)
                 
-            Text("Описание")
-                .font(.title1Bold)
-                .foregroundStyle(.ypBlack)
-                .frame(maxWidth: .infinity, alignment: .leading)
-            TextEditor(text: $description)
-                .font(.title2Regular)
-                .foregroundStyle(.ypBlack)
-                .scrollContentBackground(.hidden)
-                .background(Color.ypLightGray)
-                .clipShape(RoundedRectangle(cornerRadius: 12))
-                .frame(maxHeight: 132)
-                .padding(.bottom, 24)
-            
-            Text("Сайт")
-                .font(.title1Bold)
-                .foregroundStyle(.ypBlack)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.bottom, 8)
-            TextField("Введите сайт", text: $website)
-                .font(.title2Regular)
-                .foregroundStyle(.ypBlack)
-                .padding(.horizontal, 16)
-                .background(
-                    RoundedRectangle(cornerRadius: 12)
-                        .frame(height: 44)
-                        .foregroundStyle(.ypLightGray)
-                )
-
-            Spacer()
-            
-            if showSaveButton {
-                Button {
-                    print("Pressed")
-                } label: {
-                    Text("Сохранить")
-                        .font(.title3Bold)
-                        .foregroundStyle(.ypWhite)
+                Text("Сайт")
+                    .font(.title1Bold)
+                    .foregroundStyle(.ypBlack)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.bottom, 8)
+                TextField("Введите сайт", text: $website)
+                    .font(.title2Regular)
+                    .foregroundStyle(.ypBlack)
+                    .padding(.horizontal, 16)
+                    .background(
+                        RoundedRectangle(cornerRadius: 12)
+                            .frame(height: 44)
+                            .foregroundStyle(.ypLightGray)
+                    )
+                
+                Spacer()
+                
+                if showSaveButton {
+                    Button {
+                        print("Pressed")
+                    } label: {
+                        Text("Сохранить")
+                            .font(.title3Bold)
+                            .foregroundStyle(.ypWhite)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .background(
+                        RoundedRectangle(cornerRadius: 16)
+                            .frame(height: 60)
+                            .foregroundStyle(.ypBlack)
+                    )
+                    .padding(.bottom, 16)
                 }
-                .frame(maxWidth: .infinity)
-                .background(
-                    RoundedRectangle(cornerRadius: 16)
-                        .frame(height: 60)
-                        .foregroundStyle(.ypBlack)
-                )
-                .padding(.bottom, 16)
             }
+            .scrollIndicators(.hidden)
         }
-        .navigationBarBackButtonHidden(true)
         .padding(.horizontal, 16)
+        .navigationBarBackButtonHidden(true)
     }
     
     private var editButton: some View {
