@@ -43,21 +43,20 @@ struct CatalogView: View {
                 .listStyle(.plain)
                 .listRowBackground(Color.clear)
             }
-            if viewModel.isLoading {
+            
+            ProgressView()
+                .opacity(viewModel.isLoading ? 1 : 0)
+            
+            VStack {
+                Spacer()
                 ProgressView()
+                    .padding(.bottom, 16)
             }
+            .opacity(viewModel.isPageLoading ? 1 : 0)
             
-            if viewModel.isPageLoading {
-                VStack {
-                    Spacer()
-                    ProgressView()
-                        .padding(.bottom, 16)
-                }
-            }
-            
-            if viewModel.requestError != .none {
-                Text(viewModel.requestError.title)
-                    .foregroundColor(.red)
+            if let error = viewModel.requestError {
+                Text(error.title)
+                    .foregroundStyle(.red)
                     .padding()
             }
         }

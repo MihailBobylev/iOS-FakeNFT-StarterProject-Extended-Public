@@ -18,7 +18,7 @@ final class CatalogViewModel {
     var nftCollections: [NFTCollectionDTO] = []
     var isLoading = false
     var isPageLoading = false
-    var requestError: ErrorType = .none
+    var requestError: ErrorType?
     
     init(servicesAssembly: ServicesAssembly) {
         self.servicesAssembly = servicesAssembly
@@ -28,7 +28,7 @@ final class CatalogViewModel {
         guard !isLoading else { return }
         
         isLoading = true
-        requestError = .none
+        requestError = nil
         currentPage = 0
         canLoadMore = true
         nftCollections = []
