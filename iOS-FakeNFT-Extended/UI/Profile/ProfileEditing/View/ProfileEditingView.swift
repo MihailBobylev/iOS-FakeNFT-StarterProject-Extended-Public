@@ -121,30 +121,32 @@ struct ProfileEditingView: View {
                             .frame(height: 44)
                             .foregroundStyle(.ypLightGray)
                     )
-                
-                Spacer()
-                
-                if showSaveButton {
-                    Button {
-                        print("Pressed")
-                    } label: {
-                        Text("Сохранить")
-                            .font(.title3Bold)
-                            .foregroundStyle(.ypWhite)
-                    }
-                    .frame(maxWidth: .infinity)
-                    .background(
-                        RoundedRectangle(cornerRadius: 16)
-                            .frame(height: 60)
-                            .foregroundStyle(.ypBlack)
-                    )
-                    .padding(.bottom, 16)
-                }
             }
             .scrollIndicators(.hidden)
+            
+            if showSaveButton {
+                Button {
+                    print("Pressed")
+                } label: {
+                    Text("Сохранить")
+                        .font(.title3Bold)
+                        .foregroundStyle(.ypWhite)
+                }
+                .frame(maxWidth: .infinity)
+                .background(
+                    RoundedRectangle(cornerRadius: 16)
+                        .frame(height: 60)
+                        .foregroundStyle(.ypBlack)
+                )
+                .padding(.bottom, 16)
+                .ignoresSafeArea(.keyboard, edges: .bottom)
+            }
+            
         }
         .padding(.horizontal, 16)
         .navigationBarBackButtonHidden(true)
+        .ignoresSafeArea(.keyboard, edges: .bottom)
+        
     }
     
     private var editButton: some View {
