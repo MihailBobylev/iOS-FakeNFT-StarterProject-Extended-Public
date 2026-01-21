@@ -43,5 +43,11 @@ actor BasketStorageImpl: BasketStorage {
     func clear() async {
         items.removeAll()
     }
+    
+    func addTestData(_ nfts: [Nft]) async {
+        for nft in nfts {
+            await add(nft)
+        }
+    }
 }
 
