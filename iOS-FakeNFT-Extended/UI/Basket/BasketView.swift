@@ -50,14 +50,18 @@ struct BasketView: View {
     }
     
     private func contentView(viewModel: BasketViewModel) -> some View {
-        List {
-            ForEach(viewModel.items) { item in
-                BasketItemRow(item: item)
-                    .listRowInsets(EdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16))
-                    .listRowSeparator(.hidden)
+        VStack(spacing: 0) {
+            List {
+                ForEach(viewModel.items) { item in
+                    BasketItemRow(item: item)
+                        .listRowInsets(EdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16))
+                        .listRowSeparator(.hidden)
+                }
             }
+            .listStyle(.plain)
+            
+            BasketBottomPanel(viewModel: viewModel)
         }
-        .listStyle(.plain)
     }
     
     private var emptyStateView: some View {
@@ -160,6 +164,62 @@ struct RatingView: View {
                     .font(.system(size: 12))
             }
         }
+    }
+}
+
+struct BasketBottomPanel: View {
+    let viewModel: BasketViewModel
+    
+    var body: some View {
+        VStack(spacing: 10) {
+            HStack {
+                VStack(alignment: .leading, spacing: 2) {
+                    HStack(spacing: 4) {
+                        Text("\(viewModel.totalCount) NFT")
+                            .font(.footnoteRegular15)
+                            .foregroundColor(.ypBlack)
+                    }
+                    Text(String(format: "%.2f ETH", viewModel.totalPrice))
+                        .font(.title3Bold)
+                        .foregroundColor(.ypGreen)
+                }
+                
+                Spacer()
+                
+                Button(action: {}) {
+                    Text("К оплате")
+                        .font(.title3Bold)
+                        .foregroundColor(.ypWhite)
+                        .frame(width: 240, height: 44)
+                        .background(Color.ypBlack)
+                        .cornerRadius(16)
+                }
+            }
+            .padding(.horizontal, 16)
+        }
+        .padding(.vertical, 16)
+        .background(Color.ypLightGray)
+        .cornerRadius(12, corners: [.topLeft, .topRight])
+    }
+}
+
+extension View {
+    func cornerRadius(_ radius: CGFloat, corners: UIRectCorner) -> some View {
+        clipShape(RoundedCorner(radius: radius, corners: corners))
+    }
+}
+
+struct RoundedCorner: Shape {
+    var radius: CGFloat = .infinity
+    var corners: UIRectCorner = .allCorners
+
+    func path(in rect: CGRect) -> Path {
+        let path = UIBezierPath(
+            roundedRect: rect,
+            byRoundingCorners: corners,
+            cornerRadii: CGSize(width: radius, height: radius)
+        )
+        return Path(path.cgPath)
     }
 }
 
