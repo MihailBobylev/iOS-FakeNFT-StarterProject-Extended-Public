@@ -30,6 +30,9 @@
 		ABC5E1B22C31FBD4002B4068 /* ExampleRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABC5E1B12C31FBD4002B4068 /* ExampleRequest.swift */; };
 		ABC5E1B52C31FC57002B4068 /* TabBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABC5E1B42C31FC57002B4068 /* TabBarView.swift */; };
 		ABC5E1B72C31FC70002B4068 /* ServicesAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABC5E1B62C31FC70002B4068 /* ServicesAssembly.swift */; };
+		ABC5E1EF2C32090002B4068 /* BasketStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABC5E1EE2C32090002B4068 /* BasketStorage.swift */; };
+		ABC5E1F12C32091002B4068 /* BasketService.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABC5E1F02C32091002B4068 /* BasketService.swift */; };
+		ABC5E1F32C32092002B4068 /* PaymentService.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABC5E1F22C32092002B4068 /* PaymentService.swift */; };
 		ABC5E1D82C3204A9002B4068 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = ABC5E1D72C3204A9002B4068 /* Kingfisher */; };
 		ABC5E1E22C320535002B4068 /* ProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = ABC5E1E12C320535002B4068 /* ProgressHUD */; };
 		ABC5E1EB2C32084F002B4068 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = ABC5E1E92C32084F002B4068 /* Localizable.strings */; };
@@ -79,6 +82,9 @@
 		ABC5E1B12C31FBD4002B4068 /* ExampleRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleRequest.swift; sourceTree = "<group>"; };
 		ABC5E1B42C31FC57002B4068 /* TabBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarView.swift; sourceTree = "<group>"; };
 		ABC5E1B62C31FC70002B4068 /* ServicesAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServicesAssembly.swift; sourceTree = "<group>"; };
+		ABC5E1EE2C32090002B4068 /* BasketStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasketStorage.swift; sourceTree = "<group>"; };
+		ABC5E1F02C32091002B4068 /* BasketService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasketService.swift; sourceTree = "<group>"; };
+		ABC5E1F22C32092002B4068 /* PaymentService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentService.swift; sourceTree = "<group>"; };
 		ABC5E1EA2C32084F002B4068 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -241,6 +247,7 @@
 			isa = PBXGroup;
 			children = (
 				ABC5E19C2C31F6A6002B4068 /* NftStorage.swift */,
+				ABC5E1EE2C32090002B4068 /* BasketStorage.swift */,
 			);
 			path = MemoryStorage;
 			sourceTree = "<group>";
@@ -275,6 +282,8 @@
 			children = (
 				ABC5E1AC2C31FB6C002B4068 /* Requests */,
 				ABC5E1AA2C31FACD002B4068 /* NftService.swift */,
+				ABC5E1F02C32091002B4068 /* BasketService.swift */,
+				ABC5E1F22C32092002B4068 /* PaymentService.swift */,
 				ABC5E1B62C31FC70002B4068 /* ServicesAssembly.swift */,
 			);
 			path = Services;
@@ -445,6 +454,9 @@
 				ABC5E1992C31F666002B4068 /* Fonts.swift in Sources */,
 				ABC5E1B72C31FC70002B4068 /* ServicesAssembly.swift in Sources */,
 				ABC5E19D2C31F6A6002B4068 /* NftStorage.swift in Sources */,
+				ABC5E1EF2C32090002B4068 /* BasketStorage.swift in Sources */,
+				ABC5E1F12C32091002B4068 /* BasketService.swift in Sources */,
+				ABC5E1F32C32092002B4068 /* PaymentService.swift in Sources */,
 				ABC5E1B52C31FC57002B4068 /* TabBarView.swift in Sources */,
 				741E111E2F1A726D00320863 /* NavigationRouter.swift in Sources */,
 				741E10472F1A6B4C00320863 /* CatalogView.swift in Sources */,

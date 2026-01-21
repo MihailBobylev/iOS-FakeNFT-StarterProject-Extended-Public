@@ -21,7 +21,11 @@ struct iOS_FakeNFT_ExtendedApp: App {
                     }
             }
             .environment(router)
-            .environment(ServicesAssembly(networkClient: DefaultNetworkClient(), nftStorage: NftStorageImpl()))
+            .environment(ServicesAssembly(
+                networkClient: DefaultNetworkClient(),
+                nftStorage: NftStorageImpl(),
+                basketStorage: BasketStorageImpl()
+            ))
         }
     }
     
