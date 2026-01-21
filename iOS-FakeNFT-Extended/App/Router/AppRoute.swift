@@ -18,5 +18,5 @@ enum AppRoute: Hashable {
     case profile
     case myNFT
     case favoriteNFT
-    case profileEditing
+    case profileEditing(viewModel: ProfileViewModel)
 }

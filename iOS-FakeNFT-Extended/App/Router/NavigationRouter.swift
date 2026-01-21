@@ -44,8 +44,8 @@ final class NavigationRouter {
             MyNFTView()
         case .favoriteNFT:
             FavoriteNFTView()
-        case .profileEditing:
-            ProfileEditingView()
+        case .profileEditing(let viewModel):
+            ProfileEditingView(viewModel: viewModel)
         }
     }
 }
