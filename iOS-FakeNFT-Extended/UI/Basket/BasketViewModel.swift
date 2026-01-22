@@ -56,7 +56,7 @@ final class BasketViewModel {
                 description: "A 3D model of a mythical creature.",
                 price: 1.78,
                 author: "49",
-                website: URL(string: "http://author.website")!,
+                website: URL(string: "http://author.website") ?? URL(string: "https://example.com")!,
                 createdAt: Date()
             ),
             Nft(
@@ -67,7 +67,7 @@ final class BasketViewModel {
                 description: "A 3D model of a mythical creature.",
                 price: 1.78,
                 author: "49",
-                website: URL(string: "http://author.website")!,
+                website: URL(string: "http://author.website") ?? URL(string: "https://example.com")!,
                 createdAt: Date()
             ),
             Nft(
@@ -78,7 +78,7 @@ final class BasketViewModel {
                 description: "A 3D model of a mythical creature.",
                 price: 1.78,
                 author: "49",
-                website: URL(string: "http://author.website")!,
+                website: URL(string: "http://author.website") ?? URL(string: "https://example.com")!,
                 createdAt: Date()
             )
         ]
