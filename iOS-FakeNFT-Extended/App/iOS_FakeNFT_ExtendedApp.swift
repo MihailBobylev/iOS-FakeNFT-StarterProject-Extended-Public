@@ -12,20 +12,13 @@ struct iOS_FakeNFT_ExtendedApp: App {
         @Bindable var navigationRouter = router
         
         WindowGroup {
-            NavigationStack(path: $navigationRouter.path) {
-                ContentView()
-                    .navigationDestination(for: AppRoute.self) { route in
-                        router.destination(
-                            for: route
-                        )
-                    }
-            }
-            .environment(router)
-            .environment(ServicesAssembly(
-                networkClient: DefaultNetworkClient(),
-                nftStorage: NftStorageImpl(),
-                basketStorage: BasketStorageImpl()
-            ))
+            ContentView()
+                .environment(router)
+                .environment(ServicesAssembly(
+                    networkClient: DefaultNetworkClient(),
+                    nftStorage: NftStorageImpl(),
+                    basketStorage: BasketStorageImpl()
+                ))
         }
     }
     

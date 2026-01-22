@@ -13,7 +13,9 @@ struct BasketView: View {
     @State private var viewModel: BasketViewModel?
     
     var body: some View {
-        Group {
+        @Bindable var bindableRouter = router
+        return NavigationStack(path: $bindableRouter.path) {
+            Group {
                 if let viewModel = viewModel {
                     if viewModel.isLoading {
                         ProgressView()
@@ -37,6 +39,9 @@ struct BasketView: View {
                     }
                 }
             }
+            .navigationDestination(for: AppRoute.self) { route in
+                router.destination(for: route)
+            }
             .task {
                 if viewModel == nil {
                     viewModel = BasketViewModel(basketService: services.basketService)
@@ -46,6 +51,7 @@ struct BasketView: View {
                     }
                 }
             }
+        }
     }
     
     private func contentView(viewModel: BasketViewModel) -> some View {
