@@ -14,7 +14,7 @@ final class BasketViewModel {
     var items: [BasketItem] = []
     var isLoading = false
     var isEmpty: Bool {
-        items.isEmpty
+        items.isEmpty && !isLoading
     }
     
     private let basketService: BasketService

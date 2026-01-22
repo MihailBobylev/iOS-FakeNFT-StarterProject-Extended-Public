@@ -42,7 +42,7 @@ struct BasketView: View {
                     viewModel = BasketViewModel(basketService: services.basketService)
                     await viewModel?.loadItems()
                     if viewModel?.isEmpty == true {
-                        await viewModel?.addTestData() // моковые пикчи
+                        await viewModel?.addTestData()
                     }
                 }
             }
@@ -65,13 +65,14 @@ struct BasketView: View {
     }
     
     private var emptyStateView: some View {
-        VStack {
+        VStack(spacing: 8) {
             Spacer()
             Text("Корзина пуста")
                 .font(.title2Regular)
                 .foregroundColor(.ypBlack)
             Spacer()
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
 
