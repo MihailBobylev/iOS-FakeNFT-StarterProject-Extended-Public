@@ -9,11 +9,11 @@ import SwiftUI
 
 struct BasketView: View {
     @Environment(ServicesAssembly.self) private var services
+    @Environment(NavigationRouter.self) private var router
     @State private var viewModel: BasketViewModel?
     
     var body: some View {
-        NavigationStack {
-            Group {
+        Group {
                 if let viewModel = viewModel {
                     if viewModel.isLoading {
                         ProgressView()
@@ -46,7 +46,6 @@ struct BasketView: View {
                     }
                 }
             }
-        }
     }
     
     private func contentView(viewModel: BasketViewModel) -> some View {
@@ -60,7 +59,7 @@ struct BasketView: View {
             }
             .listStyle(.plain)
             
-            BasketBottomPanel(viewModel: viewModel)
+            BasketBottomPanel(viewModel: viewModel, router: router)
         }
     }
     
@@ -170,6 +169,7 @@ struct RatingView: View {
 
 struct BasketBottomPanel: View {
     let viewModel: BasketViewModel
+    let router: NavigationRouter
     
     var body: some View {
         VStack(spacing: 10) {
@@ -187,7 +187,9 @@ struct BasketBottomPanel: View {
                 
                 Spacer()
                 
-                Button(action: {}) {
+                Button(action: {
+                    router.push(.payment)
+                }) {
                     Text("К оплате")
                         .font(.title3Bold)
                         .foregroundColor(.ypWhite)
