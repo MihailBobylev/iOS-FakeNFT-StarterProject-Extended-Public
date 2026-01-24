@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct FavoriteNFTDescriptionView: View {
-    var viewModel: FavoriteNFTViewModel
+    @Binding var viewModel: FavoriteNFTViewModel
     private let maxRating: Int = 5
     
     var body: some View {
@@ -30,12 +30,13 @@ struct FavoriteNFTDescriptionView: View {
 }
 
 #Preview {
-    let model = FavoriteNFTModel(
-        name: "Archie",
-        rating: 1,
-        price: 1.78,
-        isLiked: true
+    @Previewable @State var viewModel = FavoriteNFTViewModel(
+        model: FavoriteNFTModel(
+            name: "Archie",
+            rating: 1,
+            price: 1.78,
+            isLiked: true
+        )
     )
-    let viewModel = FavoriteNFTViewModel(model: model)
-    FavoriteNFTDescriptionView(viewModel: viewModel)
+    FavoriteNFTDescriptionView(viewModel: $viewModel)
 }

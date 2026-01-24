@@ -14,7 +14,7 @@ struct FavoriteNFTCellView: View {
         HStack(alignment: .center) {
             FavoriteNFTIconView(viewModel: $viewModel)
             Spacer()
-            FavoriteNFTDescriptionView(viewModel: viewModel)
+            FavoriteNFTDescriptionView(viewModel: $viewModel)
         }
     }
 }

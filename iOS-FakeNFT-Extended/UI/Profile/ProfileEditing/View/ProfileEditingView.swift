@@ -9,149 +9,153 @@ import SwiftUI
 
 struct ProfileEditingView: View {
     @Environment(NavigationRouter.self) var router
-    @State private var isChanged: Bool = false
-    @State private var showPhotoActions: Bool = false
-    @State private var showEditAlert: Bool = false
-    @State private var imageURLText: String = ""
-    @State private var showSaveButton: Bool = false
-    @State private var showBackAlert: Bool = false
-    
-    @State private var name: String = ""
-    @State private var description: String = ""
-    @State private var website: String = ""
-    
-    let viewModel: ProfileViewModel
+    @State var profileViewModel: ProfileViewModel
+    @State var viewModel: ProfileEditingViewModel
     
     init(viewModel: ProfileViewModel) {
-        self.viewModel = viewModel
-        
-        _name = State(initialValue: viewModel.model.name)
-        _description = State(initialValue: viewModel.model.description)
-        _website = State(initialValue: viewModel.model.website?.absoluteString ?? "")
+        self.profileViewModel = viewModel
+        self.viewModel = ProfileEditingViewModel(viewModel: viewModel)
     }
     
     var body: some View {
         VStack {
-            HStack {
-                Button {
-                    showBackAlert = true
-                } label: {
-                    Image("ic_back")
-                        .foregroundStyle(.ypBlack)
-                }
-                .alert("Уверены, что хотите выйти?", isPresented: $showBackAlert) {
-                    Button("Остаться") {}
-                    
-                    Button("Выйти", role: .cancel) {
-                        router.pop()
-                    }
-                }
-                Spacer()
-            }
-            .padding(.horizontal, -5)
-            .padding(.top, 11)
+            backButton
+            
             ScrollView {
-                ZStack {
-                    ProfileAvatarView(imageURL: viewModel.model.photo)
-                    editButton
-                }
-                .confirmationDialog(
-                    "Фото профиля",
-                    isPresented: $showPhotoActions,
-                    titleVisibility: .visible
-                ) {
-                    Button("Изменить фото") {
-                        showEditAlert = true
-                    }
-                    Button("Удалить фото", role: .destructive) {
-                        viewModel.model.photo = nil
-                    }
-                    Button("Отмена", role: .cancel) {}
-                }
-                .alert("Ссылка на фото", isPresented: $showEditAlert) {
-                    TextField("Вставьте ссылку", text: $imageURLText)
-                    
-                    Button("Сохранить") {
-                        viewModel.model.photo = URL(string: imageURLText) ?? nil
-                    }
-                    
-                    Button("Отмена", role: .cancel) {}
-                }
-                
-                Text("Имя")
-                    .font(.title1Bold)
-                    .foregroundStyle(.ypBlack)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.bottom, 8)
-                TextField("Введите имя", text: $name)
-                    .font(.title2Regular)
-                    .foregroundStyle(.ypBlack)
-                    .padding(.horizontal, 16)
-                    .background(
-                        RoundedRectangle(cornerRadius: 12)
-                            .frame(height: 44)
-                            .foregroundStyle(.ypLightGray)
-                    )
-                    .padding(.bottom, 24)
-                
-                Text("Описание")
-                    .font(.title1Bold)
-                    .foregroundStyle(.ypBlack)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                TextEditor(text: $description)
-                    .font(.title2Regular)
-                    .foregroundStyle(.ypBlack)
-                    .scrollContentBackground(.hidden)
-                    .background(Color.ypLightGray)
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
-                    .frame(maxHeight: 132)
-                    .padding(.bottom, 24)
-                
-                Text("Сайт")
-                    .font(.title1Bold)
-                    .foregroundStyle(.ypBlack)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.bottom, 8)
-                TextField("Введите сайт", text: $website)
-                    .font(.title2Regular)
-                    .foregroundStyle(.ypBlack)
-                    .padding(.horizontal, 16)
-                    .background(
-                        RoundedRectangle(cornerRadius: 12)
-                            .frame(height: 44)
-                            .foregroundStyle(.ypLightGray)
-                    )
+                avatarSection
+                formSection
             }
             .scrollIndicators(.hidden)
             
-            if showSaveButton {
-                Button {
-                    print("Pressed")
-                } label: {
-                    Text("Сохранить")
-                        .font(.title3Bold)
-                        .foregroundStyle(.ypWhite)
-                }
-                .frame(maxWidth: .infinity)
-                .background(
-                    RoundedRectangle(cornerRadius: 16)
-                        .frame(height: 60)
-                        .foregroundStyle(.ypBlack)
-                )
-                .padding(.bottom, 16)
-                .ignoresSafeArea(.keyboard, edges: .bottom)
+            if isSomethingChanged() {
+                saveButton
             }
             
         }
         .padding(.horizontal, 16)
         .navigationBarBackButtonHidden(true)
         .ignoresSafeArea(.keyboard, edges: .bottom)
-        
+    }
+    
+    private func isSomethingChanged() -> Bool {
+        if profileViewModel.model.photo != URL(string: viewModel.model.imageURLText) {
+            return true
+        }
+        if profileViewModel.model.name != viewModel.model.name {
+            return true
+        }
+        if profileViewModel.model.description != viewModel.model.description {
+            return true
+        }
+        if profileViewModel.model.website != URL(string: viewModel.model.website) {
+            return true
+        }
+        return false
+    }
+}
+
+extension ProfileEditingView {
+    
+    private var backButton: some View {
+        Button {
+            viewModel.model.showBackAlert = true
+        } label: {
+            Image("ic_back")
+                .foregroundStyle(.ypBlack)
+        }
+        .alert("Уверены, что хотите выйти?", isPresented: $viewModel.model.showBackAlert) {
+            Button("Остаться") {}
+            
+            Button("Выйти", role: .cancel) {
+                router.pop()
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.horizontal, -5)
+        .padding(.top, 11)
+    }
+    
+    private var avatarSection: some View {
+        ZStack {
+            ProfileAvatarView(imageURL: URL(string: viewModel.model.imageURLText))
+            editButton
+        }
+        .confirmationDialog(
+            "Фото профиля",
+            isPresented: $viewModel.model.showPhotoActions,
+            titleVisibility: .visible
+        ) {
+            Button("Изменить фото") {
+                viewModel.model.showEditAlert = true
+            }
+            Button("Удалить фото", role: .destructive) {
+                viewModel.model.imageURLText = ""
+            }
+            Button("Отмена", role: .cancel) {}
+        }
+        .alert("Ссылка на фото", isPresented: $viewModel.model.showEditAlert) {
+            TextField("Вставьте ссылку", text: $viewModel.model.imageURLText)
+            
+            Button("Сохранить") {
+                profileViewModel.model.photo = URL(string: viewModel.model.imageURLText) ?? nil
+            }
+            
+            Button("Отмена", role: .cancel) {}
+        }
+    }
+    
+    private var formSection: some View {
+        VStack {
+            Text("Имя")
+                .font(.title1Bold)
+                .foregroundStyle(.ypBlack)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.bottom, 8)
+            TextField("Введите имя", text: $viewModel.model.name)
+                .font(.title2Regular)
+                .foregroundStyle(.ypBlack)
+                .padding(.horizontal, 16)
+                .background(
+                    RoundedRectangle(cornerRadius: 12)
+                        .frame(height: 44)
+                        .foregroundStyle(.ypLightGray)
+                )
+                .padding(.bottom, 24)
+            
+            Text("Описание")
+                .font(.title1Bold)
+                .foregroundStyle(.ypBlack)
+                .frame(maxWidth: .infinity, alignment: .leading)
+            TextEditor(text: $viewModel.model.description)
+                .font(.title2Regular)
+                .foregroundStyle(.ypBlack)
+                .scrollContentBackground(.hidden)
+                .background(Color.ypLightGray)
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+                .frame(maxHeight: 90)
+                .padding(.bottom, 24)
+            
+            Text("Сайт")
+                .font(.title1Bold)
+                .foregroundStyle(.ypBlack)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.bottom, 8)
+            TextField("Введите сайт", text: $viewModel.model.website)
+                .font(.title2Regular)
+                .foregroundStyle(.ypBlack)
+                .padding(.horizontal, 16)
+                .frame(height: 44)
+                .background(
+                    RoundedRectangle(cornerRadius: 12)
+                        .frame(height: 44)
+                        .foregroundStyle(.ypLightGray)
+                )
+        }
     }
     
     private var editButton: some View {
         Button {
-            showPhotoActions = true
+            viewModel.model.showPhotoActions = true
         } label: {
             Image("ic_photo")
                 .foregroundStyle(.ypBlack)
@@ -160,6 +164,27 @@ struct ProfileEditingView: View {
                 .clipShape(Circle())
         }
         .offset(x: 25, y: 25)
+    }
+    
+    private var saveButton: some View {
+        Button {
+            print("Pressed")
+            
+            profileViewModel.model.name = viewModel.model.name
+            router.pop()
+            
+        } label: {
+            ZStack {
+                RoundedRectangle(cornerRadius: 16)
+                    .frame(height: 60)
+                    .foregroundStyle(.ypBlack)
+                Text("Сохранить")
+                    .font(.title3Bold)
+                    .foregroundStyle(.ypWhite)
+            }
+        }
+        .padding(.bottom, 16)
+        .ignoresSafeArea(.keyboard, edges: .bottom)
     }
 }
 
