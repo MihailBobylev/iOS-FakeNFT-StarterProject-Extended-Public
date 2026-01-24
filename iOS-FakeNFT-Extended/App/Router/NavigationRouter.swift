@@ -26,8 +26,8 @@ final class NavigationRouter {
     @ViewBuilder
     func destination(for route: AppRoute) -> some View {
         switch route {
-        case .catalogDetails:
-            EmptyView()
+        case let .catalogDetails(nftCollection):
+            CatalogDetailsView(nftCollection: nftCollection)
         case .payment:
             EmptyView()
         case .paymentSuccess:

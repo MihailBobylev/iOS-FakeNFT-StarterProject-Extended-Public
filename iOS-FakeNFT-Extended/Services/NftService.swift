@@ -1,7 +1,7 @@
 import Foundation
 
 protocol NftService {
-    func fetchNFTCollections(page: Int, size: Int) async throws -> [NFTCollectionDTO]
+    func fetchNFTCollections(page: Int, size: Int, sortBy: NFTCollectionSort?) async throws -> [NFTCollectionDTO]
     func loadNft(id: String) async throws -> Nft
 }
 
@@ -22,8 +22,8 @@ final class NftServiceImpl: NftService {
         self.networkClient = networkClient
     }
 
-    func fetchNFTCollections(page: Int, size: Int) async throws -> [NFTCollectionDTO] {
-        let request = NFTCollectionsRequest(page: page, size: size)
+    func fetchNFTCollections(page: Int, size: Int, sortBy: NFTCollectionSort?) async throws -> [NFTCollectionDTO] {
+        let request = NFTCollectionsRequest(page: page, size: size, sortBy: sortBy)
         let nftCollections: [NFTCollectionDTO] = try await networkClient.send(request: request)
         await nftCollectionStorage.saveNFTCollections(nftCollections)
         return nftCollections
