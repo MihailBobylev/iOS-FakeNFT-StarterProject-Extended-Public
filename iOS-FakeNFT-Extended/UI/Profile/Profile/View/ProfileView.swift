@@ -1,0 +1,88 @@
+//
+//  ProfileView.swift
+//  iOS-FakeNFT-Extended
+//
+//  Created by Михаил Бобылев on 16.01.2026.
+//
+
+import SwiftUI
+import WebKit
+
+struct WebView: UIViewRepresentable {
+    var viewModel: ProfileViewModel
+    
+    func makeUIView(context: Context) -> WKWebView {
+        let webView = WKWebView()
+        webView.load(URLRequest(url: viewModel.model.website!))
+        return webView
+    }
+    
+    func updateUIView(_ uiView: WKWebView, context: Context) {}
+}
+
+struct ProfileView: View {
+    @Environment(NavigationRouter.self) var router
+    @State var viewModel: ProfileViewModel = ProfileViewModel()
+    @State private var showWebView = false
+    
+    var body: some View {
+        VStack {
+            HStack {
+                Spacer()
+                Button {
+                    router.push(AppRoute.profileEditing(viewModel: viewModel))
+                } label: {
+                    Image("ic_edit")
+                        .foregroundStyle(.ypBlack)
+                }
+            }
+            
+            HStack {
+                ProfileAvatarView(imageURL: viewModel.model.photo)
+                Text(viewModel.model.name)
+                    .font(.title1Bold)
+                    .foregroundStyle(.ypBlack)
+                    .padding(.leading, 16)
+                Spacer()
+            }
+            .padding(.top, 16)
+            
+            Text(viewModel.model.description)
+                .font(.footnoteRegular13)
+                .multilineTextAlignment(.leading)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.top, 20)
+            
+            NavigationLink("\(viewModel.model.name).com") {
+                WebView(viewModel: viewModel)
+            }
+            .font(.footnoteRegular15)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.top, 8)
+            
+            Button {
+                router.push(AppRoute.myNFT)
+            } label: {
+                ProfileListView(title: "Мои NFT (112)")
+            }
+            .padding(.top, 58)
+            
+            Button {
+                router.push(AppRoute.favoriteNFT)
+            } label: {
+                ProfileListView(title: "Избранные NFT (11)")
+            }
+            .padding(.top, 26)
+                
+            Spacer()
+        }
+        .padding(.horizontal, 16)
+    }
+}
+
+#Preview {
+    let router = NavigationRouter()
+    let viewModel = ProfileViewModel()
+    ProfileView(viewModel: viewModel)
+        .environment(router)
+}
