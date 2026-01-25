@@ -12,22 +12,27 @@ struct FavoriteNFTView: View {
     
     var body: some View {
         VStack {
-            HStack {
+            Spacer()
+            Text("Favorite NFT")
+            Spacer()
+        }
+        .navigationBarBackButtonHidden(true)
+        .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
                 Button {
                     router.pop()
                 } label: {
                     Image("ic_back")
                         .foregroundStyle(.ypBlack)
                 }
-                Spacer()
             }
-            .padding(.horizontal, 9)
-            .padding(.top, 11)
-            Spacer()
-            Text("Favorite NFT")
-            Spacer()
+            
+            ToolbarItem(placement: .principal) {
+                Text("Избранные NFT")
+                    .font(.title3Bold)
+                    .foregroundStyle(.ypBlack)
+            }
         }
-        .navigationBarBackButtonHidden(true)
     }
 }
 

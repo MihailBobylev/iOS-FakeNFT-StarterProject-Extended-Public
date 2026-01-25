@@ -19,8 +19,6 @@ struct ProfileEditingView: View {
     
     var body: some View {
         VStack {
-            backButton
-            
             ScrollView {
                 avatarSection
                 formSection
@@ -30,11 +28,15 @@ struct ProfileEditingView: View {
             if isSomethingChanged() {
                 saveButton
             }
-            
         }
         .padding(.horizontal, 16)
         .navigationBarBackButtonHidden(true)
         .ignoresSafeArea(.keyboard, edges: .bottom)
+        .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                backButton
+            }
+        }
     }
     
     private func isSomethingChanged() -> Bool {
@@ -70,9 +72,6 @@ extension ProfileEditingView {
                 router.pop()
             }
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(.horizontal, -5)
-        .padding(.top, 11)
     }
     
     private var avatarSection: some View {

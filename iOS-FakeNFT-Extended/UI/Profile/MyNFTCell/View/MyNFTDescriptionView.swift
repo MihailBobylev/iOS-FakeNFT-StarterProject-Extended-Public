@@ -8,21 +8,21 @@
 import SwiftUI
 
 struct MyNFTDescriptionView: View {
-    var viewModel: MyNFTViewModel
+    var viewModel: MyNFTCellViewModel
     private let maxRating: Int = 5
     
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
-            Text(viewModel.name)
+            Text(viewModel.model.name)
                 .font(.title1Bold)
                 .foregroundStyle(.ypBlack)
             HStack(spacing: 4) {
                 ForEach(1...maxRating, id: \.self) { index in
-                    Image(index <= viewModel.rating ? "ic_star_selected" : "ic_star_unselected")
-                        .foregroundStyle(index <= viewModel.rating ? .ypYellow : .ypLightGray)
+                    Image(index <= viewModel.model.rating ? "ic_star_selected" : "ic_star_unselected")
+                        .foregroundStyle(index <= viewModel.model.rating ? .ypYellow : .ypLightGray)
                 }
             }
-            Text("от \(viewModel.author)")
+            Text("от \(viewModel.model.author)")
                 .font(.footnoteRegular13)
                 .foregroundStyle(.ypBlack)
         }
@@ -30,13 +30,13 @@ struct MyNFTDescriptionView: View {
 }
 
 #Preview {
-    let model = MyNFTModel(
+    let model = MyNFTCellModel(
         name: "Archie",
         author: "John Doe",
         rating: 1,
         price: 1.78,
         isLiked: true
     )
-    let viewModel = MyNFTViewModel(model: model)
+    let viewModel = MyNFTCellViewModel(model: model)
     MyNFTDescriptionView(viewModel: viewModel)
 }

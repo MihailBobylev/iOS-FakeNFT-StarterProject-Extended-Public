@@ -7,7 +7,8 @@
 
 import Foundation
 
-struct MyNFTModel {
+struct MyNFTCellModel: Identifiable {
+    let id = UUID()
     let name: String
     let author: String
     let rating: Int

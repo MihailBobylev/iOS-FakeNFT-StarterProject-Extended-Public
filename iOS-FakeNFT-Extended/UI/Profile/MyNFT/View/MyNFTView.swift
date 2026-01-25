@@ -10,24 +10,67 @@ import SwiftUI
 struct MyNFTView: View {
     @Environment(NavigationRouter.self) var router
     
+    @State private var viewModel: MyNFTViewModel
+    @State private var showSortDialog = false
+    init() {
+        viewModel = MyNFTViewModel()
+    }
+    
     var body: some View {
         VStack {
-            HStack {
+            List(viewModel.cellViewModels) { cellViewModel in
+                MyNFTCellView(viewModel: cellViewModel)
+                    .listRowSeparator(.hidden)
+                    .padding(.trailing, 30)
+            }
+            .listStyle(.plain)
+        }
+        .navigationBarBackButtonHidden(true)
+        .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
                 Button {
                     router.pop()
                 } label: {
                     Image("ic_back")
                         .foregroundStyle(.ypBlack)
                 }
-                Spacer()
             }
-            .padding(.horizontal, 9)
-            .padding(.top, 11)
-            Spacer()
-            Text("My NFT")
-            Spacer()
+            
+            ToolbarItem(placement: .principal) {
+                Text("Мои NFT")
+                    .font(.title3Bold)
+                    .foregroundStyle(.ypBlack)
+            }
+            
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    print("Настройки")
+                    showSortDialog = true
+                } label: {
+                    Image("ic_sort")
+                        .foregroundStyle(.ypBlack)
+                }
+                .confirmationDialog(
+                    "Сортировка",
+                    isPresented: $showSortDialog,
+                    titleVisibility: .visible) {
+                        Button("По цене") {
+                            print("First")
+                            viewModel.sortType = .byPrice
+                        }
+                        Button("По рейтингу") {
+                            print("Second")
+                            viewModel.sortType = .byRating
+                        }
+                        Button("По названию") {
+                            print("Third")
+                            viewModel.sortType = .byName
+                        }
+                        Button("Закрыть", role: .cancel) {}
+                    }
+            }
+            
         }
-        .navigationBarBackButtonHidden(true)
     }
 }
 

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct MyNFTCellView: View {
-    @State var viewModel: MyNFTViewModel
+    @State var viewModel: MyNFTCellViewModel
     
     var body: some View {
         HStack(alignment: .center) {
@@ -23,13 +23,13 @@ struct MyNFTCellView: View {
 }
 
 #Preview {
-    let model = MyNFTModel(
+    let model = MyNFTCellModel(
         name: "Archie",
         author: "John Doe",
         rating: 1,
         price: 1.78,
         isLiked: true
     )
-    let viewModel = MyNFTViewModel(model: model)
+    let viewModel = MyNFTCellViewModel(model: model)
     MyNFTCellView(viewModel: viewModel)
 }
