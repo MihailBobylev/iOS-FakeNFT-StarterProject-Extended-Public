@@ -1,5 +1,5 @@
 //
-//  MyNFTDescriptionView.swift
+//  FavoriteNFTCellDescriptionView.swift
 //  iOS-FakeNFT-Extended
 //
 //  Created by Александр Клопков on 17.01.2026.
@@ -7,22 +7,22 @@
 
 import SwiftUI
 
-struct FavoriteNFTDescriptionView: View {
-    @Binding var viewModel: FavoriteNFTViewModel
+struct FavoriteNFTCellDescriptionView: View {
+    @Binding var viewModel: FavoriteNFTCellViewModel
     private let maxRating: Int = 5
     
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
-            Text(viewModel.name)
+            Text(viewModel.model.name)
                 .font(.title3Bold)
                 .foregroundStyle(.ypBlack)
             HStack(spacing: 4) {
                 ForEach(1...maxRating, id: \.self) { index in
-                    Image(index <= viewModel.rating ? "ic_star_selected" : "ic_star_unselected")
-                        .foregroundStyle(index <= viewModel.rating ? .ypYellow : .ypLightGray)
+                    Image(index <= viewModel.model.rating ? "ic_star_selected" : "ic_star_unselected")
+                        .foregroundStyle(index <= viewModel.model.rating ? .ypYellow : .ypLightGray)
                 }
             }
-            Text("\(viewModel.price.formatted(.number.precision(.fractionLength(2)))) ETH")
+            Text("\(viewModel.model.price.formatted(.number.precision(.fractionLength(2)))) ETH")
                 .font(.footnoteRegular15)
                 .foregroundStyle(.ypBlack)
         }
@@ -30,13 +30,13 @@ struct FavoriteNFTDescriptionView: View {
 }
 
 #Preview {
-    @Previewable @State var viewModel = FavoriteNFTViewModel(
-        model: FavoriteNFTModel(
+    @Previewable @State var viewModel = FavoriteNFTCellViewModel(
+        model: FavoriteNFTCellModel(
             name: "Archie",
             rating: 1,
             price: 1.78,
             isLiked: true
         )
     )
-    FavoriteNFTDescriptionView(viewModel: $viewModel)
+    FavoriteNFTCellDescriptionView(viewModel: $viewModel)
 }

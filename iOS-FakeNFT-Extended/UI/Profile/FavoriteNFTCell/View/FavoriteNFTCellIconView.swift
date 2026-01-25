@@ -1,5 +1,5 @@
 //
-//  MyNFTIconView.swift
+//  FavoriteNFTCellIconView.swift
 //  iOS-FakeNFT-Extended
 //
 //  Created by Александр Клопков on 17.01.2026.
@@ -7,8 +7,8 @@
 
 import SwiftUI
 
-struct FavoriteNFTIconView: View {
-    @Binding var viewModel: FavoriteNFTViewModel
+struct FavoriteNFTCellIconView: View {
+    @Binding var viewModel: FavoriteNFTCellViewModel
     
     var body: some View {
         ZStack(alignment: .topTrailing) {
@@ -22,8 +22,8 @@ struct FavoriteNFTIconView: View {
                     await viewModel.toggleLike()
                 }
             } label: {
-                Image(viewModel.isLiked ? "ic_favorites" : "ic_unfavorites")
-                    .foregroundStyle(viewModel.isLiked ? .ypRed : .ypWhite)
+                Image(viewModel.model.isLiked ? "ic_favorites" : "ic_unfavorites")
+                    .foregroundStyle(viewModel.model.isLiked ? .ypRed : .ypWhite)
                     .padding(-7)
             }
 
@@ -32,13 +32,13 @@ struct FavoriteNFTIconView: View {
 }
 
 #Preview {
-    @Previewable @State var viewModel = FavoriteNFTViewModel(
-        model: FavoriteNFTModel(
+    @Previewable @State var viewModel = FavoriteNFTCellViewModel(
+        model: FavoriteNFTCellModel(
             name: "Archie",
             rating: 1,
             price: 1.78,
             isLiked: true
         )
     )
-    FavoriteNFTIconView(viewModel: $viewModel)
+    FavoriteNFTCellIconView(viewModel: $viewModel)
 }

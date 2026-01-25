@@ -8,6 +8,5 @@
 import Foundation
 
 struct MyNFTModel {
-//    let id = UUID()
     var cells: [MyNFTCellModel]
 }
