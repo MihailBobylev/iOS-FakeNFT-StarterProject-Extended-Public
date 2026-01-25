@@ -1,6 +1,8 @@
 import SwiftUI
 
 struct TabBarView: View {
+    @Environment(NavigationRouter.self) private var router
+    
     private enum Constants {
         static let profilePrompt = "Профиль"
         static let catalogPrompt = "Каталог"
@@ -21,6 +23,20 @@ struct TabBarView: View {
                 .tabItem {
                     Label(Constants.basketPrompt, image: .icBasket)
                 }
+        }
+        .overlay {
+            if let deleteItem = router.deleteConfirmationItem {
+                DeleteConfirmationPopup(
+                    nft: deleteItem.nft,
+                    onDelete: {
+                        deleteItem.onDelete()
+                    },
+                    onCancel: {
+                        router.hideDeleteConfirmation()
+                    }
+                )
+                .zIndex(1000)
+            }
         }
     }
 }

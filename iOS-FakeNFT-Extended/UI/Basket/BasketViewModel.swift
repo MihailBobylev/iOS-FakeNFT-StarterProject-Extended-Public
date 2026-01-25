@@ -45,6 +45,11 @@ final class BasketViewModel {
         }
         await loadItems()
     }
+    
+    func removeItem(id: String) async {
+        await basketService.remove(id: id)
+        await loadItems()
+    }
     // моковые картинки
     private func createTestNfts() -> [Nft] {
         [

@@ -13,6 +13,7 @@ final class NavigationRouter {
 
     var path = NavigationPath()
     var sheet: AppRoute?
+    var deleteConfirmationItem: (nft: Nft, onDelete: () -> Void)?
     
     func push(_ route: AppRoute) {
         path.append(route)
@@ -21,6 +22,14 @@ final class NavigationRouter {
     func pop() {
         guard !path.isEmpty else { return }
         path.removeLast()
+    }
+    
+    func showDeleteConfirmation(nft: Nft, onDelete: @escaping () -> Void) {
+        deleteConfirmationItem = (nft: nft, onDelete: onDelete)
+    }
+    
+    func hideDeleteConfirmation() {
+        deleteConfirmationItem = nil
     }
     
     @ViewBuilder

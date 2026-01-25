@@ -58,9 +58,19 @@ struct BasketView: View {
         VStack(spacing: 0) {
             List {
                 ForEach(viewModel.items) { item in
-                    BasketItemRow(item: item)
-                        .listRowInsets(EdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16))
-                        .listRowSeparator(.hidden)
+                    BasketItemRow(
+                        item: item,
+                        onDelete: {
+                            router.showDeleteConfirmation(nft: item.nft) {
+                                Task {
+                                    await viewModel.removeItem(id: item.id)
+                                    router.hideDeleteConfirmation()
+                                }
+                            }
+                        }
+                    )
+                    .listRowInsets(EdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16))
+                    .listRowSeparator(.hidden)
                 }
             }
             .listStyle(.plain)
@@ -83,6 +93,7 @@ struct BasketView: View {
 
 struct BasketItemRow: View {
     let item: BasketItem
+    let onDelete: () -> Void
     
     private func getImageName(for nftName: String) -> String? {
         switch nftName {
@@ -149,7 +160,7 @@ struct BasketItemRow: View {
             
             Spacer()
             
-            Button(action: {}) {
+            Button(action: onDelete) {
                 Image(uiImage: UIImage(imageLiteralResourceName: "ic_basket_in"))
                     .renderingMode(.template)
                     .foregroundColor(.ypBlack)
