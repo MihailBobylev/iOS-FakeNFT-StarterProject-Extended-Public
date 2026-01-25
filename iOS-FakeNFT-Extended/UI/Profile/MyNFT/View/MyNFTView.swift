@@ -12,18 +12,26 @@ struct MyNFTView: View {
     
     @State private var viewModel: MyNFTViewModel
     @State private var showSortDialog = false
+    
     init() {
         viewModel = MyNFTViewModel()
     }
     
     var body: some View {
         VStack {
-            List(viewModel.cellViewModels) { cellViewModel in
-                MyNFTCellView(viewModel: cellViewModel)
-                    .listRowSeparator(.hidden)
-                    .padding(.trailing, 30)
+            if viewModel.cellViewModels.isEmpty {
+                Text("У Вас еще нет NFT")
+                    .font(.title3Bold)
+                    .foregroundStyle(.ypBlack)
             }
-            .listStyle(.plain)
+            else {
+                List(viewModel.cellViewModels) { cellViewModel in
+                    MyNFTCellView(viewModel: cellViewModel)
+                        .listRowSeparator(.hidden)
+                        .padding(.trailing, 30)
+                }
+                .listStyle(.plain)
+            }
         }
         .navigationBarBackButtonHidden(true)
         .toolbar {
