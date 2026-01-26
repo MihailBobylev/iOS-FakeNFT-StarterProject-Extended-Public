@@ -15,8 +15,7 @@ enum AppRoute: Hashable {
     case webView
     
     // Profile
-    case profile
     case myNFT
     case favoriteNFT
-    case profileEditing(viewModel: ProfileViewModel)
+    case profileEditing(profile: ProfileDTO)
 }

@@ -37,15 +37,12 @@ final class NavigationRouter {
         case .webView:
             EmptyView()
             
-        // Profile
-        case .profile:
-            ProfileView()
         case .myNFT:
             MyNFTView()
         case .favoriteNFT:
             FavoriteNFTView()
-        case .profileEditing(let viewModel):
-            ProfileEditingView(viewModel: viewModel)
+        case .profileEditing(let profile):
+            ProfileEditingView(profile: profile)
         }
     }
 }

@@ -7,36 +7,61 @@
 
 import Foundation
 
+@MainActor
 @Observable
 final class ProfileViewModel: Identifiable {
     let id: UUID = UUID()
+    private let servicesAssembly: ServicesAssembly
+    var isLoading = false
+    var requestError: ErrorType = .none
+    var profile: ProfileDTO = ProfileDTO(
+        id: nil,
+        name: nil,
+        avatar: nil,
+        description: nil,
+        website: nil
+    )
     
-    var model: ProfileModel = ProfileModel(name: "", description: "")
     
-    init() {
-        self.model = getMockProfileModel()
+    init(servicesAssembly: ServicesAssembly) {
+        self.servicesAssembly = servicesAssembly
     }
 }
 
-extension ProfileViewModel: Equatable {
+extension ProfileViewModel: @MainActor Equatable {
     static func == (lhs: ProfileViewModel, rhs: ProfileViewModel) -> Bool {
         lhs.id == rhs.id
     }
 }
 
-extension ProfileViewModel: Hashable {
+extension ProfileViewModel: @MainActor Hashable {
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
 }
 
 extension ProfileViewModel {
-    func getMockProfileModel() -> ProfileModel {
-        ProfileModel(
-            name: "Ivan Petrov",
-            description: "Дизайнер из Казани, люблю цифровое искусство  и бейглы. В моей коллекции уже 100+ NFT,  и еще больше — на моём сайте. Открыт к коллаборациям.",
-            photo: URL(string: "https://s0.rbk.ru/v6_top_pics/media/img/3/50/347328733549503.jpeg"),
-            website: URL(string: "https://practicum.yandex.ru/ios-developer/?from=catalog")
+    func loadProfile() async {
+        guard !isLoading else { return }
+        
+        isLoading = true
+        requestError = .none
+        
+        profile = ProfileDTO(
+            id: nil,
+            name: nil,
+            avatar: nil,
+            description: nil,
+            website: nil
         )
+        
+        do {
+            let profile = try await servicesAssembly.nftService.fetchProfile()
+            self.profile = profile
+            isLoading = false
+        } catch {
+            isLoading = false
+            requestError = .serverError
+        }
     }
 }
