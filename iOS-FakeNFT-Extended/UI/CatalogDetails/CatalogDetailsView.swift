@@ -29,7 +29,7 @@ struct CatalogDetailsView: View {
     
     var body: some View {
         ZStack(alignment: .topLeading) {
-            ScrollView(.vertical, showsIndicators: false) {
+            ScrollView(.vertical) {
                 VStack(spacing: 0) {
                     if let url = URL(string: viewModel.nftCollection.cover ?? "") {
                         AsyncImage(url: url) { image in
@@ -69,8 +69,7 @@ struct CatalogDetailsView: View {
                             .foregroundStyle(.ypBlack)
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.horizontal, 16)
-                    .padding(.top, 16)
+                    .padding([.horizontal, .top], 16)
                     
                     LazyVGrid(columns: columns, spacing: 29) {
                         ForEach(NFTCatalogCellModel.mockData) { nft in
@@ -83,6 +82,7 @@ struct CatalogDetailsView: View {
                     .padding(.top, 24)
                 }
             }
+            .scrollIndicators(.hidden)
             .edgesIgnoringSafeArea(.top)
             
             Button {
@@ -91,8 +91,7 @@ struct CatalogDetailsView: View {
                 Image(.icBack)
                     .renderingMode(.original)
             }
-            .padding(.top, 9)
-            .padding(.leading, 9)
+            .padding([.top, .leading], 9)
         }
         .navigationBarBackButtonHidden(true)
         .onAppear {
