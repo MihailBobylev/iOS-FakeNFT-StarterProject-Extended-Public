@@ -50,7 +50,7 @@ final class BasketViewModel {
     private func applySort() {
         switch currentSortOption {
         case .name:
-            items.sort { $0.nft.name < $1.nft.name }
+            items.sort { $0.nft.name.localizedCaseInsensitiveCompare($1.nft.name) == .orderedAscending }
         case .price:
             items.sort { $0.nft.price < $1.nft.price }
         case .rating:
