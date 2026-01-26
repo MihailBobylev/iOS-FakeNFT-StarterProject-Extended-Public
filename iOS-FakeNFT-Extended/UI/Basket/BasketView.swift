@@ -34,7 +34,16 @@ struct BasketView: View {
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: {}) {
+                    Button(action: {
+                        if let viewModel = viewModel {
+                            router.showSortPopup(
+                                currentSort: viewModel.currentSortOption,
+                                onSelect: { option in
+                                    viewModel.setSortOption(option)
+                                }
+                            )
+                        }
+                    }) {
                         Image(uiImage: UIImage(imageLiteralResourceName: "ic_sort"))
                     }
                 }
@@ -224,7 +233,7 @@ struct BasketBottomPanel: View {
 }
 
 extension View {
-    func cornerRadius(_ radius: CGFloat, corners: UIRectCorner) -> some View {
+    func  cornerRadius(_ radius: CGFloat, corners: UIRectCorner) -> some View {
         clipShape(RoundedCorner(radius: radius, corners: corners))
     }
 }

@@ -37,6 +37,20 @@ struct TabBarView: View {
                 )
                 .zIndex(1000)
             }
+            
+            if let sortItem = router.sortPopupItem {
+                SortPopup(
+                    currentSort: sortItem.currentSort,
+                    onSelect: { option in
+                        sortItem.onSelect(option)
+                        router.hideSortPopup()
+                    },
+                    onClose: {
+                        router.hideSortPopup()
+                    }
+                )
+                .zIndex(1001)
+            }
         }
     }
 }

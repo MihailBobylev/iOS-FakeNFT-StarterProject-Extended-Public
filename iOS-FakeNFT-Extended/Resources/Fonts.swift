@@ -5,6 +5,7 @@ extension Font {
     static var title1Bold = Font.system(size: 22, weight: .bold)
     static var title2Bold = Font.system(size: 20, weight: .bold)
     static var title3Bold = Font.system(size: 17, weight: .bold)
+    static var title3Regular = Font.system(size: 17, weight: .regular)
     static var title1Semibold = Font.system(size: 20, weight: .semibold)
     static var title1Regular = Font.system(size: 20, weight: .regular)
     static var title2Regular = Font.system(size: 17, weight: .regular)

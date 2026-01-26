@@ -14,6 +14,7 @@ final class NavigationRouter {
     var path = NavigationPath()
     var sheet: AppRoute?
     var deleteConfirmationItem: (nft: Nft, onDelete: () -> Void)?
+    var sortPopupItem: (currentSort: BasketSortOption, onSelect: (BasketSortOption) -> Void)?
     
     func push(_ route: AppRoute) {
         path.append(route)
@@ -30,6 +31,14 @@ final class NavigationRouter {
     
     func hideDeleteConfirmation() {
         deleteConfirmationItem = nil
+    }
+    
+    func showSortPopup(currentSort: BasketSortOption, onSelect: @escaping (BasketSortOption) -> Void) {
+        sortPopupItem = (currentSort: currentSort, onSelect: onSelect)
+    }
+    
+    func hideSortPopup() {
+        sortPopupItem = nil
     }
     
     @ViewBuilder

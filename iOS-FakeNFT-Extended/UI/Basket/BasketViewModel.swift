@@ -18,6 +18,21 @@ final class BasketViewModel {
     }
     
     private let basketService: BasketService
+    private let sortOptionKey = "BasketSortOption"
+    
+    var currentSortOption: BasketSortOption {
+        get {
+            if let rawValue = UserDefaults.standard.string(forKey: sortOptionKey),
+               let option = BasketSortOption(rawValue: rawValue) {
+                return option
+            }
+            return .name // По умолчанию для корзины по названию
+        }
+        set {
+            UserDefaults.standard.set(newValue.rawValue, forKey: sortOptionKey)
+            applySort()
+        }
+    }
     
     init(basketService: BasketService) {
         self.basketService = basketService
@@ -27,7 +42,24 @@ final class BasketViewModel {
         isLoading = true
         defer { isLoading = false }
         
-        items = await basketService.loadItems()
+        let loadedItems = await basketService.loadItems()
+        items = loadedItems
+        applySort()
+    }
+    
+    private func applySort() {
+        switch currentSortOption {
+        case .name:
+            items.sort { $0.nft.name < $1.nft.name }
+        case .price:
+            items.sort { $0.nft.price < $1.nft.price }
+        case .rating:
+            items.sort { $0.nft.rating > $1.nft.rating }
+        }
+    }
+    
+    func setSortOption(_ option: BasketSortOption) {
+        currentSortOption = option
     }
     
     var totalCount: Int {
