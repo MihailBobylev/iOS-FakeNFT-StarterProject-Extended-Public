@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct NFTCollectionDTO: Decodable {
+struct NFTCollectionDTO: Decodable, Hashable {
     let id: String?
     let name: String?
     let cover: String?

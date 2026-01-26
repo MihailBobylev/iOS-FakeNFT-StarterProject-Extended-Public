@@ -8,7 +8,7 @@
 import Foundation
 
 enum AppRoute: Hashable {
-    case catalogDetails
+    case catalogDetails(nftCollection: NFTCollectionDTO)
     case payment
     case paymentSuccess
     case editProfile
