@@ -8,7 +8,6 @@
 import Foundation
 
 @Observable
-@MainActor
 final class PaymentViewModel {
     
     var currencies: [Currency]

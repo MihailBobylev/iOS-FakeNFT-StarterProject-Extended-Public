@@ -76,6 +76,9 @@ struct BasketView: View {
                                     router.hideDeleteConfirmation()
                                 }
                             }
+                        },
+                        onSelect: {
+                            router.push(.payment)
                         }
                     )
                     .listRowInsets(EdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16))
@@ -103,6 +106,7 @@ struct BasketView: View {
 struct BasketItemRow: View {
     let item: BasketItem
     let onDelete: () -> Void
+    let onSelect: () -> Void
     
     private func getImageName(for nftName: String) -> String? {
         switch nftName {
@@ -119,62 +123,73 @@ struct BasketItemRow: View {
     
     var body: some View {
         HStack(spacing: 20) {
-            Group {
-                if let imageName = getImageName(for: item.nft.name) {
-                    Image(imageName)
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                } else if let url = item.nft.images.first {
-                    AsyncImage(url: url) { phase in
-                        switch phase {
-                        case .empty:
-                            ProgressView()
-                        case .success(let image):
-                            image
+            Button(action: onSelect) {
+                HStack(spacing: 20) {
+                    Group {
+                        if let imageName = getImageName(for: item.nft.name) {
+                            Image(imageName)
                                 .resizable()
                                 .aspectRatio(contentMode: .fill)
-                        case .failure:
+                        } else if let url = item.nft.images.first {
+                            AsyncImage(url: url) { phase in
+                                switch phase {
+                                case .empty:
+                                    ProgressView()
+                                case .success(let image):
+                                    image
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fill)
+                                case .failure:
+                                    Image(systemName: "photo")
+                                        .foregroundColor(.gray)
+                                @unknown default:
+                                    EmptyView()
+                                }
+                            }
+                        } else {
                             Image(systemName: "photo")
                                 .foregroundColor(.gray)
-                        @unknown default:
-                            EmptyView()
                         }
                     }
-                } else {
-                    Image(systemName: "photo")
-                        .foregroundColor(.gray)
-                }
-            }
-            .frame(width: 108, height: 108)
-            .clipShape(RoundedRectangle(cornerRadius: 12))
-            
-            VStack(alignment: .leading, spacing: 12) {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(item.nft.name)
-                        .font(.title3Bold)
-                        .foregroundColor(.ypBlack)
+                    .frame(width: 108, height: 108)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
                     
-                    RatingView(rating: item.nft.rating)
-                }
-                
-                VStack(alignment: .leading, spacing: 2) {
-                    Text("Цена")
-                        .font(.footnoteRegular13)
-                        .foregroundColor(.ypBlack)
-                    Text(String(format: "%.2f ETH", item.nft.price))
-                        .font(.title3Bold)
-                        .foregroundColor(.ypBlack)
+                    VStack(alignment: .leading, spacing: 12) {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(item.nft.name)
+                                .font(.title3Bold)
+                                .foregroundColor(.ypBlack)
+                            
+                            RatingView(rating: item.nft.rating)
+                        }
+                        
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("Цена")
+                                .font(.footnoteRegular13)
+                                .foregroundColor(.ypBlack)
+                            Text(String(format: "%.2f ETH", item.nft.price))
+                                .font(.title3Bold)
+                                .foregroundColor(.ypBlack)
+                        }
+                    }
+                    
+                    Spacer()
                 }
             }
+            .buttonStyle(.plain)
             
-            Spacer()
-            
-            Button(action: onDelete) {
-                Image(uiImage: UIImage(imageLiteralResourceName: "ic_basket_in"))
-                    .renderingMode(.template)
-                    .foregroundColor(.ypBlack)
-                    .frame(width: 40, height: 40)
+            VStack(alignment: .trailing) {
+                Button(action: onDelete) {
+                    Image(uiImage: UIImage(imageLiteralResourceName: "ic_basket_in"))
+                        .renderingMode(.template)
+                        .foregroundColor(.ypBlack)
+                        .frame(width: 20, height: 20)
+                        .offset(x: -20)
+                }
+                .buttonStyle(.plain)
             }
+            .frame(width: 80, height: 80, alignment: .trailing)
+            .contentShape(Rectangle())
         }
     }
 }
