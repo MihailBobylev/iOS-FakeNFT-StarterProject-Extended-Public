@@ -20,10 +20,17 @@ struct PaymentView: View {
     }
     
     var body: some View {
-        ScrollView {
+        @Bindable var bindableViewModel = viewModel
+        return ScrollView {
             LazyVGrid(columns: columns, spacing: 12) {
                 ForEach(viewModel.currencies) { currency in
-                    CurrencyCell(currency: currency)
+                    CurrencyCell(
+                        currency: currency,
+                        isSelected: viewModel.selectedCurrencyID == currency.id,
+                        onSelect: {
+                            viewModel.selectCurrency(id: currency.id)
+                        }
+                    )
                 }
             }
             .padding(.horizontal, 16)
@@ -36,31 +43,40 @@ struct PaymentView: View {
 
 private struct CurrencyCell: View {
     let currency: Currency
+    let isSelected: Bool
+    let onSelect: () -> Void
     
     var body: some View {
-        HStack(spacing: 12) {
-            Image(iconName(for: currency.ticker))
-                .resizable()
-                .aspectRatio(contentMode: .fill)
-                .frame(width: 40, height: 40)
-                .clipShape(RoundedRectangle(cornerRadius: 12))
-            
-            VStack(alignment: .leading, spacing: 4) {
-                Text(currency.name)
-                    .font(.footnoteRegular15)
-                    .foregroundColor(.ypBlack)
+        Button(action: onSelect) {
+            HStack(spacing: 12) {
+                Image(iconName(for: currency.ticker))
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .frame(width: 40, height: 40)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
                 
-                Text(currency.ticker)
-                    .font(.footnoteRegular13)
-                    .foregroundColor(.ypGreen)
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(currency.name)
+                        .font(.footnoteRegular15)
+                        .foregroundColor(.ypBlack)
+                    
+                    Text(currency.ticker)
+                        .font(.footnoteRegular13)
+                        .foregroundColor(.ypGreen)
+                }
+                
+                Spacer()
             }
-            
-            Spacer()
+            .padding(.horizontal, 12)
+            .padding(.vertical, 10)
+            .background(Color("LightGray"))
+            .cornerRadius(12)
+            .overlay(
+                RoundedRectangle(cornerRadius: 12)
+                    .stroke(isSelected ? Color.ypBlack : Color.clear, lineWidth: 1)
+            )
         }
-        .padding(.horizontal, 12)
-        .padding(.vertical, 10)
-        .background(Color("LightGray"))
-        .cornerRadius(12)
+        .buttonStyle(.plain)
     }
     
     private func iconName(for ticker: String) -> String {

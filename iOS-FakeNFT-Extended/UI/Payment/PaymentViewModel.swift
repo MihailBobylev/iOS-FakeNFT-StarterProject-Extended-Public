@@ -21,5 +21,9 @@ final class PaymentViewModel {
         guard let id = selectedCurrencyID else { return nil }
         return currencies.first { $0.id == id }
     }
+    
+    func selectCurrency(id: String) {
+        selectedCurrencyID = id
+    }
 }
 
