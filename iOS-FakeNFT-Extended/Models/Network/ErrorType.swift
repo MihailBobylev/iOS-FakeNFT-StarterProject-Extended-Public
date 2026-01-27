@@ -9,14 +9,11 @@ import Foundation
 
 enum ErrorType {
     case serverError
-    case none
     
     var title: String {
         return switch self {
         case .serverError:
             "Ошибка сервера"
-        case .none:
-            ""
         }
     }
 }

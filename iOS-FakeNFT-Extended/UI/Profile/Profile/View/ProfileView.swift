@@ -22,17 +22,14 @@ struct WebView: UIViewRepresentable {
 
 struct ProfileView: View {
     @Environment(NavigationRouter.self) var router
+    @Environment(ServicesAssembly.self) private var servicesAssembly
     @State var viewModel: ProfileViewModel
     @State private var showWebView = false
     private let profileStorage: ProfileStorage
     
-    init(servicesAssembly: ServicesAssembly) {
-        let viewModel = ProfileViewModel(servicesAssembly: servicesAssembly)
+    init() {
+        let viewModel = ProfileViewModel()
         self._viewModel = State(wrappedValue: viewModel)
-        Task {
-            await viewModel.loadProfile()
-            print("profile loaded")
-        }
         profileStorage = ProfileStorage()
     }
     
@@ -44,7 +41,7 @@ struct ProfileView: View {
                     Button {
                         router.push(AppRoute.profileEditing(profile: viewModel.profile))
                     } label: {
-                        Image("ic_edit")
+                        Image(.icEdit)
                             .foregroundStyle(.ypBlack)
                     }
                 }
@@ -93,6 +90,7 @@ struct ProfileView: View {
         }
         .padding(.horizontal, 16)
         .task {
+            viewModel.configure(servicesAssembly: servicesAssembly)
             await viewModel.loadProfile()
         }
     }
@@ -106,6 +104,7 @@ struct ProfileView: View {
         profileStorage: ProfileStorage()
     )
     
-    ProfileView(servicesAssembly: servicesAssembly)
+    ProfileView()
         .environment(router)
+        .environment(servicesAssembly)
 }

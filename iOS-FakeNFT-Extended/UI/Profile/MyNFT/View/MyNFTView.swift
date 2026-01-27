@@ -8,6 +8,15 @@
 import SwiftUI
 
 struct MyNFTView: View {
+    private enum Constants {
+        static let emptyNFTText = "У Вас еще нет NFT"
+        static let myNFTs = "Мои NFT"
+        static let sort = "Сортировка"
+        static let close = "Закрыть"
+        static let byPrice = "По цене"
+        static let byRating = "По рейтингу"
+        static let byName = "По названию"
+    }
     @Environment(NavigationRouter.self) var router
     
     @State private var viewModel: MyNFTViewModel
@@ -20,7 +29,7 @@ struct MyNFTView: View {
     var body: some View {
         VStack {
             if viewModel.cellViewModels.isEmpty {
-                Text("У Вас еще нет NFT")
+                Text(Constants.emptyNFTText)
                     .font(.title3Bold)
                     .foregroundStyle(.ypBlack)
             }
@@ -39,42 +48,38 @@ struct MyNFTView: View {
                 Button {
                     router.pop()
                 } label: {
-                    Image("ic_back")
+                    Image(.icBack)
                         .foregroundStyle(.ypBlack)
                 }
             }
             
             ToolbarItem(placement: .principal) {
-                Text("Мои NFT")
+                Text(Constants.myNFTs)
                     .font(.title3Bold)
                     .foregroundStyle(.ypBlack)
             }
             
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
-                    print("Настройки")
                     showSortDialog = true
                 } label: {
-                    Image("ic_sort")
+                    Image(.icSort)
                         .foregroundStyle(.ypBlack)
                 }
                 .confirmationDialog(
-                    "Сортировка",
+                    Constants.sort,
                     isPresented: $showSortDialog,
                     titleVisibility: .visible) {
-                        Button("По цене") {
-                            print("First")
+                        Button(Constants.byPrice) {
                             viewModel.sortType = .byPrice
                         }
-                        Button("По рейтингу") {
-                            print("Second")
+                        Button(Constants.byRating) {
                             viewModel.sortType = .byRating
                         }
-                        Button("По названию") {
-                            print("Third")
+                        Button(Constants.byName) {
                             viewModel.sortType = .byName
                         }
-                        Button("Закрыть", role: .cancel) {}
+                        Button(Constants.close, role: .cancel) {}
                     }
             }
             

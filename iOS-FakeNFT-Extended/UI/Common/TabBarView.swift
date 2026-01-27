@@ -7,11 +7,9 @@ struct TabBarView: View {
         static let basketPrompt = "Корзина"
     }
     
-    @Environment(ServicesAssembly.self) private var servicesAssembly
-    
     var body: some View {
         TabView {
-            ProfileView(servicesAssembly: servicesAssembly)
+            ProfileView()
                 .tabItem {
                     Label(Constants.profilePrompt, image: .icProfile)
                 }

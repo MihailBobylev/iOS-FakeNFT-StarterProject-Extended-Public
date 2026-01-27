@@ -8,6 +8,11 @@
 import SwiftUI
 
 struct FavoriteNFTView: View {
+    private enum Constants {
+        static let emptyNFTText = "У Вас еще нет избранных NFT"
+        static let favoritesNFT = "Избранные NFT"
+    }
+    
     @Environment(NavigationRouter.self) var router
     
     @State private var viewModel: FavoriteNFTViewModel
@@ -21,23 +26,20 @@ struct FavoriteNFTView: View {
     
     var body: some View {
         VStack {
-            if viewModel.cellViewModels.isEmpty {
-                Text("У Вас еще нет избранных NFT")
-                    .font(.title3Bold)
-                    .foregroundStyle(.ypBlack)
-            }
-            else {
-                ScrollView {
-                    LazyVGrid(columns: columns) {
-                        ForEach(viewModel.cellViewModels) { cellViewModel in
-                            FavoriteNFTCellView(viewModel: cellViewModel)
-                                .padding(.trailing, 10)
-                        }
+            Text(Constants.emptyNFTText)
+                .font(.title3Bold)
+                .foregroundStyle(.ypBlack)
+                .opacity(viewModel.cellViewModels.isEmpty ? 1.0 : 0)
+            ScrollView {
+                LazyVGrid(columns: columns) {
+                    ForEach(viewModel.cellViewModels) { cellViewModel in
+                        FavoriteNFTCellView(viewModel: cellViewModel)
+                            .padding(.trailing, 10)
                     }
                 }
-                .padding(.horizontal, 16)
-                .padding(.top, 10)
             }
+            .padding(.horizontal, 16)
+            .padding(.top, 10)
         }
         .navigationBarBackButtonHidden(true)
         .toolbar {
@@ -45,13 +47,13 @@ struct FavoriteNFTView: View {
                 Button {
                     router.pop()
                 } label: {
-                    Image("ic_back")
+                    Image(.icBack)
                         .foregroundStyle(.ypBlack)
                 }
             }
             
             ToolbarItem(placement: .principal) {
-                Text("Избранные NFT")
+                Text(Constants.favoritesNFT)
                     .font(.title3Bold)
                     .foregroundStyle(.ypBlack)
             }

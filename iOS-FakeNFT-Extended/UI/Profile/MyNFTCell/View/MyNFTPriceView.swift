@@ -8,11 +8,13 @@
 import SwiftUI
 
 struct MyNFTPriceView: View {
+    enum Constants {
+        static let price = "Price"
+    }
     var viewModel: MyNFTCellViewModel
-//    let price: Double
     var body: some View {
         VStack(alignment: .leading) {
-            Text("Price")
+            Text(Constants.price)
                 .font(.footnoteRegular13)
                 .foregroundStyle(.ypBlack)
             Text("\(viewModel.model.price.formatted(.number.precision(.fractionLength(2)))) ETH")

@@ -37,7 +37,7 @@ struct ProfileAvatarView: View {
     }
     
     private var placeholder: some View {
-        Image("ic_user")
+        Image(.icUser)
             .resizable()
             .scaledToFit()
             .frame(width: 70, height: 70)

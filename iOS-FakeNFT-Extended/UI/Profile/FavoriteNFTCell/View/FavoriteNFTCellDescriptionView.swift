@@ -18,7 +18,7 @@ struct FavoriteNFTCellDescriptionView: View {
                 .foregroundStyle(.ypBlack)
             HStack(spacing: 4) {
                 ForEach(1...maxRating, id: \.self) { index in
-                    Image(index <= viewModel.model.rating ? "ic_star_selected" : "ic_star_unselected")
+                    Image(index <= viewModel.model.rating ? .icStarSelected : .icStarUnselected)
                         .foregroundStyle(index <= viewModel.model.rating ? .ypYellow : .ypLightGray)
                 }
             }

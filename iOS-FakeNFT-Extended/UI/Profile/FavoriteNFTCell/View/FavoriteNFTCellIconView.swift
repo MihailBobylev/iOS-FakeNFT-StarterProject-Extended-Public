@@ -12,7 +12,7 @@ struct FavoriteNFTCellIconView: View {
     
     var body: some View {
         ZStack(alignment: .topTrailing) {
-            Image("nft")
+            Image(.nft)
                 .resizable()
                 .scaledToFill()
                 .frame(width: 80, height: 80)
@@ -22,7 +22,7 @@ struct FavoriteNFTCellIconView: View {
                     await viewModel.toggleLike()
                 }
             } label: {
-                Image(viewModel.model.isLiked ? "ic_favorites" : "ic_unfavorites")
+                Image(viewModel.model.isLiked ? .icFavorites : .icUnfavorites)
                     .foregroundStyle(viewModel.model.isLiked ? .ypRed : .ypWhite)
                     .padding(-7)
             }

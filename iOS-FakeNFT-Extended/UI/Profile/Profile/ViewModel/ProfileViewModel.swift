@@ -11,9 +11,9 @@ import Foundation
 @Observable
 final class ProfileViewModel: Identifiable {
     let id: UUID = UUID()
-    private let servicesAssembly: ServicesAssembly
+    private var servicesAssembly: ServicesAssembly?
     var isLoading = false
-    var requestError: ErrorType = .none
+    var requestError: ErrorType? = nil
     var profile: ProfileDTO = ProfileDTO(
         id: nil,
         name: nil,
@@ -22,8 +22,7 @@ final class ProfileViewModel: Identifiable {
         website: nil
     )
     
-    
-    init(servicesAssembly: ServicesAssembly) {
+    func configure(servicesAssembly: ServicesAssembly) {
         self.servicesAssembly = servicesAssembly
     }
 }
@@ -56,6 +55,7 @@ extension ProfileViewModel {
         )
         
         do {
+            guard let servicesAssembly else { return }
             let profile = try await servicesAssembly.nftService.fetchProfile()
             self.profile = profile
             isLoading = false

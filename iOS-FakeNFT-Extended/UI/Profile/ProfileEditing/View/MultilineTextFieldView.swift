@@ -20,7 +20,6 @@ struct MultilineTextFieldView: View {
                 .foregroundStyle(.ypBlack)
                 .background(
                     RoundedRectangle(cornerRadius: 12)
-                        .frame(height: 100)
                         .foregroundStyle(.ypLightGray)
                 )
                 .scrollContentBackground(.hidden)

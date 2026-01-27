@@ -51,7 +51,6 @@ final class NftServiceImpl: NftService {
         )
         
         let profile: ProfileDTO = try await networkClient.send(request: request)
-        print(profile.name)
         await profileStorage.saveProfile(profile)
     }
 }
