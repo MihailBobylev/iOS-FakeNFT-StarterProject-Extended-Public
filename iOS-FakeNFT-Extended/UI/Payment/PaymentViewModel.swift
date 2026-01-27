@@ -25,5 +25,9 @@ final class PaymentViewModel {
     func selectCurrency(id: String) {
         selectedCurrencyID = id
     }
+    
+    func deselectCurrency() {
+        selectedCurrencyID = nil
+    }
 }
 

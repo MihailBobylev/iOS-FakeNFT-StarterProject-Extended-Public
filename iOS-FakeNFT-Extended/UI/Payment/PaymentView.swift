@@ -21,23 +21,69 @@ struct PaymentView: View {
     
     var body: some View {
         @Bindable var bindableViewModel = viewModel
-        return ScrollView {
-            LazyVGrid(columns: columns, spacing: 12) {
-                ForEach(viewModel.currencies) { currency in
-                    CurrencyCell(
-                        currency: currency,
-                        isSelected: viewModel.selectedCurrencyID == currency.id,
-                        onSelect: {
-                            viewModel.selectCurrency(id: currency.id)
-                        }
-                    )
+        return VStack(spacing: 0) {
+            ScrollView {
+                LazyVGrid(columns: columns, spacing: 12) {
+                    ForEach(viewModel.currencies) { currency in
+                        CurrencyCell(
+                            currency: currency,
+                            isSelected: viewModel.selectedCurrencyID == currency.id,
+                            onSelect: {
+                                viewModel.selectCurrency(id: currency.id)
+                            }
+                        )
+                    }
                 }
+                .padding(.horizontal, 16)
+                .padding(.top, 16)
+                .padding(.bottom, 16)
+            }
+            .contentShape(Rectangle())
+            .onTapGesture {
+                if viewModel.selectedCurrencyID != nil {
+                    viewModel.deselectCurrency()
+                }
+            }
+            
+            VStack(spacing: 16) {
+                agreementLink
+                payButton
             }
             .padding(.horizontal, 16)
             .padding(.top, 16)
+            .padding(.bottom, 50)
+            .background(Color("ypPaymentBackground"))
+            .cornerRadius(12, corners: [.topLeft, .topRight])
         }
         .navigationTitle("Выбор валюты")
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar(.hidden, for: .tabBar)
+    }
+    
+    private var agreementLink: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text("Совершая покупку, вы соглашаетесь с условиями")
+                .font(.footnoteRegular13)
+                .foregroundColor(.ypBlack)
+            
+            Link("Пользовательского соглашения", destination: URL(string: "https://yandex.ru/legal/practicum_termsofuse")!)
+                .font(.footnoteRegular13)
+                .foregroundColor(.ypBlue)
+        }
+    }
+    
+    private var payButton: some View {
+        Button(action: {
+        }) {
+            Text("Оплатить")
+                .font(.title3Bold)
+                .foregroundColor(viewModel.selectedCurrencyID != nil ? .ypWhite : .ypBlack)
+                .frame(maxWidth: .infinity)
+                .frame(height: 50)
+                .background(viewModel.selectedCurrencyID != nil ? Color.ypBlack : Color("ypButtonDisabled"))
+                .cornerRadius(16)
+        }
+        .disabled(viewModel.selectedCurrencyID == nil)
     }
 }
 
@@ -69,7 +115,7 @@ private struct CurrencyCell: View {
             }
             .padding(.horizontal, 12)
             .padding(.vertical, 10)
-            .background(Color("LightGray"))
+            .background(Color("ypPaymentBackground"))
             .cornerRadius(12)
             .overlay(
                 RoundedRectangle(cornerRadius: 12)
