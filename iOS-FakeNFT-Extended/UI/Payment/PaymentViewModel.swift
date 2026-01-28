@@ -12,9 +12,15 @@ final class PaymentViewModel {
     
     var currencies: [Currency]
     var selectedCurrencyID: String?
+    var isLoading = false
+    var paymentSuccess = false
+    var paymentError: Error?
     
-    init(currencies: [Currency] = []) {
+    private let paymentService: PaymentService
+    
+    init(currencies: [Currency] = [], paymentService: PaymentService) {
         self.currencies = currencies
+        self.paymentService = paymentService
     }
     
     var selectedCurrency: Currency? {
@@ -28,6 +34,22 @@ final class PaymentViewModel {
     
     func deselectCurrency() {
         selectedCurrencyID = nil
+    }
+    
+    func pay() async {
+        guard let currencyId = selectedCurrencyID else { return }
+        
+        isLoading = true
+        paymentError = nil
+        
+        do {
+            let response = try await paymentService.pay(currencyId: currencyId)
+            paymentSuccess = response.success
+        } catch {
+            paymentError = error
+        }
+        
+        isLoading = false
     }
 }
 

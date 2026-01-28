@@ -9,13 +9,13 @@ import Foundation
 
 enum PaymentError: Error {
     case failed
+    case networkError(Error)
 }
 
 protocol PaymentService {
-    func pay(items: [BasketItem], currency: Currency) async throws
+    func pay(currencyId: String) async throws -> PaymentResponse
 }
 
-@MainActor
 final class PaymentServiceImpl: PaymentService {
     private let networkClient: NetworkClient
 
@@ -23,10 +23,15 @@ final class PaymentServiceImpl: PaymentService {
         self.networkClient = networkClient
     }
 
-    func pay(items: [BasketItem], currency: Currency) async throws {
-        // TODO: заменить на реальный запрос оплаты, пока имитируем успешный результат
-        _ = items
-        _ = currency
+    func pay(currencyId: String) async throws -> PaymentResponse {
+        let request = PaymentRequest(currencyId: currencyId)
+        let response: PaymentResponse = try await networkClient.send(request: request)
+        
+        guard response.success else {
+            throw PaymentError.failed
+        }
+        
+        return response
     }
 }
 

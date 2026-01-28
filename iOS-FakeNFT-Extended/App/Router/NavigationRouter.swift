@@ -97,7 +97,7 @@ final class NavigationRouter {
                     imageURL: URL(string: "https://example.com/shib")!
                 )
             ]
-            PaymentView(viewModel: PaymentViewModel(currencies: currencies))
+            PaymentView(currencies: currencies)
         case .paymentSuccess:
             EmptyView()
         case .editProfile:

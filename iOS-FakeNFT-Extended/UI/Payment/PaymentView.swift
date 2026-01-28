@@ -8,20 +8,38 @@
 import SwiftUI
 
 struct PaymentView: View {
-    @State private var viewModel: PaymentViewModel
+    @Environment(ServicesAssembly.self) private var services
+    @State private var viewModel: PaymentViewModel?
+    let currencies: [Currency]
     
     private let columns = [
         GridItem(.flexible(), spacing: 12),
         GridItem(.flexible(), spacing: 12)
     ]
     
-    init(viewModel: PaymentViewModel) {
-        _viewModel = State(initialValue: viewModel)
+    var body: some View {
+        Group {
+            if let viewModel = viewModel {
+                contentView(viewModel: viewModel)
+            } else {
+                ProgressView()
+            }
+        }
+        .navigationTitle("Выбор валюты")
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar(.hidden, for: .tabBar)
+        .task {
+            if viewModel == nil {
+                viewModel = PaymentViewModel(
+                    currencies: currencies,
+                    paymentService: services.paymentService
+                )
+            }
+        }
     }
     
-    var body: some View {
-        @Bindable var bindableViewModel = viewModel
-        return VStack(spacing: 0) {
+    private func contentView(viewModel: PaymentViewModel) -> some View {
+        VStack(spacing: 0) {
             ScrollView {
                 LazyVGrid(columns: columns, spacing: 12) {
                     ForEach(viewModel.currencies) { currency in
@@ -47,7 +65,7 @@ struct PaymentView: View {
             
             VStack(spacing: 16) {
                 agreementLink
-                payButton
+                payButton(viewModel: viewModel)
             }
             .padding(.horizontal, 16)
             .padding(.top, 16)
@@ -55,9 +73,12 @@ struct PaymentView: View {
             .background(Color("ypPaymentBackground"))
             .cornerRadius(12, corners: [.topLeft, .topRight])
         }
-        .navigationTitle("Выбор валюты")
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbar(.hidden, for: .tabBar)
+        .disabled(viewModel.isLoading)
+        .overlay {
+            if viewModel.isLoading {
+                ProgressView()
+            }
+        }
     }
     
     private var agreementLink: some View {
@@ -72,8 +93,11 @@ struct PaymentView: View {
         }
     }
     
-    private var payButton: some View {
+    private func payButton(viewModel: PaymentViewModel) -> some View {
         Button(action: {
+            Task {
+                await viewModel.pay()
+            }
         }) {
             Text("Оплатить")
                 .font(.title3Bold)
@@ -83,7 +107,7 @@ struct PaymentView: View {
                 .background(viewModel.selectedCurrencyID != nil ? Color.ypBlack : Color("ypButtonDisabled"))
                 .cornerRadius(16)
         }
-        .disabled(viewModel.selectedCurrencyID == nil)
+        .disabled(viewModel.selectedCurrencyID == nil || viewModel.isLoading)
     }
 }
 
@@ -202,7 +226,12 @@ private struct CurrencyCell: View {
     ]
     
     return NavigationStack {
-        PaymentView(viewModel: PaymentViewModel(currencies: currencies))
+        PaymentView(currencies: currencies)
     }
+    .environment(ServicesAssembly(
+        networkClient: DefaultNetworkClient(),
+        nftStorage: NftStorageImpl(),
+        basketStorage: BasketStorageImpl()
+    ))
 }
 
