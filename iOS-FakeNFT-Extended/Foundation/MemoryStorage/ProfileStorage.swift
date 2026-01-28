@@ -13,6 +13,9 @@ protocol ProfileStorageProtocol: AnyObject {
 }
 
 actor ProfileStorage: ProfileStorageProtocol {
+    
+    // MARK: - Storage
+    
     private var storage: ProfileDTO = ProfileDTO(
         id: nil,
         name: nil,
@@ -20,9 +23,13 @@ actor ProfileStorage: ProfileStorageProtocol {
         description: nil,
         website: nil
     )
+    
+    // MARK: - ProfileStorageProtocol
+    
     func saveProfile(_ profile: ProfileDTO) async {
         self.storage = profile
     }
+    
     func getProfile() async -> ProfileDTO {
         storage
     }

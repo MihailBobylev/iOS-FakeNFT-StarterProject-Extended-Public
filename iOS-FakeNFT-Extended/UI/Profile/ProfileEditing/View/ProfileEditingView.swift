@@ -161,7 +161,7 @@ extension ProfileEditingView {
                 .font(.title1Bold)
                 .foregroundStyle(.ypBlack)
                 .frame(maxWidth: .infinity, alignment: .leading)
-            MultilineTextFieldView(
+            ProfileEditorTextFieldView(
                 text: $viewModel.model.description,
                 placeholder: Constants.enterDescription
             )
@@ -209,7 +209,7 @@ extension ProfileEditingView {
                         website: viewModel.model.website
                     )
                     isLoading = true
-                    try await servicesAssembly.nftService.putProfile(with: newProfile)
+                    try await servicesAssembly.nftService.updateProfile(with: newProfile)
                     profile = newProfile
                     router.pop()
                 } catch {

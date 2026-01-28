@@ -1,13 +1,13 @@
 import Foundation
 
-protocol NftService {
+protocol NftServiceProtocol {
     func loadNft(id: String) async throws -> Nft
     func fetchProfile() async throws -> ProfileDTO
-    func putProfile(with profile: ProfileDTO) async throws
+    func updateProfile(with profile: ProfileDTO) async throws
 }
 
 @MainActor
-final class NftServiceImpl: NftService {
+final class NftServiceImpl: NftServiceProtocol {
 
     private let networkClient: NetworkClient
     private let storage: NftStorage
@@ -35,14 +35,14 @@ final class NftServiceImpl: NftService {
     }
     
     func fetchProfile() async throws -> ProfileDTO {
-        let request = ProfileGetRequest()
+        let request = FetchProfileRequest()
         let profile: ProfileDTO = try await networkClient.send(request: request)
         await profileStorage.saveProfile(profile)
         return profile
     }
     
-    func putProfile(with profile: ProfileDTO) async throws {
-        let request = ProfilePutRequest(
+    func updateProfile(with profile: ProfileDTO) async throws {
+        let request = UpdateProfileRequest(
             id: profile.id,
             name: profile.name,
             avatar: profile.avatar,
