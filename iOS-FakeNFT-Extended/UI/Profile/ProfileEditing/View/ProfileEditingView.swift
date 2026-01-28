@@ -8,46 +8,81 @@
 import SwiftUI
 
 struct ProfileEditingView: View {
-    @Environment(NavigationRouter.self) var router
-    @State var profileViewModel: ProfileViewModel
-    @State var viewModel: ProfileEditingViewModel
+    enum Constants {
+        static let save = "Сохранить"
+        static let error = "Ошибка"
+        static let wantToExit = "Уверены, что хотите выйти?"
+        static let stay = "Остаться"
+        static let exit = "Выйти"
+        static let profilePhoto = "Фото профиля"
+        static let changePhoto = "Изменить фото"
+        static let deletePhoto = "Удалить фото"
+        static let cancel = "Отмена"
+        static let photoURL = "Ссылка на фото"
+        static let enterURL = "Вставьте ссылку"
+        static let name = "Имя"
+        static let enterName = "Введите имя"
+        static let description = "Описание"
+        static let enterDescription = "Введите описание"
+        static let website = "Сайт"
+        static let enterWebsite = "Введите сайт"
+        static let OK = "OK"
+    }
     
-    init(viewModel: ProfileViewModel) {
-        self.profileViewModel = viewModel
-        self.viewModel = ProfileEditingViewModel(viewModel: viewModel)
+    @Environment(NavigationRouter.self) private var router
+    @Environment(ServicesAssembly.self) private var servicesAssembly
+    @State private var viewModel: ProfileEditingViewModel
+    @State private var profile: ProfileDTO
+    @State private var isLoading = false
+    @State private var newImageUrl: String = ""
+    @State private var showErrorAlert = false
+    @State private var errorMessage = "Ошибка при сохранении"
+    
+    init(profile: ProfileDTO) {
+        self._profile = State(wrappedValue: profile)
+        let state = ProfileEditingViewModel(profile: profile)
+        self._viewModel = State(wrappedValue: state)
+        self._newImageUrl = State(wrappedValue: profile.avatar ?? "")
     }
     
     var body: some View {
-        VStack {
-            backButton
-            
-            ScrollView {
-                avatarSection
-                formSection
+        ZStack {
+            if isLoading {
+                ProgressView()
             }
-            .scrollIndicators(.hidden)
-            
-            if isSomethingChanged() {
-                saveButton
+            VStack {
+                ScrollView {
+                    avatarSection
+                    formSection
+                }
+                .scrollIndicators(.hidden)
+                
+                if isSomethingChanged() {
+                    saveButton
+                }
             }
-            
+            .padding(.horizontal, 16)
+            .navigationBarBackButtonHidden(true)
+            .ignoresSafeArea(.keyboard, edges: .bottom)
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    backButton
+                }
+            }
         }
-        .padding(.horizontal, 16)
-        .navigationBarBackButtonHidden(true)
-        .ignoresSafeArea(.keyboard, edges: .bottom)
     }
     
     private func isSomethingChanged() -> Bool {
-        if profileViewModel.model.photo != URL(string: viewModel.model.imageURLText) {
+        if profile.avatar != viewModel.model.imageURLText {
             return true
         }
-        if profileViewModel.model.name != viewModel.model.name {
+        if profile.name != viewModel.model.name {
             return true
         }
-        if profileViewModel.model.description != viewModel.model.description {
+        if (profile.description ?? "") != viewModel.model.description {
             return true
         }
-        if profileViewModel.model.website != URL(string: viewModel.model.website) {
+        if profile.website != viewModel.model.website {
             return true
         }
         return false
@@ -60,58 +95,58 @@ extension ProfileEditingView {
         Button {
             viewModel.model.showBackAlert = true
         } label: {
-            Image("ic_back")
+            Image(.icBack)
                 .foregroundStyle(.ypBlack)
         }
-        .alert("Уверены, что хотите выйти?", isPresented: $viewModel.model.showBackAlert) {
-            Button("Остаться") {}
+        .alert(Constants.wantToExit, isPresented: $viewModel.model.showBackAlert) {
+            Button(Constants.stay) {}
             
-            Button("Выйти", role: .cancel) {
+            Button(Constants.exit, role: .cancel) {
                 router.pop()
             }
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(.horizontal, -5)
-        .padding(.top, 11)
     }
     
     private var avatarSection: some View {
         ZStack {
-            ProfileAvatarView(imageURL: URL(string: viewModel.model.imageURLText))
+            ProfileAvatarView(imageURL: URL(string: newImageUrl))
             editButton
         }
         .confirmationDialog(
-            "Фото профиля",
+            Constants.profilePhoto,
             isPresented: $viewModel.model.showPhotoActions,
             titleVisibility: .visible
         ) {
-            Button("Изменить фото") {
+            Button(Constants.changePhoto) {
                 viewModel.model.showEditAlert = true
             }
-            Button("Удалить фото", role: .destructive) {
+            Button(Constants.deletePhoto, role: .destructive) {
                 viewModel.model.imageURLText = ""
+                newImageUrl = ""
             }
-            Button("Отмена", role: .cancel) {}
+            Button(Constants.cancel, role: .cancel) {}
         }
-        .alert("Ссылка на фото", isPresented: $viewModel.model.showEditAlert) {
-            TextField("Вставьте ссылку", text: $viewModel.model.imageURLText)
+        .alert(Constants.photoURL, isPresented: $viewModel.model.showEditAlert) {
+            TextField(Constants.enterURL, text: $newImageUrl)
             
-            Button("Сохранить") {
-                profileViewModel.model.photo = URL(string: viewModel.model.imageURLText) ?? nil
+            Button(Constants.save) {
+                if newImageUrl != viewModel.model.imageURLText {
+                    viewModel.model.imageURLText = newImageUrl
+                }
             }
             
-            Button("Отмена", role: .cancel) {}
+            Button(Constants.cancel, role: .cancel) {}
         }
     }
     
     private var formSection: some View {
         VStack {
-            Text("Имя")
+            Text(Constants.name)
                 .font(.title1Bold)
                 .foregroundStyle(.ypBlack)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.bottom, 8)
-            TextField("Введите имя", text: $viewModel.model.name)
+            TextField(Constants.enterName, text: $viewModel.model.name)
                 .font(.title2Regular)
                 .foregroundStyle(.ypBlack)
                 .padding(.horizontal, 16)
@@ -122,25 +157,21 @@ extension ProfileEditingView {
                 )
                 .padding(.bottom, 24)
             
-            Text("Описание")
+            Text(Constants.description)
                 .font(.title1Bold)
                 .foregroundStyle(.ypBlack)
                 .frame(maxWidth: .infinity, alignment: .leading)
-            TextEditor(text: $viewModel.model.description)
-                .font(.title2Regular)
-                .foregroundStyle(.ypBlack)
-                .scrollContentBackground(.hidden)
-                .background(Color.ypLightGray)
-                .clipShape(RoundedRectangle(cornerRadius: 12))
-                .frame(maxHeight: 90)
-                .padding(.bottom, 24)
+            ProfileEditorTextFieldView(
+                text: $viewModel.model.description,
+                placeholder: Constants.enterDescription
+            )
             
-            Text("Сайт")
+            Text(Constants.website)
                 .font(.title1Bold)
                 .foregroundStyle(.ypBlack)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.bottom, 8)
-            TextField("Введите сайт", text: $viewModel.model.website)
+            TextField(Constants.enterWebsite, text: $viewModel.model.website)
                 .font(.title2Regular)
                 .foregroundStyle(.ypBlack)
                 .padding(.horizontal, 16)
@@ -157,7 +188,7 @@ extension ProfileEditingView {
         Button {
             viewModel.model.showPhotoActions = true
         } label: {
-            Image("ic_photo")
+            Image(.icPhoto)
                 .foregroundStyle(.ypBlack)
                 .frame(width: 23, height: 23)
                 .background(Color.ypLightGray)
@@ -168,20 +199,39 @@ extension ProfileEditingView {
     
     private var saveButton: some View {
         Button {
-            print("Pressed")
-            
-            profileViewModel.model.name = viewModel.model.name
-            router.pop()
+            Task {
+                do {
+                    let newProfile = ProfileDTO(
+                        id: profile.id,
+                        name: viewModel.model.name,
+                        avatar: viewModel.model.imageURLText,
+                        description: viewModel.model.description,
+                        website: viewModel.model.website
+                    )
+                    isLoading = true
+                    try await servicesAssembly.nftService.updateProfile(with: newProfile)
+                    profile = newProfile
+                    router.pop()
+                } catch {
+                    showErrorAlert = true
+                }
+            }
             
         } label: {
             ZStack {
                 RoundedRectangle(cornerRadius: 16)
                     .frame(height: 60)
                     .foregroundStyle(.ypBlack)
-                Text("Сохранить")
+                Text(Constants.save)
                     .font(.title3Bold)
                     .foregroundStyle(.ypWhite)
             }
+        }
+        .alert(Constants.error,
+               isPresented: $showErrorAlert) {
+            Button(Constants.OK, role: .cancel) {}
+        } message: {
+            Text(errorMessage)
         }
         .padding(.bottom, 16)
         .ignoresSafeArea(.keyboard, edges: .bottom)
@@ -190,7 +240,20 @@ extension ProfileEditingView {
 
 #Preview {
     let router = NavigationRouter()
-    let viewModel = ProfileViewModel()
-    ProfileEditingView(viewModel: viewModel)
+    let servicesAssembly = ServicesAssembly(
+        networkClient: DefaultNetworkClient(),
+        nftStorage: NftStorageImpl(),
+        profileStorage: ProfileStorage()
+    )
+    ProfileEditingView(
+            profile: ProfileDTO(
+            id: "id",
+            name: "Ivan Petrov",
+            avatar: nil,
+            description: "Описание",
+            website: nil
+        )
+    )
         .environment(router)
+        .environment(servicesAssembly)
 }

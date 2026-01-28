@@ -8,24 +8,24 @@
 import SwiftUI
 
 struct FavoriteNFTCellView: View {
-    @State var viewModel: FavoriteNFTViewModel
+    @State var viewModel: FavoriteNFTCellViewModel
     
     var body: some View {
         HStack(alignment: .center) {
-            FavoriteNFTIconView(viewModel: $viewModel)
+            FavoriteNFTCellIconView(viewModel: $viewModel)
             Spacer()
-            FavoriteNFTDescriptionView(viewModel: $viewModel)
+            FavoriteNFTCellDescriptionView(viewModel: $viewModel)
         }
     }
 }
 
 #Preview {
-    let model = FavoriteNFTModel(
+    let model = FavoriteNFTCellModel(
         name: "Archie",
         rating: 1,
         price: 1.78,
         isLiked: true
     )
-    let viewModel = FavoriteNFTViewModel(model: model)
+    let viewModel = FavoriteNFTCellViewModel(model: model)
     FavoriteNFTCellView(viewModel: viewModel)
 }

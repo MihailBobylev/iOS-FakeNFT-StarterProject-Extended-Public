@@ -13,7 +13,7 @@ struct WebView: UIViewRepresentable {
     
     func makeUIView(context: Context) -> WKWebView {
         let webView = WKWebView()
-        webView.load(URLRequest(url: viewModel.model.website!))
+        webView.load(URLRequest(url: URL(string: viewModel.profile.website ?? "")!))
         return webView
     }
     
@@ -22,67 +22,89 @@ struct WebView: UIViewRepresentable {
 
 struct ProfileView: View {
     @Environment(NavigationRouter.self) var router
-    @State var viewModel: ProfileViewModel = ProfileViewModel()
+    @Environment(ServicesAssembly.self) private var servicesAssembly
+    @State var viewModel: ProfileViewModel
     @State private var showWebView = false
+    private let profileStorage: ProfileStorage
+    
+    init() {
+        let viewModel = ProfileViewModel()
+        self._viewModel = State(wrappedValue: viewModel)
+        profileStorage = ProfileStorage()
+    }
     
     var body: some View {
         VStack {
-            HStack {
-                Spacer()
-                Button {
-                    router.push(AppRoute.profileEditing(viewModel: viewModel))
-                } label: {
-                    Image("ic_edit")
-                        .foregroundStyle(.ypBlack)
+            if !viewModel.isLoading {
+                HStack {
+                    Spacer()
+                    Button {
+                        router.push(AppRoute.profileEditing(profile: viewModel.profile))
+                    } label: {
+                        Image(.icEdit)
+                            .foregroundStyle(.ypBlack)
+                    }
                 }
-            }
-            
-            HStack {
-                ProfileAvatarView(imageURL: viewModel.model.photo)
-                Text(viewModel.model.name)
-                    .font(.title1Bold)
-                    .foregroundStyle(.ypBlack)
-                    .padding(.leading, 16)
-                Spacer()
-            }
-            .padding(.top, 16)
-            
-            Text(viewModel.model.description)
-                .font(.footnoteRegular13)
-                .multilineTextAlignment(.leading)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.top, 20)
-            
-            NavigationLink("\(viewModel.model.name).com") {
-                WebView(viewModel: viewModel)
-            }
-            .font(.footnoteRegular15)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(.top, 8)
-            
-            Button {
-                router.push(AppRoute.myNFT)
-            } label: {
-                ProfileListView(title: "Мои NFT (112)")
-            }
-            .padding(.top, 58)
-            
-            Button {
-                router.push(AppRoute.favoriteNFT)
-            } label: {
-                ProfileListView(title: "Избранные NFT (11)")
-            }
-            .padding(.top, 26)
                 
-            Spacer()
+                HStack {
+                    ProfileAvatarView(imageURL: URL(string: viewModel.profile.avatar ?? ""))
+                    Text(viewModel.profile.name ?? "")
+                        .font(.title1Bold)
+                        .foregroundStyle(.ypBlack)
+                        .padding(.leading, 16)
+                    Spacer()
+                }
+                .padding(.top, 16)
+                
+                Text(viewModel.profile.description ?? "")
+                    .font(.footnoteRegular13)
+                    .multilineTextAlignment(.leading)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.top, 20)
+                
+                NavigationLink("\(viewModel.profile.name ?? "").com") {
+                    WebView(viewModel: viewModel)
+                }
+                .font(.footnoteRegular15)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.top, 8)
+                
+                Button {
+                    router.push(AppRoute.myNFT)
+                } label: {
+                    ProfileListView(title: "Мои NFT (112)")
+                }
+                .padding(.top, 58)
+                
+                Button {
+                    router.push(AppRoute.favoriteNFT)
+                } label: {
+                    ProfileListView(title: "Избранные NFT (11)")
+                }
+                .padding(.top, 26)
+                
+                Spacer()
+            } else {
+                ProgressView()
+            }
         }
         .padding(.horizontal, 16)
+        .task {
+            viewModel.configure(servicesAssembly: servicesAssembly)
+            await viewModel.loadProfile()
+        }
     }
 }
 
 #Preview {
     let router = NavigationRouter()
-    let viewModel = ProfileViewModel()
-    ProfileView(viewModel: viewModel)
+    let servicesAssembly = ServicesAssembly(
+        networkClient: DefaultNetworkClient(),
+        nftStorage: NftStorageImpl(),
+        profileStorage: ProfileStorage()
+    )
+    
+    ProfileView()
         .environment(router)
+        .environment(servicesAssembly)
 }

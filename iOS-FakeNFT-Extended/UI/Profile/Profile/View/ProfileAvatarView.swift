@@ -28,8 +28,6 @@ struct ProfileAvatarView: View {
             case .failure:
                 ZStack {
                     placeholder
-                    ProgressView()
-                        .frame(width: 70, height: 70)
                 }
             @unknown default:
                 placeholder
@@ -39,7 +37,7 @@ struct ProfileAvatarView: View {
     }
     
     private var placeholder: some View {
-        Image("ic_user")
+        Image(.icUser)
             .resizable()
             .scaledToFit()
             .frame(width: 70, height: 70)

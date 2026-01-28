@@ -15,7 +15,7 @@ struct ProfileListView: View {
                 .font(.title3Bold)
                 .foregroundStyle(.ypBlack)
             Spacer()
-            Image("ic_chevron_forward")
+            Image(.icChevronForward)
                 .foregroundStyle(.ypBlack)
         }
         .contentShape(Rectangle())

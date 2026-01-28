@@ -8,11 +8,11 @@
 import SwiftUI
 
 struct MyNFTIconView: View {
-    @Binding var viewModel: MyNFTViewModel
+    @Binding var viewModel: MyNFTCellViewModel
     
     var body: some View {
         ZStack(alignment: .topTrailing) {
-            Image("nft")
+            Image(.nft)
                 .resizable()
                 .scaledToFill()
                 .frame(width: 108, height: 108)
@@ -22,8 +22,8 @@ struct MyNFTIconView: View {
                     await viewModel.toggleLike()
                 }
             } label: {
-                Image(viewModel.isLiked ? "ic_favorites" : "ic_unfavorites")
-                    .foregroundStyle(viewModel.isLiked ? .ypRed : .ypWhite)
+                Image(viewModel.model.isLiked ? .icFavorites : .icUnfavorites)
+                    .foregroundStyle(viewModel.model.isLiked ? .ypRed : .ypWhite)
             }
 
         }
@@ -31,8 +31,8 @@ struct MyNFTIconView: View {
 }
 
 #Preview {
-    @Previewable @State var viewModel = MyNFTViewModel(
-        model: MyNFTModel(
+    @Previewable @State var viewModel = MyNFTCellViewModel(
+        model: MyNFTCellModel(
             name: "Archie",
             author: "John Doe",
             rating: 1,

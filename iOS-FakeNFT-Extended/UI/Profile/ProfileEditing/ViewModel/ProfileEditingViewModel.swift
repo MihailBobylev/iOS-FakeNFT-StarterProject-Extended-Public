@@ -7,21 +7,22 @@
 
 import Foundation
 
+@MainActor
 @Observable
 final class ProfileEditingViewModel {
     
     var model: ProfileEditingModel
     
-    init(viewModel: ProfileViewModel) {
+    init(profile: ProfileDTO) {
         self.model = ProfileEditingModel(
             showPhotoActions: false,
             showEditAlert: false,
             showSaveButton: false,
             showBackAlert: false,
-            imageURLText: viewModel.model.photo?.absoluteString ?? "",
-            name: viewModel.model.name,
-            description: viewModel.model.description,
-            website: viewModel.model.website?.absoluteString ?? ""
+            imageURLText: profile.avatar ?? "",
+            name: profile.name ?? "",
+            description: profile.description ?? "",
+            website: profile.website ?? ""
         )
     }
 }
