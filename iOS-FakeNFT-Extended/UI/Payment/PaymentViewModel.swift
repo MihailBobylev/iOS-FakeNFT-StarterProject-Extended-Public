@@ -37,13 +37,13 @@ final class PaymentViewModel {
     }
     
     func pay() async {
-        guard let currencyId = selectedCurrencyID else { return }
+        guard let selectedCurrencyID else { return }
         
         isLoading = true
         paymentError = nil
         
         do {
-            let response = try await paymentService.pay(currencyId: currencyId)
+            let response = try await paymentService.pay(currencyId: selectedCurrencyID)
             paymentSuccess = response.success
         } catch {
             paymentError = error

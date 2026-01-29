@@ -12,6 +12,12 @@ struct BasketView: View {
     @Environment(NavigationRouter.self) private var router
     @State private var viewModel: BasketViewModel?
     
+    private enum Constants {
+        static let navigationTitle = "Корзина"
+        static let emptyBasketText = "Корзина пуста"
+        static let priceLabel = "Цена"
+    }
+    
     var body: some View {
         @Bindable var bindableRouter = router
         return NavigationStack(path: $bindableRouter.path) {
@@ -30,12 +36,12 @@ struct BasketView: View {
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
             }
-            .navigationTitle("Корзина")
+            .navigationTitle(Constants.navigationTitle)
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
-                        if let viewModel = viewModel {
+                        if let viewModel {
                             router.showSortPopup(
                                 currentSort: viewModel.currentSortOption,
                                 onSelect: { option in
@@ -44,7 +50,7 @@ struct BasketView: View {
                             )
                         }
                     }) {
-                        Image(uiImage: UIImage(imageLiteralResourceName: "ic_sort"))
+                        Image(.icSort)
                     }
                 }
             }
@@ -94,7 +100,7 @@ struct BasketView: View {
     private var emptyStateView: some View {
         VStack(spacing: 8) {
             Spacer()
-            Text("Корзина пуста")
+            Text(Constants.emptyBasketText)
                 .font(.title2Regular)
                 .foregroundColor(.ypBlack)
             Spacer()
@@ -108,16 +114,16 @@ struct BasketItemRow: View {
     let onDelete: () -> Void
     let onSelect: () -> Void
     
-    private func getImageName(for nftName: String) -> String? {
+    private enum Constants {
+        static let priceLabel = "Цена"
+    }
+    
+    private static func assetName(for nftName: String) -> String? {
         switch nftName {
-        case "April":
-            return "nft_april"
-        case "Greena":
-            return "nft_greena"
-        case "Spring":
-            return "nft_spring"
-        default:
-            return nil
+        case "April": return "nft_april"
+        case "Greena": return "nft_greena"
+        case "Spring": return "nft_spring"
+        default: return nil
         }
     }
     
@@ -126,11 +132,7 @@ struct BasketItemRow: View {
             Button(action: onSelect) {
                 HStack(spacing: 20) {
                     Group {
-                        if let imageName = getImageName(for: item.nft.name) {
-                            Image(imageName)
-                                .resizable()
-                                .aspectRatio(contentMode: .fill)
-                        } else if let url = item.nft.images.first {
+                        if let url = item.nft.images.first {
                             AsyncImage(url: url) { phase in
                                 switch phase {
                                 case .empty:
@@ -140,12 +142,22 @@ struct BasketItemRow: View {
                                         .resizable()
                                         .aspectRatio(contentMode: .fill)
                                 case .failure:
-                                    Image(systemName: "photo")
-                                        .foregroundColor(.gray)
+                                    if let name = Self.assetName(for: item.nft.name) {
+                                        Image(name)
+                                            .resizable()
+                                            .aspectRatio(contentMode: .fill)
+                                    } else {
+                                        Image(systemName: "photo")
+                                            .foregroundColor(.gray)
+                                    }
                                 @unknown default:
                                     EmptyView()
                                 }
                             }
+                        } else if let name = Self.assetName(for: item.nft.name) {
+                            Image(name)
+                                .resizable()
+                                .aspectRatio(contentMode: .fill)
                         } else {
                             Image(systemName: "photo")
                                 .foregroundColor(.gray)
@@ -164,7 +176,7 @@ struct BasketItemRow: View {
                         }
                         
                         VStack(alignment: .leading, spacing: 2) {
-                            Text("Цена")
+                            Text(Constants.priceLabel)
                                 .font(.footnoteRegular13)
                                 .foregroundColor(.ypBlack)
                             Text(String(format: "%.2f ETH", item.nft.price))
@@ -180,7 +192,7 @@ struct BasketItemRow: View {
             
             VStack(alignment: .trailing) {
                 Button(action: onDelete) {
-                    Image(uiImage: UIImage(imageLiteralResourceName: "ic_basket_in"))
+                    Image(.icBasketIn)
                         .renderingMode(.template)
                         .foregroundColor(.ypBlack)
                         .frame(width: 20, height: 20)
@@ -248,7 +260,7 @@ struct BasketBottomPanel: View {
 }
 
 extension View {
-    func  cornerRadius(_ radius: CGFloat, corners: UIRectCorner) -> some View {
+    func cornerRadius(_ radius: CGFloat, corners: UIRectCorner) -> some View {
         clipShape(RoundedCorner(radius: radius, corners: corners))
     }
 }

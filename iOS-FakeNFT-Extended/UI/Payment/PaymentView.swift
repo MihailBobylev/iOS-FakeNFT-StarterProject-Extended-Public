@@ -12,6 +12,11 @@ struct PaymentView: View {
     @State private var viewModel: PaymentViewModel?
     let currencies: [Currency]
     
+    private enum Constants {
+        static let navigationTitle = "Выбор валюты"
+        static let currencyIconSize: CGFloat = 40
+    }
+    
     private let columns = [
         GridItem(.flexible(), spacing: 12),
         GridItem(.flexible(), spacing: 12)
@@ -19,13 +24,13 @@ struct PaymentView: View {
     
     var body: some View {
         Group {
-            if let viewModel = viewModel {
+            if let viewModel {
                 contentView(viewModel: viewModel)
             } else {
                 ProgressView()
             }
         }
-        .navigationTitle("Выбор валюты")
+        .navigationTitle(Constants.navigationTitle)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar(.hidden, for: .tabBar)
         .task {
@@ -70,7 +75,7 @@ struct PaymentView: View {
             .padding(.horizontal, 16)
             .padding(.top, 16)
             .padding(.bottom, 50)
-            .background(Color("ypPaymentBackground"))
+            .background(Color.ypPaymentBackground)
             .cornerRadius(12, corners: [.topLeft, .topRight])
         }
         .disabled(viewModel.isLoading)
@@ -104,7 +109,7 @@ struct PaymentView: View {
                 .foregroundColor(viewModel.selectedCurrencyID != nil ? .ypWhite : .ypBlack)
                 .frame(maxWidth: .infinity)
                 .frame(height: 50)
-                .background(viewModel.selectedCurrencyID != nil ? Color.ypBlack : Color("ypButtonDisabled"))
+                .background(viewModel.selectedCurrencyID != nil ? Color.ypBlack : Color.ypButtonDisabled)
                 .cornerRadius(16)
         }
         .disabled(viewModel.selectedCurrencyID == nil || viewModel.isLoading)
@@ -116,13 +121,17 @@ private struct CurrencyCell: View {
     let isSelected: Bool
     let onSelect: () -> Void
     
+    private enum Constants {
+        static let iconSize: CGFloat = 40
+    }
+    
     var body: some View {
         Button(action: onSelect) {
             HStack(spacing: 12) {
                 Image(iconName(for: currency.ticker))
                     .resizable()
                     .aspectRatio(contentMode: .fill)
-                    .frame(width: 40, height: 40)
+                    .frame(width: Constants.iconSize, height: Constants.iconSize)
                     .clipShape(RoundedRectangle(cornerRadius: 12))
                 
                 VStack(alignment: .leading, spacing: 4) {
@@ -139,7 +148,7 @@ private struct CurrencyCell: View {
             }
             .padding(.horizontal, 12)
             .padding(.vertical, 10)
-            .background(Color("ypPaymentBackground"))
+            .background(Color.ypPaymentBackground)
             .cornerRadius(12)
             .overlay(
                 RoundedRectangle(cornerRadius: 12)
@@ -174,59 +183,8 @@ private struct CurrencyCell: View {
 }
 
 #Preview {
-    let currencies = [
-        Currency(
-            id: "1",
-            name: "Bitcoin",
-            ticker: "BTC",
-            imageURL: URL(string: "https://example.com/btc")!
-        ),
-        Currency(
-            id: "2",
-            name: "Dogecoin",
-            ticker: "DOGE",
-            imageURL: URL(string: "https://example.com/doge")!
-        ),
-        Currency(
-            id: "3",
-            name: "Tether",
-            ticker: "USDT",
-            imageURL: URL(string: "https://example.com/usdt")!
-        ),
-        Currency(
-            id: "4",
-            name: "ApeCoin",
-            ticker: "APE",
-            imageURL: URL(string: "https://example.com/ape")!
-        ),
-        Currency(
-            id: "5",
-            name: "Ethereum",
-            ticker: "ETH",
-            imageURL: URL(string: "https://example.com/eth")!
-        ),
-        Currency(
-            id: "6",
-            name: "Solana",
-            ticker: "SOL",
-            imageURL: URL(string: "https://example.com/sol")!
-        ),
-        Currency(
-            id: "7",
-            name: "Cardano",
-            ticker: "ADA",
-            imageURL: URL(string: "https://example.com/ada")!
-        ),
-        Currency(
-            id: "8",
-            name: "Shiba Inu",
-            ticker: "SHIB",
-            imageURL: URL(string: "https://example.com/shib")!
-        )
-    ]
-    
     return NavigationStack {
-        PaymentView(currencies: currencies)
+        PaymentView(currencies: Currency.mocks)
     }
     .environment(ServicesAssembly(
         networkClient: DefaultNetworkClient(),

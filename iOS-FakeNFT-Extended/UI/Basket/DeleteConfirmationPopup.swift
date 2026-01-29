@@ -12,6 +12,21 @@ struct DeleteConfirmationPopup: View {
     let onDelete: () -> Void
     let onCancel: () -> Void
     
+    private enum Constants {
+        static let confirmationText = "Вы уверены, что хотите\nудалить объект из корзины?"
+        static let deleteButtonText = "Удалить"
+        static let cancelButtonText = "Вернуться"
+    }
+    
+    private static func assetName(for nftName: String) -> String? {
+        switch nftName {
+        case "April": return "nft_april"
+        case "Greena": return "nft_greena"
+        case "Spring": return "nft_spring"
+        default: return nil
+        }
+    }
+    
     var body: some View {
         ZStack {
             // Размытый фон на весь экран (включая верх и низ, navigation bar и tab bar)
@@ -25,13 +40,8 @@ struct DeleteConfirmationPopup: View {
             // Попап без фона - контент плавает на размытом фоне
             VStack(spacing: 0) {
                 VStack(spacing: 12) {
-                    // Изображение NFT
                     Group {
-                        if let imageName = getImageName(for: nft.name) {
-                            Image(imageName)
-                                .resizable()
-                                .aspectRatio(contentMode: .fill)
-                        } else if let url = nft.images.first {
+                        if let url = nft.images.first {
                             AsyncImage(url: url) { phase in
                                 switch phase {
                                 case .empty:
@@ -41,12 +51,22 @@ struct DeleteConfirmationPopup: View {
                                         .resizable()
                                         .aspectRatio(contentMode: .fill)
                                 case .failure:
-                                    Image(systemName: "photo")
-                                        .foregroundColor(.gray)
+                                    if let name = Self.assetName(for: nft.name) {
+                                        Image(name)
+                                            .resizable()
+                                            .aspectRatio(contentMode: .fill)
+                                    } else {
+                                        Image(systemName: "photo")
+                                            .foregroundColor(.gray)
+                                    }
                                 @unknown default:
                                     EmptyView()
                                 }
                             }
+                        } else if let name = Self.assetName(for: nft.name) {
+                            Image(name)
+                                .resizable()
+                                .aspectRatio(contentMode: .fill)
                         } else {
                             Image(systemName: "photo")
                                 .foregroundColor(.gray)
@@ -55,8 +75,7 @@ struct DeleteConfirmationPopup: View {
                     .frame(width: 108, height: 108)
                     .clipShape(RoundedRectangle(cornerRadius: 12))
                     
-                    // Текст подтверждения
-                    Text("Вы уверены, что хотите\nудалить объект из корзины?")
+                    Text(Constants.confirmationText)
                         .font(.footnoteRegular13)
                         .foregroundColor(.ypBlack)
                         .multilineTextAlignment(.center)
@@ -66,11 +85,9 @@ struct DeleteConfirmationPopup: View {
                 .padding(.horizontal, 16)
                 .padding(.bottom, 20)
                 
-                // Кнопки горизонтально: слева "Удалить", справа "Вернуться"
                 HStack(spacing: 8) {
-                    // Кнопка "Удалить" слева - черный прямоугольник с красным текстом
                     Button(action: onDelete) {
-                        Text("Удалить")
+                        Text(Constants.deleteButtonText)
                             .font(.footnoteRegular13)
                             .foregroundColor(.ypRed)
                             .frame(maxWidth: .infinity)
@@ -79,9 +96,8 @@ struct DeleteConfirmationPopup: View {
                             .cornerRadius(12)
                     }
                     
-                    // Кнопка "Вернуться" справа - черный прямоугольник с белым текстом
                     Button(action: onCancel) {
-                        Text("Вернуться")
+                        Text(Constants.cancelButtonText)
                             .font(.footnoteRegular13)
                             .foregroundColor(.ypWhite)
                             .frame(maxWidth: .infinity)
@@ -94,19 +110,6 @@ struct DeleteConfirmationPopup: View {
                 .padding(.bottom, 16)
             }
             .padding(.horizontal, 16)
-        }
-    }
-    
-    private func getImageName(for nftName: String) -> String? {
-        switch nftName {
-        case "April":
-            return "nft_april"
-        case "Greena":
-            return "nft_greena"
-        case "Spring":
-            return "nft_spring"
-        default:
-            return nil
         }
     }
 }
