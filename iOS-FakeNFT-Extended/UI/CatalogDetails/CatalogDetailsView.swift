@@ -88,7 +88,17 @@ struct CatalogDetailsView: View {
                         LazyVGrid(columns: columns, spacing: 29) {
                             ForEach(viewModel.nfts) {
                                 NFTCatalogCell(
-                                    model: $0
+                                    model: $0,
+                                    onFavoriteTap: { id in
+                                        Task {
+                                            await viewModel.toggleFavorite(with: id)
+                                        }
+                                    },
+                                    onBasketTap: { id in
+                                        Task {
+                                            await viewModel.toggleBasket(with: id)
+                                        }
+                                    }
                                 )
                             }
                         }

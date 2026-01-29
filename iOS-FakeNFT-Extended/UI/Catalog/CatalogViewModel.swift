@@ -37,6 +37,7 @@ final class CatalogViewModel {
     }
     
     func loadNFTCollections() async {
+        currentSort = nil
         await reload()
     }
     
@@ -47,8 +48,7 @@ final class CatalogViewModel {
     }
     
     func loadNextPageIfNeeded(currentItem item: NFTCollectionModel) async {
-        guard let servicesAssembly,
-              canLoadMore,
+        guard canLoadMore,
               !isPageLoading,
               let last = nftCollections.last,
               last.id == item.id
@@ -72,7 +72,7 @@ final class CatalogViewModel {
     }
     
     private func reload() async {
-        guard let servicesAssembly, !isLoading else { return }
+        guard !isLoading else { return }
         
         isLoading = true
         requestError = nil

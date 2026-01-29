@@ -34,14 +34,25 @@ final class CatalogDetailsViewModel {
         
         do {
             let nfts = try await servicesAssembly.nftService.loadNfts(ids: nftCollection.nfts)
-            let models: [NFTCatalogCellModel] = nfts.map { nft in
-                NFTCatalogCellModel(nft: nft)
-            }
-            self.nfts = models
+            self.nfts = nfts
             isLoading = false
         } catch {
             isLoading = false
             requestError = .serverError
         }
+    }
+    
+    func toggleFavorite(with id: String) async {
+        guard let servicesAssembly,
+              await servicesAssembly.nftService.changeFavoriteNFT(id: id) else { return }
+        guard let index = nfts.firstIndex(where: { $0.id == id }) else { return }
+        nfts[index].isFavorite.toggle()
+    }
+    
+    func toggleBasket(with id: String) async {
+        guard let servicesAssembly,
+              await servicesAssembly.nftService.changeBasketNFT(id: id) else { return }
+        guard let index = nfts.firstIndex(where: { $0.id == id }) else { return }
+        nfts[index].inBasket.toggle()
     }
 }

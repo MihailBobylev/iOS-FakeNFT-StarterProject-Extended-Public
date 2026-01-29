@@ -13,6 +13,8 @@ struct NFTCatalogCell: View {
     }
     
     let model: NFTCatalogCellModel
+    let onFavoriteTap: (_ id: String) -> Void
+    let onBasketTap: (_ id: String) -> Void
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -37,7 +39,7 @@ struct NFTCatalogCell: View {
                 }
                 
                 Button {
-                    // TODO: - Лайк / дизлайк
+                    onFavoriteTap(model.id)
                 } label: {
                     Image(model.isFavorite ? .icFavorites : .icUnfavorites)
                         .renderingMode(.original)
@@ -59,7 +61,7 @@ struct NFTCatalogCell: View {
                 }
                 Spacer()
                 Button {
-                    // TODO: - Добавление / удаление в корзину
+                    onBasketTap(model.id)
                 } label: {
                     Image(model.inBasket ? .icBasketIn : .icBasketOut)
                         .renderingMode(.original)
@@ -79,6 +81,8 @@ struct NFTCatalogCell: View {
             price: "39.37",
             isFavorite: true,
             inBasket: true
-        )
+        ),
+        onFavoriteTap: { id in },
+        onBasketTap: { id in }
     )
 }

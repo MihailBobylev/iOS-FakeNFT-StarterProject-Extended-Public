@@ -2,8 +2,10 @@ import Foundation
 
 protocol NftService {
     func fetchNFTCollections(page: Int, size: Int, sortBy: NFTCollectionSort?) async throws -> [NFTCollectionDTO]
-    func loadNfts(ids: [String]) async throws -> [Nft]
-    func loadNft(id: String) async throws -> Nft
+    func loadNfts(ids: [String]) async throws -> [NFTCatalogCellModel]
+    func loadNft(id: String) async throws -> NFTCatalogCellModel
+    func changeFavoriteNFT(id: String) async -> Bool
+    func changeBasketNFT(id: String) async -> Bool
 }
 
 @MainActor
@@ -30,8 +32,8 @@ final class NftServiceImpl: NftService {
         return nftCollections
     }
     
-    func loadNfts(ids: [String]) async throws -> [Nft] {
-        try await withThrowingTaskGroup(of: (Int, Nft).self) { group in
+    func loadNfts(ids: [String]) async throws -> [NFTCatalogCellModel] {
+        try await withThrowingTaskGroup(of: (Int, NFTCatalogCellModel).self) { group in
             for (index, id) in ids.enumerated() {
                 group.addTask {
                     let nft = try await self.loadNft(id: id)
@@ -39,7 +41,7 @@ final class NftServiceImpl: NftService {
                 }
             }
 
-            var result = Array<Nft?>(repeating: nil, count: ids.count)
+            var result = Array<NFTCatalogCellModel?>(repeating: nil, count: ids.count)
 
             for try await (index, nft) in group {
                 result[index] = nft
@@ -49,14 +51,23 @@ final class NftServiceImpl: NftService {
         }
     }
 
-    func loadNft(id: String) async throws -> Nft {
+    func loadNft(id: String) async throws -> NFTCatalogCellModel {
         if let nft = await storage.getNft(with: id) {
             return nft
         }
 
         let request = NFTRequest(id: id)
         let nft: Nft = try await networkClient.send(request: request)
-        await storage.saveNft(nft)
-        return nft
+        let nftModel = NFTCatalogCellModel(nft: nft)
+        await storage.saveNft(nftModel)
+        return nftModel
+    }
+    
+    func changeFavoriteNFT(id: String) async -> Bool {
+        await storage.changeFavoriteNFT(with: id)
+    }
+    
+    func changeBasketNFT(id: String) async -> Bool {
+        await storage.changeBasketNFT(with: id)
     }
 }

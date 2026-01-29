@@ -8,13 +8,17 @@
 import Foundation
 
 struct NFTCatalogCellModel: Identifiable {
+    enum Constants {
+        static let noName = "Без названия"
+    }
+    
     let id: String
     let cover: String?
     let rating: Int
     let name: String
     let price: String
-    let isFavorite: Bool
-    let inBasket: Bool
+    var isFavorite: Bool
+    var inBasket: Bool
 }
 
 extension NFTCatalogCellModel {
@@ -30,10 +34,10 @@ extension NFTCatalogCellModel {
             return min(max(rating, 0), 5)
         }()
         
-        self.name = nft.name ?? "Без названия"
+        self.name = nft.name ?? Constants.noName
         
         self.price = {
-            guard let price = nft.price else { return "0" }
+            guard let price = nft.price else { return "" }
             return NSDecimalNumber(decimal: price).stringValue
         }()
         

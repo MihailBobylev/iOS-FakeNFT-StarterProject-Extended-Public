@@ -75,6 +75,11 @@ struct CatalogView: View {
                 }
                 .listStyle(.plain)
                 .listRowBackground(Color.clear)
+                .refreshable {
+                    if !viewModel.isLoading {
+                        await viewModel.loadNFTCollections()
+                    }
+                }
             }
             
             ProgressView()
