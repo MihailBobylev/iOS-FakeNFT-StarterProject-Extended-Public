@@ -51,6 +51,7 @@ struct NFTCatalogCell: View {
                     Text(model.name)
                         .font(.title3Bold)
                         .foregroundStyle(.ypBlack)
+                        .lineLimit(1)
                     
                     Text("\(model.price) \(Constants.currency)")
                         .font(.bodyMedium)

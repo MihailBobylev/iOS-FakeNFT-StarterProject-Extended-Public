@@ -22,7 +22,7 @@ struct CatalogDetailsView: View {
         GridItem(.flexible(), spacing: 9)
     ]
     
-    init(nftCollection: NFTCollectionDTO) {
+    init(nftCollection: NFTCollectionModel) {
         let initialState = CatalogDetailsViewModel(nftCollection: nftCollection)
         self._viewModel = State(wrappedValue: initialState)
     }
@@ -61,6 +61,15 @@ struct CatalogDetailsView: View {
                                 .font(.footnoteRegular15)
                                 .foregroundStyle(.ypBlue)
                                 .underline()
+                                .onTapGesture {
+                                    if let url = URL(string: viewModel.nftCollection.website) {
+                                        router.push(
+                                            .webView(
+                                                url: url
+                                            )
+                                        )
+                                    }
+                                }
                         }
                         .padding(.bottom, 5)
                         
@@ -71,15 +80,24 @@ struct CatalogDetailsView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding([.horizontal, .top], 16)
                     
-                    LazyVGrid(columns: columns, spacing: 29) {
-                        ForEach(NFTCatalogCellModel.mockData) { nft in
-                            NFTCatalogCell(
-                                model: nft
-                            )
+                    if let error = viewModel.requestError {
+                        Text(error.title)
+                            .foregroundStyle(.red)
+                            .padding()
+                    } else {
+                        LazyVGrid(columns: columns, spacing: 29) {
+                            ForEach(viewModel.nfts) {
+                                NFTCatalogCell(
+                                    model: $0
+                                )
+                            }
                         }
+                        .padding(.horizontal, 16)
+                        .padding(.top, 24)
                     }
-                    .padding(.horizontal, 16)
-                    .padding(.top, 24)
+                    
+                    ProgressView()
+                        .opacity(viewModel.isLoading ? 1 : 0)
                 }
             }
             .scrollIndicators(.hidden)
@@ -94,6 +112,9 @@ struct CatalogDetailsView: View {
             .padding([.top, .leading], 9)
         }
         .navigationBarBackButtonHidden(true)
+        .task {
+            await viewModel.loadNFTs()
+        }
         .onAppear {
             viewModel.setup(servicesAssembly: servicesAssembly)
         }
@@ -112,8 +133,7 @@ struct CatalogDetailsView: View {
                 "f380f245-0264-4b42-8e7e-c4486e237504"
             ],
             description: "curabitur feugait a definitiones singulis movet eros aeque mucius evertitur assueverit et eam",
-            author: "Lourdes Harper",
-            website: "https://lourdes_harper.fakenfts.org/"
+            author: "Lourdes Harper"
         )
     )
 }

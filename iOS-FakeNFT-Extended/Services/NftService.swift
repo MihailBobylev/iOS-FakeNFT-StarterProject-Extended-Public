@@ -2,6 +2,7 @@ import Foundation
 
 protocol NftService {
     func fetchNFTCollections(page: Int, size: Int, sortBy: NFTCollectionSort?) async throws -> [NFTCollectionDTO]
+    func loadNfts(ids: [String]) async throws -> [Nft]
     func loadNft(id: String) async throws -> Nft
 }
 
@@ -29,6 +30,25 @@ final class NftServiceImpl: NftService {
         return nftCollections
     }
     
+    func loadNfts(ids: [String]) async throws -> [Nft] {
+        try await withThrowingTaskGroup(of: (Int, Nft).self) { group in
+            for (index, id) in ids.enumerated() {
+                group.addTask {
+                    let nft = try await self.loadNft(id: id)
+                    return (index, nft)
+                }
+            }
+
+            var result = Array<Nft?>(repeating: nil, count: ids.count)
+
+            for try await (index, nft) in group {
+                result[index] = nft
+            }
+
+            return result.compactMap { $0 }
+        }
+    }
+
     func loadNft(id: String) async throws -> Nft {
         if let nft = await storage.getNft(with: id) {
             return nft

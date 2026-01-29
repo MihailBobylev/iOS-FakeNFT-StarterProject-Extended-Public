@@ -18,6 +18,8 @@
 		7455A7EA2F24B65E00095C09 /* NFTCatalogCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7455A7E92F24B65E00095C09 /* NFTCatalogCell.swift */; };
 		7455A7EC2F24B7A600095C09 /* NFTRatingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7455A7EB2F24B7A600095C09 /* NFTRatingView.swift */; };
 		7455A7F02F24BCDE00095C09 /* NFTCatalogCellModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7455A7EF2F24BCDE00095C09 /* NFTCatalogCellModel.swift */; };
+		74653A7D2F2B885F0012DAFC /* WebViewScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74653A7C2F2B885F0012DAFC /* WebViewScreen.swift */; };
+		74653A7F2F2B887A0012DAFC /* WebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74653A7E2F2B887A0012DAFC /* WebView.swift */; };
 		747FA98E2F1E8216007907CE /* NFTCollectionDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 747FA98D2F1E8216007907CE /* NFTCollectionDTO.swift */; };
 		747FAA1D2F1E8486007907CE /* CatalogViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 747FAA1C2F1E8486007907CE /* CatalogViewModel.swift */; };
 		74F1D72A2F2254E700993BD1 /* View+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74F1D7292F2254E700993BD1 /* View+Extension.swift */; };
@@ -74,6 +76,8 @@
 		7455A7E92F24B65E00095C09 /* NFTCatalogCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NFTCatalogCell.swift; sourceTree = "<group>"; };
 		7455A7EB2F24B7A600095C09 /* NFTRatingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NFTRatingView.swift; sourceTree = "<group>"; };
 		7455A7EF2F24BCDE00095C09 /* NFTCatalogCellModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NFTCatalogCellModel.swift; sourceTree = "<group>"; };
+		74653A7C2F2B885F0012DAFC /* WebViewScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewScreen.swift; sourceTree = "<group>"; };
+		74653A7E2F2B887A0012DAFC /* WebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebView.swift; sourceTree = "<group>"; };
 		747FA98D2F1E8216007907CE /* NFTCollectionDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NFTCollectionDTO.swift; sourceTree = "<group>"; };
 		747FAA1C2F1E8486007907CE /* CatalogViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogViewModel.swift; sourceTree = "<group>"; };
 		74F1D7292F2254E700993BD1 /* View+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Extension.swift"; sourceTree = "<group>"; };
@@ -162,6 +166,7 @@
 		741E104C2F1A6BA300320863 /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				74653A7B2F2B88550012DAFC /* WebView */,
 				7455A7ED2F24BCB300095C09 /* NFTCatalogCell */,
 				ABC5E1B42C31FC57002B4068 /* TabBarView.swift */,
 			);
@@ -220,6 +225,15 @@
 				7455A7EF2F24BCDE00095C09 /* NFTCatalogCellModel.swift */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		74653A7B2F2B88550012DAFC /* WebView */ = {
+			isa = PBXGroup;
+			children = (
+				74653A7C2F2B885F0012DAFC /* WebViewScreen.swift */,
+				74653A7E2F2B887A0012DAFC /* WebView.swift */,
+			);
+			path = WebView;
 			sourceTree = "<group>";
 		};
 		74F1D7282F2254CF00993BD1 /* Extensions */ = {
@@ -518,6 +532,7 @@
 				ABC5E1992C31F666002B4068 /* Fonts.swift in Sources */,
 				7455A7EC2F24B7A600095C09 /* NFTRatingView.swift in Sources */,
 				ABC5E1B72C31FC70002B4068 /* ServicesAssembly.swift in Sources */,
+				74653A7D2F2B885F0012DAFC /* WebViewScreen.swift in Sources */,
 				ABC5E19D2C31F6A6002B4068 /* NftStorage.swift in Sources */,
 				ABC5E1B52C31FC57002B4068 /* TabBarView.swift in Sources */,
 				741E111E2F1A726D00320863 /* NavigationRouter.swift in Sources */,
@@ -529,6 +544,7 @@
 				741E104B2F1A6B7F00320863 /* ProfileView.swift in Sources */,
 				ABC5E1A12C31F6D7002B4068 /* Nft.swift in Sources */,
 				7455A7EA2F24B65E00095C09 /* NFTCatalogCell.swift in Sources */,
+				74653A7F2F2B887A0012DAFC /* WebView.swift in Sources */,
 				74F1D72A2F2254E700993BD1 /* View+Extension.swift in Sources */,
 				742250132F1FAF5B00337A53 /* NFTCollectionsRequest.swift in Sources */,
 				741E111C2F1A723500320863 /* AppRoute.swift in Sources */,

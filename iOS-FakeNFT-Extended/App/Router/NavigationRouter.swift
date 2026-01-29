@@ -34,8 +34,8 @@ final class NavigationRouter {
             EmptyView()
         case .editProfile:
             EmptyView()
-        case .webView:
-            EmptyView()
+        case let .webView(url):
+            WebViewScreen(url: url)
         }
     }
 }
