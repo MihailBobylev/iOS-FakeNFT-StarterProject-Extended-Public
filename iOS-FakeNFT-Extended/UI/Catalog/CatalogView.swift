@@ -75,6 +75,11 @@ struct CatalogView: View {
                 }
                 .listStyle(.plain)
                 .listRowBackground(Color.clear)
+                .refreshable {
+                    if !viewModel.isLoading {
+                        await viewModel.loadNFTCollections()
+                    }
+                }
             }
             
             ProgressView()
@@ -94,13 +99,13 @@ struct CatalogView: View {
             }
         }
         .task {
+            viewModel.setup(servicesAssembly: servicesAssembly)
+
             if viewModel.nftCollections.isEmpty {
                 await viewModel.loadNFTCollections()
             }
         }
-        .onAppear {
-            viewModel.setup(servicesAssembly: servicesAssembly)
-        }
+
     }
 }
 

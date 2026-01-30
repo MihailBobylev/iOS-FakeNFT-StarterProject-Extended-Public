@@ -22,7 +22,7 @@ final class CatalogViewModel {
     private var currentPage = 0
     private var canLoadMore = true
     
-    var nftCollections: [NFTCollectionDTO] = []
+    var nftCollections: [NFTCollectionModel] = []
     var isLoading = false
     var isPageLoading = false
     var canChangeSort: Bool {
@@ -37,6 +37,7 @@ final class CatalogViewModel {
     }
     
     func loadNFTCollections() async {
+        currentSort = nil
         await reload()
     }
     
@@ -46,9 +47,8 @@ final class CatalogViewModel {
         await reload()
     }
     
-    func loadNextPageIfNeeded(currentItem item: NFTCollectionDTO) async {
-        guard let servicesAssembly,
-              canLoadMore,
+    func loadNextPageIfNeeded(currentItem item: NFTCollectionModel) async {
+        guard canLoadMore,
               !isPageLoading,
               let last = nftCollections.last,
               last.id == item.id
@@ -57,17 +57,12 @@ final class CatalogViewModel {
         isPageLoading = true
         
         do {
-            let pageCollections = try await servicesAssembly.nftService.fetchNFTCollections(
-                page: currentPage,
-                size: pageSize,
-                sortBy: currentSort
-            )
-            
+            let collectionsModel = try await fetchCollections()
             var updatedCollections = nftCollections
-            updatedCollections.append(contentsOf: pageCollections)
+            updatedCollections.append(contentsOf: collectionsModel)
             
             nftCollections = updatedCollections
-            canLoadMore = pageCollections.count == pageSize
+            canLoadMore = collectionsModel.count == pageSize
             currentPage += 1
             isPageLoading = false
         } catch {
@@ -77,7 +72,7 @@ final class CatalogViewModel {
     }
     
     private func reload() async {
-        guard let servicesAssembly, !isLoading else { return }
+        guard !isLoading else { return }
         
         isLoading = true
         requestError = nil
@@ -85,19 +80,29 @@ final class CatalogViewModel {
         canLoadMore = true
         
         do {
-            let pageCollections = try await servicesAssembly.nftService.fetchNFTCollections(
-                page: currentPage,
-                size: pageSize,
-                sortBy: currentSort
-            )
-            
-            nftCollections = pageCollections
-            canLoadMore = pageCollections.count == pageSize
+            let collectionsModel = try await fetchCollections()
+            nftCollections = collectionsModel
+            canLoadMore = collectionsModel.count == pageSize
             currentPage += 1
             isLoading = false
         } catch {
             isLoading = false
             requestError = .serverError
         }
+    }
+    
+    private func fetchCollections() async throws -> [NFTCollectionModel] {
+        guard let servicesAssembly else { return [] }
+        
+        let pageCollections = try await servicesAssembly.nftService.fetchNFTCollections(
+            page: currentPage,
+            size: pageSize,
+            sortBy: currentSort
+        )
+        
+        let collectionsModel = pageCollections.map {
+            NFTCollectionModel(collectionDTO: $0)
+        }
+        return collectionsModel
     }
 }

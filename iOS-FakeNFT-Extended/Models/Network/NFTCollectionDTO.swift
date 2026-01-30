@@ -14,5 +14,4 @@ struct NFTCollectionDTO: Decodable, Hashable {
     let nfts: [String]
     let description: String?
     let author: String?
-    let website: String?
 }

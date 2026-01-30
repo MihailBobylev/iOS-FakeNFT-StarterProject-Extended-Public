@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct CatalogItemRowView: View {
-    let model: NFTCollectionDTO
+    let model: NFTCollectionModel
 
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
@@ -34,14 +34,13 @@ struct CatalogItemRowView: View {
 
 #Preview {
     CatalogItemRowView(
-        model: NFTCollectionDTO(
+        model: NFTCollectionModel(
             id: "asdasd",
             name: "Brown",
             cover: "https://code.s3.yandex.net/Mobile/iOS/NFT/Обложки_коллекций/Brown.png",
             nfts: ["1", "2", "3"],
             description: "",
-            author: "",
-            website: ""
+            author: ""
         )
     )
     .frame(maxHeight: 162)
