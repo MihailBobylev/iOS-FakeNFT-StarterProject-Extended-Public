@@ -44,15 +44,19 @@ final class CatalogDetailsViewModel {
     
     func toggleFavorite(with id: String) async {
         guard let servicesAssembly,
-              await servicesAssembly.nftService.changeFavoriteNFT(id: id) else { return }
-        guard let index = nfts.firstIndex(where: { $0.id == id }) else { return }
+              await servicesAssembly.nftService.changeFavoriteNFT(id: id),
+              let index = nfts.firstIndex(where: { $0.id == id }) else {
+            return
+        }
         nfts[index].isFavorite.toggle()
     }
     
     func toggleBasket(with id: String) async {
         guard let servicesAssembly,
-              await servicesAssembly.nftService.changeBasketNFT(id: id) else { return }
-        guard let index = nfts.firstIndex(where: { $0.id == id }) else { return }
+              await servicesAssembly.nftService.changeBasketNFT(id: id),
+              let index = nfts.firstIndex(where: { $0.id == id }) else {
+            return
+        }
         nfts[index].inBasket.toggle()
     }
 }
