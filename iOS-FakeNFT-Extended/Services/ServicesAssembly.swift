@@ -4,21 +4,17 @@ import Foundation
 @MainActor
 final class ServicesAssembly {
 
-    private let networkClient: NetworkClient
-    private let nftStorage: NftStorage
+    let nftService: NftService
 
     init(
         networkClient: NetworkClient,
-        nftStorage: NftStorage
+        nftStorage: NftStorage,
+        nftCollectionStorage: NFTCollectionStorageProtocol
     ) {
-        self.networkClient = networkClient
-        self.nftStorage = nftStorage
-    }
-
-    var nftService: NftService {
-        NftServiceImpl(
+        self.nftService = NftServiceImpl(
             networkClient: networkClient,
-            storage: nftStorage
+            storage: nftStorage,
+            nftCollectionStorage: nftCollectionStorage
         )
     }
 }
