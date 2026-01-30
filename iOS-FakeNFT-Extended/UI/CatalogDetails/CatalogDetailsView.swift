@@ -125,8 +125,9 @@ struct CatalogDetailsView: View {
         .task {
             await viewModel.loadNFTs()
         }
-        .onAppear {
+        .task {
             viewModel.setup(servicesAssembly: servicesAssembly)
+            await viewModel.loadNFTs()
         }
     }
 }

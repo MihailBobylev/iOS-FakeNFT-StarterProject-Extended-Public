@@ -99,13 +99,13 @@ struct CatalogView: View {
             }
         }
         .task {
+            viewModel.setup(servicesAssembly: servicesAssembly)
+
             if viewModel.nftCollections.isEmpty {
                 await viewModel.loadNFTCollections()
             }
         }
-        .onAppear {
-            viewModel.setup(servicesAssembly: servicesAssembly)
-        }
+
     }
 }
 
