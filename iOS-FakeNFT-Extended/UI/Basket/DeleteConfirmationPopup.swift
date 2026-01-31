@@ -115,19 +115,11 @@ struct DeleteConfirmationPopup: View {
 }
 
 #Preview {
-    DeleteConfirmationPopup(
-        nft: Nft(
-            id: "1",
-            name: "April",
-            images: [],
-            rating: 5,
-            description: "Test",
-            price: 1.78,
-            author: "Test",
-            website: URL(string: "https://example.com")!,
-            createdAt: Date()
-        ),
-        onDelete: {},
-        onCancel: {}
-    )
+    if let nft = Nft.mocks.first {
+        DeleteConfirmationPopup(
+            nft: nft,
+            onDelete: {},
+            onCancel: {}
+        )
+    }
 }

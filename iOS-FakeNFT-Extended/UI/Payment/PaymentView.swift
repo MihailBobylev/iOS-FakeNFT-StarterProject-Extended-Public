@@ -92,9 +92,11 @@ struct PaymentView: View {
                 .font(.footnoteRegular13)
                 .foregroundColor(.ypBlack)
             
-            Link("Пользовательского соглашения", destination: URL(string: "https://yandex.ru/legal/practicum_termsofuse")!)
-                .font(.footnoteRegular13)
-                .foregroundColor(.ypBlue)
+            if let url = URL(string: "https://yandex.ru/legal/practicum_termsofuse") {
+                Link("Пользовательского соглашения", destination: url)
+                    .font(.footnoteRegular13)
+                    .foregroundColor(.ypBlue)
+            }
         }
     }
     
