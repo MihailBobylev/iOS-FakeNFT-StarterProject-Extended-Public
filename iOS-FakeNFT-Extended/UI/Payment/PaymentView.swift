@@ -9,18 +9,25 @@ import SwiftUI
 
 struct PaymentView: View {
     @Environment(ServicesAssembly.self) private var services
+    @Environment(\.dismiss) private var dismiss
     @State private var viewModel: PaymentViewModel?
     let currencies: [Currency]
     
     private enum Constants {
-        static let navigationTitle = "Выбор валюты"
+        static let navigationTitle = "Выберите способ оплаты"
         static let currencyIconSize: CGFloat = 40
+        static let payButtonWidth: CGFloat = 363
+        static let payButtonHeight: CGFloat = 60
     }
     
-    private let columns = [
-        GridItem(.flexible(), spacing: 12),
-        GridItem(.flexible(), spacing: 12)
-    ]
+    private static let currencyCellWidth: CGFloat = 168
+    private static let columnSpacing: CGFloat = 8
+    private var currencyColumns: [GridItem] {
+        [
+            GridItem(.fixed(Self.currencyCellWidth), spacing: Self.columnSpacing),
+            GridItem(.fixed(Self.currencyCellWidth))
+        ]
+    }
     
     var body: some View {
         Group {
@@ -32,6 +39,16 @@ struct PaymentView: View {
         }
         .navigationTitle(Constants.navigationTitle)
         .navigationBarTitleDisplayMode(.inline)
+        .navigationBarBackButtonHidden(true)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button(action: { dismiss() }) {
+                    Image(systemName: "chevron.left")
+                        .font(.system(size: 17, weight: .regular))
+                        .foregroundColor(.ypBlack)
+                }
+            }
+        }
         .toolbar(.hidden, for: .tabBar)
         .task {
             if viewModel == nil {
@@ -46,7 +63,7 @@ struct PaymentView: View {
     private func contentView(viewModel: PaymentViewModel) -> some View {
         VStack(spacing: 0) {
             ScrollView {
-                LazyVGrid(columns: columns, spacing: 12) {
+                LazyVGrid(columns: currencyColumns, spacing: 6) {
                     ForEach(viewModel.currencies) { currency in
                         CurrencyCell(
                             currency: currency,
@@ -68,6 +85,8 @@ struct PaymentView: View {
                 }
             }
             
+            Spacer().frame(height: 20)
+            
             VStack(spacing: 16) {
                 agreementLink
                 payButton(viewModel: viewModel)
@@ -75,7 +94,11 @@ struct PaymentView: View {
             .padding(.horizontal, 16)
             .padding(.top, 16)
             .padding(.bottom, 50)
-            .background(Color.ypPaymentBackground)
+            .frame(maxWidth: .infinity)
+            .background(
+                Color.ypPaymentBackground
+                    .ignoresSafeArea(edges: [.bottom, .leading, .trailing])
+            )
             .cornerRadius(12, corners: [.topLeft, .topRight])
         }
         .disabled(viewModel.isLoading)
@@ -109,8 +132,7 @@ struct PaymentView: View {
             Text("Оплатить")
                 .font(.title3Bold)
                 .foregroundColor(viewModel.selectedCurrencyID != nil ? .ypWhite : .ypBlack)
-                .frame(maxWidth: .infinity)
-                .frame(height: 50)
+                .frame(width: Constants.payButtonWidth, height: Constants.payButtonHeight)
                 .background(viewModel.selectedCurrencyID != nil ? Color.ypBlack : Color.ypButtonDisabled)
                 .cornerRadius(16)
         }
@@ -125,6 +147,8 @@ private struct CurrencyCell: View {
     
     private enum Constants {
         static let iconSize: CGFloat = 40
+        static let cellWidth: CGFloat = 168
+        static let cellHeight: CGFloat = 46
     }
     
     var body: some View {
@@ -150,6 +174,7 @@ private struct CurrencyCell: View {
             }
             .padding(.horizontal, 12)
             .padding(.vertical, 10)
+            .frame(width: Constants.cellWidth, height: Constants.cellHeight)
             .background(Color.ypPaymentBackground)
             .cornerRadius(12)
             .overlay(
