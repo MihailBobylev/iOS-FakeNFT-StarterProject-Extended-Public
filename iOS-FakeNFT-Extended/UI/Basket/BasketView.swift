@@ -13,7 +13,6 @@ struct BasketView: View {
     @State private var viewModel: BasketViewModel?
     
     private enum Constants {
-        static let navigationTitle = "Корзина"
         static let emptyBasketText = "Корзина пуста"
         static let priceLabel = "Цена"
     }
@@ -36,8 +35,8 @@ struct BasketView: View {
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
             }
-            .navigationTitle(Constants.navigationTitle)
-            .navigationBarTitleDisplayMode(.large)
+            .navigationTitle("")
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
@@ -51,6 +50,8 @@ struct BasketView: View {
                         }
                     }) {
                         Image(.icSort)
+                            .renderingMode(.template)
+                            .foregroundColor(.ypBlack)
                     }
                 }
             }
