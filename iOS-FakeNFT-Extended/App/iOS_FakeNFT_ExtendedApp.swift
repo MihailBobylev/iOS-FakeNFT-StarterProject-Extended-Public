@@ -7,7 +7,8 @@ struct iOS_FakeNFT_ExtendedApp: App {
         networkClient: DefaultNetworkClient(),
         nftStorage: NftStorageImpl(),
         nftCollectionStorage: NFTCollectionStorage(),
-        nftFavoriteStorage: NFTFavoriteStorage()
+        nftFavoriteStorage: NFTFavoriteStorage(),
+        nftBasketStorage: NFTBasketStorage()
     )
     
     init() {

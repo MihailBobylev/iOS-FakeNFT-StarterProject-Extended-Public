@@ -13,6 +13,6 @@ struct ProfileDTO: Codable {
     let avatar: String?
     let description: String?
     let website: String?
-    let nfts: [Nft]
+    let nfts: [String]
     let likes: [String]
 }

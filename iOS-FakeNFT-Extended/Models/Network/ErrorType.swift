@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum ErrorType {
+enum ErrorType: Error {
     case serverError
 
     var title: String {

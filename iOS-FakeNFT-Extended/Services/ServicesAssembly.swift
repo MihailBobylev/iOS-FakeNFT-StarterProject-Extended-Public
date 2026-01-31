@@ -10,13 +10,15 @@ final class ServicesAssembly {
         networkClient: NetworkClient,
         nftStorage: NftStorage,
         nftCollectionStorage: NFTCollectionStorageProtocol,
-        nftFavoriteStorage: NFTFavoriteStorageProtocol
+        nftFavoriteStorage: NFTFavoriteStorageProtocol,
+        nftBasketStorage: NFTBasketStorageProtocol
     ) {
         self.nftService = NftServiceImpl(
             networkClient: networkClient,
             storage: nftStorage,
             nftCollectionStorage: nftCollectionStorage,
-            nftFavoriteStorage: nftFavoriteStorage
+            nftFavoriteStorage: nftFavoriteStorage,
+            nftBasketStorage: nftBasketStorage
         )
     }
 }

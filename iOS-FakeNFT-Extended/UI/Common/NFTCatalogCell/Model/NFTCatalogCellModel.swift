@@ -22,7 +22,11 @@ struct NFTCatalogCellModel: Identifiable {
 }
 
 extension NFTCatalogCellModel {
-    init(nft: Nft, isFavorite: Bool) {
+    init(
+        nft: Nft,
+        isFavorite: Bool,
+        inBasket: Bool
+    ) {
         self.id = nft.id
         
         self.cover = nft.images.first?.absoluteString
@@ -42,6 +46,6 @@ extension NFTCatalogCellModel {
         }()
         
         self.isFavorite = isFavorite
-        self.inBasket = false
+        self.inBasket = inBasket
     }
 }
