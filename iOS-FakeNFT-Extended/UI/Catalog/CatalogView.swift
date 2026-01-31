@@ -102,6 +102,7 @@ struct CatalogView: View {
             viewModel.setup(servicesAssembly: servicesAssembly)
 
             if viewModel.nftCollections.isEmpty {
+                await viewModel.loadFavoriteNFTs()
                 await viewModel.loadNFTCollections()
             }
         }
