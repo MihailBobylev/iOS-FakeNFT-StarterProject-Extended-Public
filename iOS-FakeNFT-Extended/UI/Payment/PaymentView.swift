@@ -50,6 +50,7 @@ struct PaymentView: View {
             }
         }
         .toolbar(.hidden, for: .tabBar)
+        .background(bottomPanelBackground)
         .task {
             if viewModel == nil {
                 viewModel = PaymentViewModel(
@@ -57,6 +58,18 @@ struct PaymentView: View {
                     paymentService: services.paymentService
                 )
             }
+        }
+    }
+    
+    private var bottomPanelBackground: some View {
+        GeometryReader { geo in
+            VStack(spacing: 0) {
+                Spacer()
+                Color.ypPaymentBackground
+                    .frame(height: max(200, geo.safeAreaInsets.bottom + 150))
+                    .frame(maxWidth: .infinity)
+            }
+            .ignoresSafeArea(edges: [.bottom, .leading, .trailing])
         }
     }
     
