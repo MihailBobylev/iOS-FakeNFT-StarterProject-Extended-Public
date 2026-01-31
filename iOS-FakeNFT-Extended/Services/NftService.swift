@@ -4,8 +4,10 @@ protocol NftService {
     func fetchNFTCollections(page: Int, size: Int, sortBy: NFTCollectionSort?) async throws -> [NFTCollectionDTO]
     func loadNfts(ids: [String]) async throws -> [NFTCatalogCellModel]
     func loadNft(id: String) async throws -> NFTCatalogCellModel
-    func changeFavoriteNFT(id: String) async -> Bool
-    func changeBasketNFT(id: String) async -> Bool
+    func loadFavoriteNFTs() async throws
+    func changeFavoriteNFT(id: String) async throws -> Bool
+    func loadBasket() async throws
+    func changeBasketNFT(id: String) async throws -> Bool
 }
 
 @MainActor
@@ -14,15 +16,21 @@ final class NftServiceImpl: NftService {
     private let networkClient: NetworkClient
     private let storage: NftStorage
     private let nftCollectionStorage: NFTCollectionStorageProtocol
+    private let nftFavoriteStorage: NFTFavoriteStorageProtocol
+    private let nftBasketStorage: NFTBasketStorageProtocol
 
     init(
         networkClient: NetworkClient,
         storage: NftStorage,
-        nftCollectionStorage: NFTCollectionStorageProtocol
+        nftCollectionStorage: NFTCollectionStorageProtocol,
+        nftFavoriteStorage: NFTFavoriteStorageProtocol,
+        nftBasketStorage: NFTBasketStorageProtocol
     ) {
         self.storage = storage
         self.nftCollectionStorage = nftCollectionStorage
         self.networkClient = networkClient
+        self.nftFavoriteStorage = nftFavoriteStorage
+        self.nftBasketStorage = nftBasketStorage
     }
 
     func fetchNFTCollections(page: Int, size: Int, sortBy: NFTCollectionSort?) async throws -> [NFTCollectionDTO] {
@@ -58,16 +66,51 @@ final class NftServiceImpl: NftService {
 
         let request = NFTRequest(id: id)
         let nft: Nft = try await networkClient.send(request: request)
-        let nftModel = NFTCatalogCellModel(nft: nft)
+        let isFavorite = await nftFavoriteStorage.isFavorite(nft.id)
+        let inBasket = await nftBasketStorage.inBasket(nft.id)
+        
+        let nftModel = NFTCatalogCellModel(
+            nft: nft,
+            isFavorite: isFavorite,
+            inBasket: inBasket
+        )
         await storage.saveNft(nftModel)
         return nftModel
     }
     
-    func changeFavoriteNFT(id: String) async -> Bool {
-        await storage.changeFavoriteNFT(with: id)
+    func loadFavoriteNFTs() async throws {
+        let request = FetchProfileRequest()
+        let profile: ProfileDTO = try await networkClient.send(request: request)
+
+        await nftFavoriteStorage.saveFavorite(profile.likes)
     }
     
-    func changeBasketNFT(id: String) async -> Bool {
-        await storage.changeBasketNFT(with: id)
+    func changeFavoriteNFT(id: String) async throws -> Bool {
+        guard await storage.changeFavoriteNFT(with: id) else { return false }
+        await nftFavoriteStorage.toggleFavorite(id)
+        let favorites = await nftFavoriteStorage.getFavorites()
+        let request = UpdateFavoritesRequest(
+            likes: favorites
+        )
+        let _ = try await networkClient.send(request: request)
+        return true
+    }
+    
+    func loadBasket() async throws {
+        let request = FetchBasketRequest()
+        let order: OrderDTO = try await networkClient.send(request: request)
+        
+        await nftBasketStorage.saveBasket(order.nfts)
+    }
+    
+    func changeBasketNFT(id: String) async throws -> Bool {
+        guard await storage.changeBasketNFT(with: id) else { return false }
+        await nftBasketStorage.toggleBasket(id)
+        let basket = await nftBasketStorage.getBasket()
+        let request = PUTBasketRequest(
+            nfts: basket
+        )
+        let _ = try await networkClient.send(request: request)
+        return true
     }
 }

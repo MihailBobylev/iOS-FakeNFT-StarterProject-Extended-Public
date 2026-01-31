@@ -36,9 +36,43 @@ final class CatalogViewModel {
         self.servicesAssembly = servicesAssembly
     }
     
-    func loadNFTCollections() async {
+    func initialLoad() async {
+        guard nftCollections.isEmpty else { return }
+        requestError = nil
+        
+        do {
+            async let favorites = loadFavoriteNFTs()
+            async let basket = loadBasket()
+            async let collections = loadNFTCollections()
+            
+            _ = try await (favorites, basket, collections)
+        } catch {
+            requestError = .serverError
+        }
+    }
+    
+    func loadFavoriteNFTs() async throws -> Bool {
+        guard let servicesAssembly else {
+            throw ErrorType.serverError
+        }
+        
+        try await servicesAssembly.nftService.loadFavoriteNFTs()
+        return true
+    }
+    
+    func loadBasket() async throws -> Bool {
+        guard let servicesAssembly else {
+            throw ErrorType.serverError
+        }
+        
+        try await servicesAssembly.nftService.loadBasket()
+        return true
+    }
+    
+    func loadNFTCollections() async -> Bool {
         currentSort = nil
         await reload()
+        return true
     }
     
     func applySort(_ sort: NFTCollectionSort) async {

@@ -6,7 +6,9 @@ struct iOS_FakeNFT_ExtendedApp: App {
     @State private var servicesAssembly = ServicesAssembly(
         networkClient: DefaultNetworkClient(),
         nftStorage: NftStorageImpl(),
-        nftCollectionStorage: NFTCollectionStorage()
+        nftCollectionStorage: NFTCollectionStorage(),
+        nftFavoriteStorage: NFTFavoriteStorage(),
+        nftBasketStorage: NFTBasketStorage()
     )
     
     init() {

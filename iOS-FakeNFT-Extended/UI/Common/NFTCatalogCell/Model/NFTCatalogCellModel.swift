@@ -22,7 +22,11 @@ struct NFTCatalogCellModel: Identifiable {
 }
 
 extension NFTCatalogCellModel {
-    init(nft: Nft) {
+    init(
+        nft: Nft,
+        isFavorite: Bool,
+        inBasket: Bool
+    ) {
         self.id = nft.id
         
         self.cover = nft.images.first?.absoluteString
@@ -41,7 +45,7 @@ extension NFTCatalogCellModel {
             return NSDecimalNumber(decimal: price).stringValue
         }()
         
-        self.isFavorite = false
-        self.inBasket = false
+        self.isFavorite = isFavorite
+        self.inBasket = inBasket
     }
 }

@@ -43,20 +43,38 @@ final class CatalogDetailsViewModel {
     }
     
     func toggleFavorite(with id: String) async {
-        guard let servicesAssembly,
-              await servicesAssembly.nftService.changeFavoriteNFT(id: id),
-              let index = nfts.firstIndex(where: { $0.id == id }) else {
-            return
+        isLoading = true
+        requestError = nil
+        
+        do {
+            guard let servicesAssembly,
+                  try await servicesAssembly.nftService.changeFavoriteNFT(id: id),
+                  let index = nfts.firstIndex(where: { $0.id == id }) else {
+                return
+            }
+            nfts[index].isFavorite.toggle()
+            isLoading = false
+        } catch {
+            requestError = .serverError
+            isLoading = false
         }
-        nfts[index].isFavorite.toggle()
     }
     
     func toggleBasket(with id: String) async {
-        guard let servicesAssembly,
-              await servicesAssembly.nftService.changeBasketNFT(id: id),
-              let index = nfts.firstIndex(where: { $0.id == id }) else {
-            return
+        isLoading = true
+        requestError = nil
+        
+        do {
+            guard let servicesAssembly,
+                  try await servicesAssembly.nftService.changeBasketNFT(id: id),
+                  let index = nfts.firstIndex(where: { $0.id == id }) else {
+                return
+            }
+            nfts[index].inBasket.toggle()
+            isLoading = false
+        } catch {
+            requestError = .serverError
+            isLoading = false
         }
-        nfts[index].inBasket.toggle()
     }
 }

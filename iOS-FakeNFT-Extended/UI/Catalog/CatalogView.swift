@@ -77,7 +77,7 @@ struct CatalogView: View {
                 .listRowBackground(Color.clear)
                 .refreshable {
                     if !viewModel.isLoading {
-                        await viewModel.loadNFTCollections()
+                        let _ = await viewModel.loadNFTCollections()
                     }
                 }
             }
@@ -100,12 +100,8 @@ struct CatalogView: View {
         }
         .task {
             viewModel.setup(servicesAssembly: servicesAssembly)
-
-            if viewModel.nftCollections.isEmpty {
-                await viewModel.loadNFTCollections()
-            }
+            await viewModel.initialLoad()
         }
-
     }
 }
 
