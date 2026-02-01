@@ -27,11 +27,10 @@
 		0F6A63902F2696B00038DE45 /* UpdateProfileRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F6A638F2F2696AA0038DE45 /* UpdateProfileRequest.swift */; };
 		0F6A63922F2A940B0038DE45 /* ProfileRequestDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F6A63912F2A94050038DE45 /* ProfileRequestDTO.swift */; };
 		0F6E80F22F2D072C0003051E /* NftDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F6E80F12F2D07190003051E /* NftDTO.swift */; };
-		0F6E80F42F2DDE340003051E /* FetchLikedNFTRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F6E80F32F2DDE340003051E /* FetchLikedNFTRequest.swift */; };
 		0F6E80F62F2E063F0003051E /* UpdateLikedNFTRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F6E80F52F2E063F0003051E /* UpdateLikedNFTRequest.swift */; };
 		0F6E80F82F2E0D240003051E /* FavoriteNFTRequestDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F6E80F72F2E0D240003051E /* FavoriteNFTRequestDTO.swift */; };
 		0F6E80FA2F2F53D30003051E /* MyNFTRequestDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F6E80F92F2F53D30003051E /* MyNFTRequestDTO.swift */; };
-		0F6E80FC2F2F54310003051E /* FetchMyNFTRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F6E80FB2F2F54310003051E /* FetchMyNFTRequest.swift */; };
+		0F6E80FC2F2F54310003051E /* FetchNFTRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F6E80FB2F2F54310003051E /* FetchNFTRequest.swift */; };
 		0FCABFCC2F1BB47C0077EAC5 /* MyNFTCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FCABFCB2F1BB47C0077EAC5 /* MyNFTCellView.swift */; };
 		0FCABFCF2F1BC49B0077EAC5 /* MyNFTIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FCABFCE2F1BC49B0077EAC5 /* MyNFTIconView.swift */; };
 		0FCABFD12F1BC4F60077EAC5 /* MyNFTDescriptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FCABFD02F1BC4F60077EAC5 /* MyNFTDescriptionView.swift */; };
@@ -109,11 +108,10 @@
 		0F6A638F2F2696AA0038DE45 /* UpdateProfileRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateProfileRequest.swift; sourceTree = "<group>"; };
 		0F6A63912F2A94050038DE45 /* ProfileRequestDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileRequestDTO.swift; sourceTree = "<group>"; };
 		0F6E80F12F2D07190003051E /* NftDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NftDTO.swift; sourceTree = "<group>"; };
-		0F6E80F32F2DDE340003051E /* FetchLikedNFTRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchLikedNFTRequest.swift; sourceTree = "<group>"; };
 		0F6E80F52F2E063F0003051E /* UpdateLikedNFTRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateLikedNFTRequest.swift; sourceTree = "<group>"; };
 		0F6E80F72F2E0D240003051E /* FavoriteNFTRequestDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteNFTRequestDTO.swift; sourceTree = "<group>"; };
 		0F6E80F92F2F53D30003051E /* MyNFTRequestDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyNFTRequestDTO.swift; sourceTree = "<group>"; };
-		0F6E80FB2F2F54310003051E /* FetchMyNFTRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchMyNFTRequest.swift; sourceTree = "<group>"; };
+		0F6E80FB2F2F54310003051E /* FetchNFTRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchNFTRequest.swift; sourceTree = "<group>"; };
 		0FCABFCB2F1BB47C0077EAC5 /* MyNFTCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyNFTCellView.swift; sourceTree = "<group>"; };
 		0FCABFCE2F1BC49B0077EAC5 /* MyNFTIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyNFTIconView.swift; sourceTree = "<group>"; };
 		0FCABFD02F1BC4F60077EAC5 /* MyNFTDescriptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyNFTDescriptionView.swift; sourceTree = "<group>"; };
@@ -316,9 +314,8 @@
 			children = (
 				0F6A638F2F2696AA0038DE45 /* UpdateProfileRequest.swift */,
 				0F6A63802F2634590038DE45 /* FetchProfileRequest.swift */,
-				0F6E80F32F2DDE340003051E /* FetchLikedNFTRequest.swift */,
 				0F6E80F52F2E063F0003051E /* UpdateLikedNFTRequest.swift */,
-				0F6E80FB2F2F54310003051E /* FetchMyNFTRequest.swift */,
+				0F6E80FB2F2F54310003051E /* FetchNFTRequest.swift */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -774,7 +771,7 @@
 				0F6A636F2F23CE730038DE45 /* ProfileEditingViewModel.swift in Sources */,
 				ABC5E1A42C31F800002B4068 /* NetworkClient.swift in Sources */,
 				741E104B2F1A6B7F00320863 /* ProfileView.swift in Sources */,
-				0F6E80FC2F2F54310003051E /* FetchMyNFTRequest.swift in Sources */,
+				0F6E80FC2F2F54310003051E /* FetchNFTRequest.swift in Sources */,
 				0F6A63852F26397E0038DE45 /* ProfileDTO.swift in Sources */,
 				0F138FE22F1FF97A0084A782 /* ProfileAvatarView.swift in Sources */,
 				ABC5E1A12C31F6D7002B4068 /* Nft.swift in Sources */,
@@ -793,7 +790,6 @@
 				0F138F732F1D7B230084A782 /* ProfileListView.swift in Sources */,
 				ABC5E1B22C31FBD4002B4068 /* ExampleRequest.swift in Sources */,
 				ABC5E1A82C31FA90002B4068 /* DateFormatters+Presets.swift in Sources */,
-				0F6E80F42F2DDE340003051E /* FetchLikedNFTRequest.swift in Sources */,
 				0FCABFCF2F1BC49B0077EAC5 /* MyNFTIconView.swift in Sources */,
 				ABC5E1B02C31FB90002B4068 /* RequestConstants.swift in Sources */,
 			);

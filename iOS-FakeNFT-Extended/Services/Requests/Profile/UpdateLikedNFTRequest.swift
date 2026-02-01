@@ -17,7 +17,7 @@ struct UpdateLikedNFTRequest: NetworkRequest {
         
         var idsString = ""
         for id in nftIds {
-            idsString += id!
+            idsString += id ?? ""
             idsString += ","
         }
         let queryItems: [URLQueryItem] = [

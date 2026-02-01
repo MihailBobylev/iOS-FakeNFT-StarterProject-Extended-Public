@@ -1,13 +1,13 @@
 //
-//  FetchLikedNFTRequest.swift
+//  FetchNFTRequest.swift
 //  iOS-FakeNFT-Extended
 //
-//  Created by Александр Клопков on 31.01.2026.
+//  Created by Александр Клопков on 01.02.2026.
 //
 
 import Foundation
 
-struct FetchLikedNFTRequest: NetworkRequest {
+struct FetchNFTRequest: NetworkRequest {
     let id: String?
     
     var endpoint: URL? {

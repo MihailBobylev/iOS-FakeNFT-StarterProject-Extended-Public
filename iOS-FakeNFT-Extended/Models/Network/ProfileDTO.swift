@@ -24,9 +24,9 @@ struct ProfileDTO: Decodable, Equatable, Hashable {
     let website: String?
     
     /// Массив nft
-    let nfts: [String?]
+    let nfts: [String]
     
     /// Массив избранных nft
-    let likes: [String?]
+    let likes: [String]
 }
 

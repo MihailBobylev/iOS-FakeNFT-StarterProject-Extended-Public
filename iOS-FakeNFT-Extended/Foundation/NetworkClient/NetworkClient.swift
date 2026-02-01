@@ -35,7 +35,6 @@ actor DefaultNetworkClient: NetworkClient {
             throw NetworkClientError.urlSessionError
         }
         guard 200 ..< 300 ~= response.statusCode else {
-            print(response.statusCode)
             throw NetworkClientError.httpStatusCode(response.statusCode)
         }
         return data
