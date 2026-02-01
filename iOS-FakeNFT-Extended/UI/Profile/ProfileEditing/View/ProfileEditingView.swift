@@ -245,7 +245,10 @@ extension ProfileEditingView {
     let servicesAssembly = ServicesAssembly(
         networkClient: DefaultNetworkClient(),
         nftStorage: NftStorageImpl(),
-        profileStorage: ProfileStorage()
+        profileStorage: ProfileStorage(),
+        nftCollectionStorage: NFTCollectionStorage(),
+        nftFavoriteStorage: NFTFavoriteStorage(),
+        nftBasketStorage: NFTBasketStorage()
     )
     ProfileEditingView(
             profile: ProfileDTO(

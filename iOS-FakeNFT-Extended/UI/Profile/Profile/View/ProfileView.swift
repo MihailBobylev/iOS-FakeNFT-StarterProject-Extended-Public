@@ -8,7 +8,7 @@
 import SwiftUI
 import WebKit
 
-struct WebView: UIViewRepresentable {
+struct WebViewProfile: UIViewRepresentable {
     var viewModel: ProfileViewModel
     
     func makeUIView(context: Context) -> WKWebView {
@@ -63,7 +63,7 @@ struct ProfileView: View {
                     .padding(.top, 20)
                 
                 NavigationLink("\(viewModel.profile.name ?? "").com") {
-                    WebView(viewModel: viewModel)
+                    WebViewProfile(viewModel: viewModel)
                 }
                 .font(.footnoteRegular15)
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -101,7 +101,10 @@ struct ProfileView: View {
     let servicesAssembly = ServicesAssembly(
         networkClient: DefaultNetworkClient(),
         nftStorage: NftStorageImpl(),
-        profileStorage: ProfileStorage()
+        profileStorage: ProfileStorage(),
+        nftCollectionStorage: NFTCollectionStorage(),
+        nftFavoriteStorage: NFTFavoriteStorage(),
+        nftBasketStorage: NFTBasketStorage()
     )
     
     ProfileView()

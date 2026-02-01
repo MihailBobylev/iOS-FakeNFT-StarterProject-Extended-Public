@@ -2,18 +2,17 @@
 //  ErrorType.swift
 //  iOS-FakeNFT-Extended
 //
-//  Created by Александр Клопков on 25.01.2026.
+//  Created by Михаил Бобылев on 20.01.2026.
 //
 
 import Foundation
 
-enum ErrorType {
+enum ErrorType: Error {
     case serverError
-    
+
     var title: String {
-        return switch self {
-        case .serverError:
-            "Ошибка сервера"
+        switch self {
+        case .serverError: "Ошибка сервера"
         }
     }
 }

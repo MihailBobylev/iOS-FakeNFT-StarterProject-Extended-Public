@@ -3,10 +3,13 @@ import SwiftUI
 @main
 struct iOS_FakeNFT_ExtendedApp: App {
     @State private var router = NavigationRouter()
-    @State private var serviceAssembly = ServicesAssembly(
+    @State private var servicesAssembly = ServicesAssembly(
         networkClient: DefaultNetworkClient(),
         nftStorage: NftStorageImpl(),
-        profileStorage: ProfileStorage()
+        profileStorage: ProfileStorage(),
+        nftCollectionStorage: NFTCollectionStorage(),
+        nftFavoriteStorage: NFTFavoriteStorage(),
+        nftBasketStorage: NFTBasketStorage()
     )
     
     init() {
@@ -26,7 +29,7 @@ struct iOS_FakeNFT_ExtendedApp: App {
                     }
             }
             .environment(router)
-            .environment(serviceAssembly)
+            .environment(servicesAssembly)
         }
     }
     

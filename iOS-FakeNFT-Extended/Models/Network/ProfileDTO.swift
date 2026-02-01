@@ -6,7 +6,7 @@
 //
 
 /// DTO профиля пользователя, получаемый с сервера
-struct ProfileDTO: Decodable, Equatable, Hashable {
+struct ProfileDTO: Codable, Equatable, Hashable {
     
     /// Уникальный идентификатор пользователя
     let id: String?
