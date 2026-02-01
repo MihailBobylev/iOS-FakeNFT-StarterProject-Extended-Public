@@ -18,29 +18,35 @@ struct MyNFTView: View {
         static let byName = "По названию"
     }
     @Environment(NavigationRouter.self) var router
+    @Environment(ServicesAssembly.self) private var servicesAssembly
     
-    @State private var viewModel: MyNFTViewModel
+    private var viewModel: MyNFTViewModel
+    @State private var profile: ProfileDTO
     @State private var showSortDialog = false
     
-    init() {
-        viewModel = MyNFTViewModel()
+    init(profile: ProfileDTO) {
+        self._profile = State(wrappedValue: profile)
+        viewModel = MyNFTViewModel(ids: profile.nfts, likedIds: profile.likes)
     }
     
     var body: some View {
-        VStack {
-            if viewModel.cellViewModels.isEmpty {
-                Text(Constants.emptyNFTText)
-                    .font(.title3Bold)
-                    .foregroundStyle(.ypBlack)
+        ZStack {
+            Text(Constants.emptyNFTText)
+                .font(.title3Bold)
+                .foregroundStyle(.ypBlack)
+            List(viewModel.sortedCells) { nft in
+                let cellViewModel = MyNFTCellViewModel(
+                    model: nft,
+                    ids: viewModel.ids,
+                    likedIds: viewModel.likedIds,
+                    mainViewModel: viewModel,
+                    servicesAssembly: servicesAssembly
+                )
+                MyNFTCellView(cellViewModel: cellViewModel)
+                    .listRowSeparator(.hidden)
+                    .padding(.trailing, 30)
             }
-            else {
-                List(viewModel.cellViewModels) { cellViewModel in
-                    MyNFTCellView(viewModel: cellViewModel)
-                        .listRowSeparator(.hidden)
-                        .padding(.trailing, 30)
-                }
-                .listStyle(.plain)
-            }
+            .listStyle(.plain)
         }
         .navigationBarBackButtonHidden(true)
         .toolbar {
@@ -84,11 +90,24 @@ struct MyNFTView: View {
             }
             
         }
+        .task {
+            viewModel.configure(servicesAssembly: servicesAssembly)
+            await viewModel.loadNfts()
+        }
     }
 }
 
 #Preview {
     let router = NavigationRouter()
-    MyNFTView()
+    let profile = ProfileDTO(
+        id: "",
+        name: "",
+        avatar: "",
+        description: "",
+        website: "",
+        nfts: [],
+        likes: []
+    )
+    MyNFTView(profile: profile)
         .environment(router)
 }

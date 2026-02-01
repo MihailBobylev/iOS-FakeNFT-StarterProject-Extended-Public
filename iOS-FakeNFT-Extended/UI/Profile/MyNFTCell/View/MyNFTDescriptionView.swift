@@ -13,30 +13,18 @@ struct MyNFTDescriptionView: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
-            Text(viewModel.model.name)
+            Text(viewModel.model.name ?? "")
                 .font(.title1Bold)
                 .foregroundStyle(.ypBlack)
             HStack(spacing: 4) {
                 ForEach(1...maxRating, id: \.self) { index in
-                    Image(index <= viewModel.model.rating ? .icStarSelected : .icStarUnselected)
-                        .foregroundStyle(index <= viewModel.model.rating ? .ypYellow : .ypLightGray)
+                    Image(index <= viewModel.model.rating ?? 0 ? .icStarSelected : .icStarUnselected)
+                        .foregroundStyle(index <= viewModel.model.rating ?? 0 ? .ypYellow : .ypLightGray)
                 }
             }
-            Text("от \(viewModel.model.author)")
+            Text("от \(viewModel.model.author ?? "")")
                 .font(.footnoteRegular13)
                 .foregroundStyle(.ypBlack)
         }
     }
-}
-
-#Preview {
-    let model = MyNFTCellModel(
-        name: "Archie",
-        author: "John Doe",
-        rating: 1,
-        price: 1.78,
-        isLiked: true
-    )
-    let viewModel = MyNFTCellViewModel(model: model)
-    MyNFTDescriptionView(viewModel: viewModel)
 }

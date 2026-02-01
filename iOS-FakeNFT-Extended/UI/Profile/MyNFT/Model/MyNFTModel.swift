@@ -4,9 +4,3 @@
 //
 //  Created by Александр Клопков on 24.01.2026.
 //
-
-import Foundation
-
-struct MyNFTModel {
-    var cells: [MyNFTCellModel]
-}

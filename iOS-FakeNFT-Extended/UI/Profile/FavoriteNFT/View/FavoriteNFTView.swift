@@ -14,26 +14,36 @@ struct FavoriteNFTView: View {
     }
     
     @Environment(NavigationRouter.self) var router
+    @Environment(ServicesAssembly.self) private var servicesAssembly
     
-    @State private var viewModel: FavoriteNFTViewModel
+    private var viewModel: FavoriteNFTViewModel
+    @State private var profile: ProfileDTO
+    
     private let columns = [
         GridItem(.flexible()),
         GridItem(.flexible())
     ]
-    init() {
-        viewModel = FavoriteNFTViewModel()
+    init(profile: ProfileDTO) {
+        self._profile = State(wrappedValue: profile)
+        viewModel = FavoriteNFTViewModel(ids: profile.likes)
     }
     
     var body: some View {
-        VStack {
+        ZStack {
             Text(Constants.emptyNFTText)
                 .font(.title3Bold)
                 .foregroundStyle(.ypBlack)
-                .opacity(viewModel.cellViewModels.isEmpty ? 1.0 : 0)
+                .opacity(viewModel.nfts.isEmpty ? 1.0 : 0)
             ScrollView {
                 LazyVGrid(columns: columns) {
-                    ForEach(viewModel.cellViewModels) { cellViewModel in
-                        FavoriteNFTCellView(viewModel: cellViewModel)
+                    ForEach(viewModel.nfts) { nft in
+                        let cellViewModel = FavoriteNFTCellViewModel(
+                            model: nft,
+                            with: viewModel.ids,
+                            mainViewModel: viewModel,
+                            servicesAssembly: servicesAssembly
+                        )
+                        FavoriteNFTCellView(cellViewModel: cellViewModel)
                             .padding(.trailing, 10)
                     }
                 }
@@ -58,11 +68,24 @@ struct FavoriteNFTView: View {
                     .foregroundStyle(.ypBlack)
             }
         }
+        .task {
+            viewModel.configure(servicesAssembly: servicesAssembly)
+            await viewModel.loadNfts()
+        }
     }
 }
 
 #Preview {
     let router = NavigationRouter()
-    FavoriteNFTView()
+    let profile = ProfileDTO(
+        id: "",
+        name: "",
+        avatar: "",
+        description: "",
+        website: "",
+        nfts: [],
+        likes: []
+    )
+    FavoriteNFTView(profile: profile)
         .environment(router)
 }

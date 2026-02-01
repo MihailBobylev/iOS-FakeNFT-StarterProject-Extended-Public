@@ -21,7 +21,9 @@ actor ProfileStorage: ProfileStorageProtocol {
         name: nil,
         avatar: nil,
         description: nil,
-        website: nil
+        website: nil,
+        nfts: [],
+        likes: []
     )
     
     // MARK: - ProfileStorageProtocol

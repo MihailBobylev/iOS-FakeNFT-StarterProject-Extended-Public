@@ -15,83 +15,54 @@ final class MyNFTViewModel {
         case byName
     }
     
-    private var model: MyNFTModel
+    private var servicesAssembly: ServicesAssembly?
+    var isLoading = false
+    var requestError: ErrorType? = nil
+    var nfts: [NftDTO] = []
+    var ids: [String?]
+    var likedIds: [String?]
     var sortType: SortType = .byPrice
     
-    var cellViewModels: [MyNFTCellViewModel] {
-        sortedCells.map {
-            MyNFTCellViewModel(model: $0)
-        }
-    }
-    
-    private var sortedCells: [MyNFTCellModel] {
+    var sortedCells: [NftDTO] {
         switch sortType {
         case .byPrice:
-            return model.cells.sorted { $0.price < $1.price }
+            return nfts.sorted { $0.price ?? 0 < $1.price ?? 0 }
         case .byRating:
-            return model.cells.sorted { $0.rating > $1.rating }
+            return nfts.sorted { $0.rating ?? 0 > $1.rating ?? 0 }
         case .byName:
-            return model.cells.sorted { $0.name < $1.name }
+            return nfts.sorted { $0.name ?? "" < $1.name ?? "" }
         }
     }
     
-    init(items: [MyNFTCellModel] = []) {
-        self.model = MyNFTModel(cells: items)
-        self.model = mockMyNFTModel()
+    init(ids: [String?], likedIds: [String?]) {
+        self.ids = ids
+        self.likedIds = likedIds
+    }
+    
+    func configure(servicesAssembly: ServicesAssembly) {
+        self.servicesAssembly = servicesAssembly
     }
 }
 
 extension MyNFTViewModel {
-    func mockMyNFTModel() -> MyNFTModel {
-        let myNFTCellModel1 = MyNFTCellModel(
-            name: "B.Name",
-            author: "Author",
-            rating: 1,
-            price: 1.44,
-            isLiked: true
-        )
-        let myNFTCellModel2 = MyNFTCellModel(
-            name: "A.Name",
-            author: "Author",
-            rating: 3,
-            price: 2.44,
-            isLiked: true
-        )
-        let myNFTCellModel3 = MyNFTCellModel(
-            name: "C.Name",
-            author: "Author",
-            rating: 5,
-            price: 2.04,
-            isLiked: true
-        )
-        let myNFTCellModel4 = MyNFTCellModel(
-            name: "D.Name",
-            author: "Author",
-            rating: 4,
-            price: 1.77,
-            isLiked: true
-        )
-        let myNFTCellModel5 = MyNFTCellModel(
-            name: "E.Name",
-            author: "Author",
-            rating: 3,
-            price: 2.44,
-            isLiked: true
-        )
-        let myNFTCellModel6 = MyNFTCellModel(
-            name: "F.Name",
-            author: "Author",
-            rating: 2,
-            price: 1.65,
-            isLiked: true
-        )
-        return MyNFTModel(cells: [
-            myNFTCellModel1,
-            myNFTCellModel2,
-            myNFTCellModel3,
-            myNFTCellModel4,
-            myNFTCellModel5,
-            myNFTCellModel6
-        ])
+    func loadNfts() async {
+        guard !isLoading else { return }
+        
+        isLoading = true
+        requestError = .none
+        
+        nfts = []
+        
+        do {
+            guard let servicesAssembly else { return }
+            for id in ids {
+                let nft = try await servicesAssembly.nftService.fetchNFT(with: id ?? "")
+                self.nfts.append(nft)
+            }
+            isLoading = false
+        } catch {
+            isLoading = false
+            requestError = .serverError
+        }
     }
 }

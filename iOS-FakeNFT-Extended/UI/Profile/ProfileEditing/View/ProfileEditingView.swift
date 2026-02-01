@@ -206,7 +206,9 @@ extension ProfileEditingView {
                         name: viewModel.model.name,
                         avatar: viewModel.model.imageURLText,
                         description: viewModel.model.description,
-                        website: viewModel.model.website
+                        website: viewModel.model.website,
+                        nfts: profile.nfts,
+                        likes: profile.likes
                     )
                     isLoading = true
                     try await servicesAssembly.nftService.updateProfile(with: newProfile)
@@ -251,7 +253,12 @@ extension ProfileEditingView {
             name: "Ivan Petrov",
             avatar: nil,
             description: "Описание",
-            website: nil
+            website: nil,
+            nfts: [],
+            likes: [
+                "cc74e9ab-2189-465f-a1a6-8405e07e9fe4",
+                "a06d0075-d1a7-40dc-b710-db6808c28cca"
+            ]
         )
     )
         .environment(router)

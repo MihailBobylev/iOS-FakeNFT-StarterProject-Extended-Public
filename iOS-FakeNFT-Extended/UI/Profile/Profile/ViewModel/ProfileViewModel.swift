@@ -19,7 +19,9 @@ final class ProfileViewModel: Identifiable {
         name: nil,
         avatar: nil,
         description: nil,
-        website: nil
+        website: nil,
+        nfts: [],
+        likes: []
     )
     
     func configure(servicesAssembly: ServicesAssembly) {
@@ -51,7 +53,9 @@ extension ProfileViewModel {
             name: nil,
             avatar: nil,
             description: nil,
-            website: nil
+            website: nil,
+            nfts: [],
+            likes: []
         )
         
         do {
