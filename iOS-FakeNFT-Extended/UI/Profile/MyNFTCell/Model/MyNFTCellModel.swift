@@ -7,11 +7,11 @@
 
 import Foundation
 
-struct MyNFTCellModel: Identifiable {
-    let id = UUID()
-    let name: String
-    let author: String
-    let rating: Int
-    let price: Double
-    var isLiked: Bool
-}
+//struct MyNFTCellModel: Identifiable {
+//    let id = UUID()
+//    let name: String
+//    let author: String
+//    let rating: Int
+//    let price: Double
+//    var isLiked: Bool
+//}

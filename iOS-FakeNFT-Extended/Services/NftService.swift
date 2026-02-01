@@ -6,6 +6,7 @@ protocol NftServiceProtocol {
     func updateProfile(with profile: ProfileDTO) async throws
     func fetchLikedNFT(with id: String) async throws -> NftDTO
     func updateLikedNFT(with ids: [String?]) async throws
+    func fetchMyNFT(with id: String) async throws -> NftDTO
 }
 
 @MainActor
@@ -66,5 +67,11 @@ final class NftServiceImpl: NftServiceProtocol {
         let request = UpdateLikedNFTRequest(nftIds: ids)
         let profile: ProfileDTO = try await networkClient.send(request: request)
         await profileStorage.saveProfile(profile)
+    }
+    
+    func fetchMyNFT(with id: String) async throws -> NftDTO {
+        let request = FetchMyNFTRequest(id: id)
+        let nft: NftDTO = try await networkClient.send(request: request)
+        return nft
     }
 }

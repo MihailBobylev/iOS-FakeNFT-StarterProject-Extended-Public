@@ -9,15 +9,71 @@ import Foundation
 
 @Observable
 final class MyNFTCellViewModel: Identifiable {
-    let id: UUID
-    var model: MyNFTCellModel
+    var model: NftDTO
+    private var servicesAssembly: ServicesAssembly
+    private var mainViewModel: MyNFTViewModel
+    var isLoading = false
+    var requestError: ErrorType? = nil
     
-    init(model: MyNFTCellModel) {
+    var id: String?
+    var ids: [String?]
+    var likedIds: [String?]
+    
+    init(
+        model: NftDTO,
+        ids: [String?],
+        likedIds: [String?],
+        mainViewModel: MyNFTViewModel,
+        servicesAssembly: ServicesAssembly
+    ) {
         self.model = model
         self.id = model.id
+        self.ids = ids
+        self.likedIds = likedIds
+        self.mainViewModel = mainViewModel
+        self.servicesAssembly = servicesAssembly
+    }
+    
+    var isLiked: Bool {
+        likedIds.contains(id)
     }
     
     func toggleLike() async {
-        model.isLiked.toggle()
+        if isLiked {
+            likedIds.removeAll {
+                $0 == id
+            }
+            if (likedIds.isEmpty) {
+                mainViewModel.likedIds.removeAll()
+            } else {
+                mainViewModel.likedIds.removeAll {
+                    $0 == id
+                }
+            }
+        } else {
+            likedIds.append(id)
+            mainViewModel.likedIds.append(id)
+        }
+        if (likedIds.isEmpty) {
+            likedIds = ["null"]
+        }
+        await updateLikeNFT()
+    }
+}
+
+extension MyNFTCellViewModel {
+    func updateLikeNFT() async {
+        guard !isLoading else { return }
+        
+        isLoading = true
+        requestError = .none
+        
+        do {
+            let _ = try await servicesAssembly.nftService.updateLikedNFT(with: likedIds)
+            isLoading = false
+        } catch {
+            isLoading = false
+            requestError = .serverError
+        }
     }
 }

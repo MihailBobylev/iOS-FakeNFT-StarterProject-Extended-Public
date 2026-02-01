@@ -17,21 +17,9 @@ struct MyNFTPriceView: View {
             Text(Constants.price)
                 .font(.footnoteRegular13)
                 .foregroundStyle(.ypBlack)
-            Text("\(viewModel.model.price.formatted(.number.precision(.fractionLength(2)))) ETH")
+            Text("\((viewModel.model.price ?? 0).formatted(.number.precision(.fractionLength(2)))) ETH")
                 .font(.title3Bold)
                 .foregroundStyle(.ypBlack)
         }
     }
-}
-
-#Preview {
-    let model = MyNFTCellModel(
-        name: "Archie",
-        author: "John Doe",
-        rating: 1,
-        price: 1.78,
-        isLiked: true
-    )
-    let viewModel = MyNFTCellViewModel(model: model)
-    MyNFTPriceView(viewModel: viewModel)
 }

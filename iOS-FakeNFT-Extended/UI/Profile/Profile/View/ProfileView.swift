@@ -70,7 +70,7 @@ struct ProfileView: View {
                 .padding(.top, 8)
                 
                 Button {
-                    router.push(AppRoute.myNFT)
+                    router.push(AppRoute.myNFT(profile: viewModel.profile))
                 } label: {
                     ProfileListView(title: "Мои NFT (\(viewModel.profile.nfts.count))")
                 }

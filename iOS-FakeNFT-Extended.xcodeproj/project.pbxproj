@@ -30,6 +30,8 @@
 		0F6E80F42F2DDE340003051E /* FetchLikedNFTRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F6E80F32F2DDE340003051E /* FetchLikedNFTRequest.swift */; };
 		0F6E80F62F2E063F0003051E /* UpdateLikedNFTRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F6E80F52F2E063F0003051E /* UpdateLikedNFTRequest.swift */; };
 		0F6E80F82F2E0D240003051E /* FavoriteNFTRequestDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F6E80F72F2E0D240003051E /* FavoriteNFTRequestDTO.swift */; };
+		0F6E80FA2F2F53D30003051E /* MyNFTRequestDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F6E80F92F2F53D30003051E /* MyNFTRequestDTO.swift */; };
+		0F6E80FC2F2F54310003051E /* FetchMyNFTRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F6E80FB2F2F54310003051E /* FetchMyNFTRequest.swift */; };
 		0FCABFCC2F1BB47C0077EAC5 /* MyNFTCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FCABFCB2F1BB47C0077EAC5 /* MyNFTCellView.swift */; };
 		0FCABFCF2F1BC49B0077EAC5 /* MyNFTIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FCABFCE2F1BC49B0077EAC5 /* MyNFTIconView.swift */; };
 		0FCABFD12F1BC4F60077EAC5 /* MyNFTDescriptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FCABFD02F1BC4F60077EAC5 /* MyNFTDescriptionView.swift */; };
@@ -110,6 +112,8 @@
 		0F6E80F32F2DDE340003051E /* FetchLikedNFTRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchLikedNFTRequest.swift; sourceTree = "<group>"; };
 		0F6E80F52F2E063F0003051E /* UpdateLikedNFTRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateLikedNFTRequest.swift; sourceTree = "<group>"; };
 		0F6E80F72F2E0D240003051E /* FavoriteNFTRequestDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteNFTRequestDTO.swift; sourceTree = "<group>"; };
+		0F6E80F92F2F53D30003051E /* MyNFTRequestDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyNFTRequestDTO.swift; sourceTree = "<group>"; };
+		0F6E80FB2F2F54310003051E /* FetchMyNFTRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchMyNFTRequest.swift; sourceTree = "<group>"; };
 		0FCABFCB2F1BB47C0077EAC5 /* MyNFTCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyNFTCellView.swift; sourceTree = "<group>"; };
 		0FCABFCE2F1BC49B0077EAC5 /* MyNFTIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyNFTIconView.swift; sourceTree = "<group>"; };
 		0FCABFD02F1BC4F60077EAC5 /* MyNFTDescriptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyNFTDescriptionView.swift; sourceTree = "<group>"; };
@@ -314,6 +318,7 @@
 				0F6A63802F2634590038DE45 /* FetchProfileRequest.swift */,
 				0F6E80F32F2DDE340003051E /* FetchLikedNFTRequest.swift */,
 				0F6E80F52F2E063F0003051E /* UpdateLikedNFTRequest.swift */,
+				0F6E80FB2F2F54310003051E /* FetchMyNFTRequest.swift */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -550,6 +555,7 @@
 				0F6A63842F26397E0038DE45 /* ProfileDTO.swift */,
 				0F6A63862F263E610038DE45 /* ErrorType.swift */,
 				0F6E80F72F2E0D240003051E /* FavoriteNFTRequestDTO.swift */,
+				0F6E80F92F2F53D30003051E /* MyNFTRequestDTO.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -745,6 +751,7 @@
 				ABC5E19D2C31F6A6002B4068 /* NftStorage.swift in Sources */,
 				0F6E80F22F2D072C0003051E /* NftDTO.swift in Sources */,
 				0FCABFD82F1D0EAC0077EAC5 /* FavoriteNFTCellIconView.swift in Sources */,
+				0F6E80FA2F2F53D30003051E /* MyNFTRequestDTO.swift in Sources */,
 				0FCABFEA2F1D6DF00077EAC5 /* MyNFTCellModel.swift in Sources */,
 				0F6A63792F24D8EE0038DE45 /* MyNFTModel.swift in Sources */,
 				0F6A63772F24D8E20038DE45 /* MyNFTViewModel.swift in Sources */,
@@ -767,6 +774,7 @@
 				0F6A636F2F23CE730038DE45 /* ProfileEditingViewModel.swift in Sources */,
 				ABC5E1A42C31F800002B4068 /* NetworkClient.swift in Sources */,
 				741E104B2F1A6B7F00320863 /* ProfileView.swift in Sources */,
+				0F6E80FC2F2F54310003051E /* FetchMyNFTRequest.swift in Sources */,
 				0F6A63852F26397E0038DE45 /* ProfileDTO.swift in Sources */,
 				0F138FE22F1FF97A0084A782 /* ProfileAvatarView.swift in Sources */,
 				ABC5E1A12C31F6D7002B4068 /* Nft.swift in Sources */,

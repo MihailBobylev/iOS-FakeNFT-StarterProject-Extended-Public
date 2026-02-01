@@ -7,6 +7,6 @@
 
 import Foundation
 
-struct MyNFTModel {
-    var cells: [MyNFTCellModel]
-}
+//struct MyNFTModel {
+//    var cells: [MyNFTCellModel]
+//}

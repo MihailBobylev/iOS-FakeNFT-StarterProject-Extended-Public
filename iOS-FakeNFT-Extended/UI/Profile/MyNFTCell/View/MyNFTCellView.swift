@@ -8,28 +8,16 @@
 import SwiftUI
 
 struct MyNFTCellView: View {
-    @State var viewModel: MyNFTCellViewModel
+    var cellViewModel: MyNFTCellViewModel
     
     var body: some View {
         HStack(alignment: .center) {
-            MyNFTIconView(viewModel: $viewModel)
+            MyNFTIconView(viewModel: cellViewModel)
             Spacer()
                 .frame(width: 20)
-            MyNFTDescriptionView(viewModel: viewModel)
+            MyNFTDescriptionView(viewModel: cellViewModel)
             Spacer()
-            MyNFTPriceView(viewModel: viewModel)
+            MyNFTPriceView(viewModel: cellViewModel)
         }
     }
-}
-
-#Preview {
-    let model = MyNFTCellModel(
-        name: "Archie",
-        author: "John Doe",
-        rating: 1,
-        price: 1.78,
-        isLiked: true
-    )
-    let viewModel = MyNFTCellViewModel(model: model)
-    MyNFTCellView(viewModel: viewModel)
 }
