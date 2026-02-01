@@ -7,10 +7,10 @@
 
 import Foundation
 
-struct FavoriteNFTCellModel: Identifiable, Hashable {
-    let id = UUID()
-    let name: String
-    let rating: Int
-    let price: Double
-    var isLiked: Bool
-}
+//struct FavoriteNFTCellModel: Identifiable, Hashable {
+//    let id: String
+//    let name: String
+//    let rating: Int
+//    let price: Double
+//    var isLiked: Bool
+//}

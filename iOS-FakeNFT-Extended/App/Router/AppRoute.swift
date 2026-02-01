@@ -16,6 +16,6 @@ enum AppRoute: Hashable {
     
     // Profile
     case myNFT
-    case favoriteNFT
+    case favoriteNFT(profile: ProfileDTO)
     case profileEditing(profile: ProfileDTO)
 }

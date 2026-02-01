@@ -35,6 +35,7 @@ actor DefaultNetworkClient: NetworkClient {
             throw NetworkClientError.urlSessionError
         }
         guard 200 ..< 300 ~= response.statusCode else {
+            print(response.statusCode)
             throw NetworkClientError.httpStatusCode(response.statusCode)
         }
         return data
@@ -60,6 +61,10 @@ actor DefaultNetworkClient: NetworkClient {
             urlRequest.setValue("application/json", forHTTPHeaderField: "Accept")
             urlRequest.addValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
             urlRequest.httpBody = dtoEncoded
+        }
+        else {
+            urlRequest.setValue("application/json", forHTTPHeaderField: "Accept")
+            urlRequest.addValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
         }
         urlRequest.addValue(RequestConstants.token, forHTTPHeaderField: "X-Practicum-Mobile-Token")
 

@@ -8,12 +8,11 @@
 import SwiftUI
 
 struct FavoriteNFTCellIconView: View {
-    @Binding var viewModel: FavoriteNFTCellViewModel
+    var viewModel: FavoriteNFTCellViewModel
     
     var body: some View {
         ZStack(alignment: .topTrailing) {
-            Image(.nft)
-                .resizable()
+            image(url: URL(string: viewModel.model.images[0] ?? ""))
                 .scaledToFill()
                 .frame(width: 80, height: 80)
                 .clipShape(RoundedRectangle(cornerRadius: 12))
@@ -22,23 +21,44 @@ struct FavoriteNFTCellIconView: View {
                     await viewModel.toggleLike()
                 }
             } label: {
-                Image(viewModel.model.isLiked ? .icFavorites : .icUnfavorites)
-                    .foregroundStyle(viewModel.model.isLiked ? .ypRed : .ypWhite)
+                Image(.icFavorites)
+                    .foregroundStyle(.ypRed)
                     .padding(-7)
             }
 
         }
     }
-}
-
-#Preview {
-    @Previewable @State var viewModel = FavoriteNFTCellViewModel(
-        model: FavoriteNFTCellModel(
-            name: "Archie",
-            rating: 1,
-            price: 1.78,
-            isLiked: true
-        )
-    )
-    FavoriteNFTCellIconView(viewModel: $viewModel)
+    
+    @ViewBuilder
+    private func image(url: URL?) -> some View {
+        AsyncImage(url: url) { phase in
+            switch phase {
+            case .empty:
+                placeholder
+            case .success(let image):
+                ZStack {
+                    ProgressView()
+                        .frame(width: 70, height: 70)
+                    image
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 80, height: 80)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                }
+            case .failure:
+                ZStack {
+                    placeholder
+                }
+            @unknown default:
+                placeholder
+            }
+        }
+    }
+    private var placeholder: some View {
+        Image(.nft)
+            .resizable()
+            .scaledToFill()
+            .frame(width: 80, height: 80)
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+    }
 }
