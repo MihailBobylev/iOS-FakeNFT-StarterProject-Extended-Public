@@ -44,7 +44,7 @@ final class FavoriteNFTCellViewModel: Identifiable {
             ids = ["null"]
         }
         
-        await updateLikeNFT()
+        await updateLikeNFT(with: id)
         
         if (ids.isEmpty) {
             mainViewModel.nfts.removeAll()
@@ -61,14 +61,14 @@ final class FavoriteNFTCellViewModel: Identifiable {
 }
 
 extension FavoriteNFTCellViewModel {
-    func updateLikeNFT() async {
+    func updateLikeNFT(with id: String) async {
         guard !isLoading else { return }
         
         isLoading = true
         requestError = .none
         
         do {
-            let _ = try await servicesAssembly.nftService.updateLikedNFT(with: ids)
+            let _ = try await servicesAssembly.nftService.updateLikedNFT(with: ids, with: id)
             isLoading = false
         } catch {
             isLoading = false
