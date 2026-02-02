@@ -10,17 +10,30 @@ import Foundation
 @Observable
 final class PaymentViewModel {
     
-    var currencies: [Currency]
+    var currencies: [Currency] = []
     var selectedCurrencyID: String?
     var isLoading = false
     var paymentSuccess = false
     var paymentError: Error?
+    var loadCurrenciesError: Error?
     
+    private let currencyService: CurrencyService
     private let paymentService: PaymentService
     
-    init(currencies: [Currency] = [], paymentService: PaymentService) {
-        self.currencies = currencies
+    init(currencyService: CurrencyService, paymentService: PaymentService) {
+        self.currencyService = currencyService
         self.paymentService = paymentService
+    }
+    
+    func loadCurrencies() async {
+        isLoading = true
+        loadCurrenciesError = nil
+        defer { isLoading = false }
+        do {
+            currencies = try await currencyService.loadCurrencies()
+        } catch {
+            loadCurrenciesError = error
+        }
     }
     
     var selectedCurrency: Currency? {

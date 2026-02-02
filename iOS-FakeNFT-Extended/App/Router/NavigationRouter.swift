@@ -30,6 +30,10 @@ final class NavigationRouter {
         path.removeLast()
     }
     
+    func popToRoot() {
+        path = NavigationPath()
+    }
+    
     func showDeleteConfirmation(nft: Nft, onDelete: @escaping () -> Void) {
         deleteConfirmationItem = (nft: nft, onDelete: onDelete)
     }

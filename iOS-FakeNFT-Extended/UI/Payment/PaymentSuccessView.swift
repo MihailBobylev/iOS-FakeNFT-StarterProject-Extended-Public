@@ -30,7 +30,7 @@ struct PaymentSuccessView: View {
             Spacer()
                 .frame(height: Layout.imageTopPadding)
             
-            Image("payment_success")
+            Image(.paymentSuccess)
                 .resizable()
                 .aspectRatio(contentMode: .fill)
                 .frame(width: Layout.imageSize, height: Layout.imageSize)
@@ -45,7 +45,7 @@ struct PaymentSuccessView: View {
             Spacer()
             
             Button(action: {
-                router.path = NavigationPath()
+                router.popToRoot()
             }) {
                 Text(Constants.buttonText)
                     .font(.title3Bold)
@@ -61,7 +61,7 @@ struct PaymentSuccessView: View {
         .navigationBarBackButtonHidden(true)
         .toolbar(.hidden, for: .tabBar)
         .task {
-            await services.basketService.clear()
+            try? await services.basketService.clear()
         }
     }
 }

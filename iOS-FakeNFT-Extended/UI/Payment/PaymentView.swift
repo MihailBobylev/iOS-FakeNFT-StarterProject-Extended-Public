@@ -13,13 +13,17 @@ struct PaymentView: View {
     @Environment(NavigationRouter.self) private var router
     @Environment(\.dismiss) private var dismiss
     @State private var viewModel: PaymentViewModel?
-    @State private var currencies: [Currency] = []
     
     private enum Constants {
         static let navigationTitle = "Выберите способ оплаты"
         static let currencyIconSize: CGFloat = 40
         static let payButtonWidth: CGFloat = 363
         static let payButtonHeight: CGFloat = 60
+        static let paymentErrorAlertTitle = "Не удалось произвести оплату"
+        static let alertCancelButton = "Отмена"
+        static let alertRetryButton = "Повторить"
+        static let agreementLinkText = "Пользовательского соглашения"
+        static let termsURLString = "https://yandex.ru/legal/practicum_termsofuse"
     }
     
     private static let currencyCellWidth: CGFloat = 168
@@ -34,7 +38,11 @@ struct PaymentView: View {
     var body: some View {
         Group {
             if let viewModel {
-                contentView(viewModel: viewModel)
+                if viewModel.loadCurrenciesError != nil {
+                    paymentLoadErrorView(viewModel: viewModel)
+                } else {
+                    contentView(viewModel: viewModel)
+                }
             } else {
                 ProgressView()
             }
@@ -55,17 +63,11 @@ struct PaymentView: View {
         .background(bottomPanelBackground)
         .task {
             guard viewModel == nil else { return }
-            if currencies.isEmpty {
-                do {
-                    currencies = try await services.currencyService.loadCurrencies()
-                } catch {
-                    currencies = Currency.mocks
-                }
-            }
             viewModel = PaymentViewModel(
-                currencies: currencies,
+                currencyService: services.currencyService,
                 paymentService: services.paymentService
             )
+            await viewModel?.loadCurrencies()
         }
         .onChange(of: viewModel?.paymentSuccess) { _, newValue in
             if newValue == true {
@@ -73,21 +75,36 @@ struct PaymentView: View {
             }
         }
         .alert(
-            "Не удалось произвести оплату",
+            Constants.paymentErrorAlertTitle,
             isPresented: Binding(
                 get: { viewModel?.showErrorAlert ?? false },
                 set: { if !$0 { viewModel?.dismissError() } }
             )
         ) {
-            Button("Отмена", role: .cancel) {
+            Button(Constants.alertCancelButton, role: .cancel) {
                 viewModel?.dismissError()
             }
-            Button("Повторить") {
+            Button(Constants.alertRetryButton) {
                 Task {
                     await viewModel?.pay()
                 }
             }
         }
+    }
+    
+    private func paymentLoadErrorView(viewModel: PaymentViewModel) -> some View {
+        VStack(spacing: 16) {
+            Text("Не удалось загрузить способы оплаты")
+                .font(.title3Bold)
+                .foregroundColor(.ypBlack)
+                .multilineTextAlignment(.center)
+            if let error = viewModel.loadCurrenciesError {
+                Text(error.localizedDescription)
+                    .font(.footnoteRegular13)
+                    .foregroundColor(.ypBlack)
+            }
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
     
     private var bottomPanelBackground: some View {
@@ -163,7 +180,7 @@ struct PaymentView: View {
                 .foregroundColor(.ypBlack)
             
             Button(action: { router.push(.webView) }) {
-                Text("Пользовательского соглашения")
+                Text(Constants.agreementLinkText)
                     .font(.footnoteRegular13)
                     .foregroundColor(.ypBlue)
                     .underline()

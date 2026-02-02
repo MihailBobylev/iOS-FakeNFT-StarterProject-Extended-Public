@@ -8,8 +8,8 @@
 import Kingfisher
 import SwiftUI
 
-private func formatPrice(_ price: Double) -> String {
-    (NumberFormatter.ethPrice.string(from: NSNumber(value: price)) ?? "0.00") + " ETH"
+private func priceLabel(_ price: Double) -> String {
+    "\(price) ETH"
 }
 
 struct BasketView: View {
@@ -79,6 +79,11 @@ struct BasketView: View {
                     Task { await viewModel?.loadItems() }
                 }
             }
+            .onAppear {
+                if router.path.isEmpty, viewModel != nil {
+                    Task { await viewModel?.loadItems() }
+                }
+            }
         }
     }
     
@@ -131,7 +136,7 @@ struct BasketItemRow: View {
         static let priceLabel = "Цена"
     }
     
-    private static func assetName(for nftName: String) -> String? {
+    private static func imageResource(for nftName: String) -> String? {
         switch nftName {
         case "April": return "nft_april"
         case "Greena": return "nft_greena"
@@ -150,7 +155,7 @@ struct BasketItemRow: View {
                                 .placeholder { ProgressView() }
                                 .resizable()
                                 .aspectRatio(contentMode: .fill)
-                        } else if let name = Self.assetName(for: item.nft.name) {
+                        } else if let name = Self.imageResource(for: item.nft.name) {
                             Image(name)
                                 .resizable()
                                 .aspectRatio(contentMode: .fill)
@@ -175,7 +180,7 @@ struct BasketItemRow: View {
                             Text(Constants.priceLabel)
                                 .font(.footnoteRegular13)
                                 .foregroundColor(.ypBlack)
-                            Text(formatPrice(item.nft.price))
+                            Text(priceLabel(item.nft.price))
                                 .font(.title3Bold)
                                 .foregroundColor(.ypBlack)
                         }
@@ -229,7 +234,7 @@ struct BasketBottomPanel: View {
                             .font(.footnoteRegular15)
                             .foregroundColor(.ypBlack)
                     }
-                    Text(formatPrice(viewModel.totalPrice))
+                    Text(priceLabel(viewModel.totalPrice))
                         .font(.title3Bold)
                         .foregroundColor(.ypGreen)
                 }
