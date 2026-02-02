@@ -5,6 +5,7 @@
 //  Created by Dmitry on 27.01.2026.
 //
 
+import Kingfisher
 import SwiftUI
 
 struct PaymentView: View {
@@ -63,7 +64,7 @@ struct PaymentView: View {
             }
             viewModel = PaymentViewModel(
                 currencies: currencies,
-                paymentService: MockPaymentService() // Заменить на services.paymentService для сети
+                paymentService: services.paymentService
             )
         }
         .onChange(of: viewModel?.paymentSuccess) { _, newValue in
@@ -228,22 +229,14 @@ private struct CurrencyCell: View {
     
     @ViewBuilder
     private var currencyImageView: some View {
-        AsyncImage(url: currency.imageURL) { phase in
-            switch phase {
-            case .success(let image):
-                image
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-            case .failure:
-                Image(iconName(for: currency.ticker))
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-            default:
+        KFImage(currency.imageURL)
+            .placeholder {
                 Image(iconName(for: currency.ticker))
                     .resizable()
                     .aspectRatio(contentMode: .fill)
             }
-        }
+            .resizable()
+            .aspectRatio(contentMode: .fill)
     }
     
     private func iconName(for ticker: String) -> String {

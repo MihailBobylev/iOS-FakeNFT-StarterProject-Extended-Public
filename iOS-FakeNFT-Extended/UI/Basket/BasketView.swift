@@ -5,6 +5,7 @@
 //  Created by Михаил Бобылев on 16.01.2026.
 //
 
+import Kingfisher
 import SwiftUI
 
 struct BasketView: View {
@@ -141,27 +142,10 @@ struct BasketItemRow: View {
                 HStack(spacing: 20) {
                     Group {
                         if let url = item.nft.images.first {
-                            AsyncImage(url: url) { phase in
-                                switch phase {
-                                case .empty:
-                                    ProgressView()
-                                case .success(let image):
-                                    image
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fill)
-                                case .failure:
-                                    if let name = Self.assetName(for: item.nft.name) {
-                                        Image(name)
-                                            .resizable()
-                                            .aspectRatio(contentMode: .fill)
-                                    } else {
-                                        Image(systemName: "photo")
-                                            .foregroundColor(.gray)
-                                    }
-                                @unknown default:
-                                    EmptyView()
-                                }
-                            }
+                            KFImage(url)
+                                .placeholder { ProgressView() }
+                                .resizable()
+                                .aspectRatio(contentMode: .fill)
                         } else if let name = Self.assetName(for: item.nft.name) {
                             Image(name)
                                 .resizable()
