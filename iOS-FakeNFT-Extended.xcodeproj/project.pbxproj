@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		741E10472F1A6B4C00320863 /* CatalogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 741E10462F1A6B4C00320863 /* CatalogView.swift */; };
+		741E11232F1A727100320863 /* WebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 741E11222F1A727100320863 /* WebView.swift */; };
+		741E11252F1A727200320863 /* TermsOfServiceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 741E11242F1A727200320863 /* TermsOfServiceView.swift */; };
 		741E10492F1A6B6C00320863 /* BasketView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 741E10482F1A6B6C00320863 /* BasketView.swift */; };
 		741E104B2F1A6B7F00320863 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 741E104A2F1A6B7F00320863 /* ProfileView.swift */; };
 		741E104F2F1A6B9000320863 /* BasketViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 741E104E2F1A6B9000320863 /* BasketViewModel.swift */; };
@@ -98,6 +100,8 @@
 		ABC5E1EE2C32090002B4068 /* BasketStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasketStorage.swift; sourceTree = "<group>"; };
 		ABC5E1F02C32091002B4068 /* BasketService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasketService.swift; sourceTree = "<group>"; };
 		ABC5E1F22C32092002B4068 /* PaymentService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentService.swift; sourceTree = "<group>"; };
+		741E11222F1A727100320863 /* WebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebView.swift; sourceTree = "<group>"; };
+		741E11242F1A727200320863 /* TermsOfServiceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermsOfServiceView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -167,6 +171,8 @@
 			isa = PBXGroup;
 			children = (
 				ABC5E1B42C31FC57002B4068 /* TabBarView.swift */,
+				741E11222F1A727100320863 /* WebView.swift */,
+				741E11242F1A727200320863 /* TermsOfServiceView.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -504,6 +510,8 @@
 				A1B2C3D4E5F6789012345678 /* PaymentRequest.swift in Sources */,
 				ABC5E1A82C31FA90002B4068 /* DateFormatters+Presets.swift in Sources */,
 				ABC5E1B02C31FB90002B4068 /* RequestConstants.swift in Sources */,
+				741E11232F1A727100320863 /* WebView.swift in Sources */,
+				741E11252F1A727200320863 /* TermsOfServiceView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

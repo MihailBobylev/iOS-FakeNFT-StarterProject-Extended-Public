@@ -53,7 +53,7 @@ final class NavigationRouter {
         case .editProfile:
             EmptyView()
         case .webView:
-            EmptyView()
+            TermsOfServiceView()
         }
     }
 }

@@ -9,6 +9,7 @@ import SwiftUI
 
 struct PaymentView: View {
     @Environment(ServicesAssembly.self) private var services
+    @Environment(NavigationRouter.self) private var router
     @Environment(\.dismiss) private var dismiss
     @State private var viewModel: PaymentViewModel?
     let currencies: [Currency]
@@ -128,11 +129,13 @@ struct PaymentView: View {
                 .font(.footnoteRegular13)
                 .foregroundColor(.ypBlack)
             
-            if let url = URL(string: "https://yandex.ru/legal/practicum_termsofuse") {
-                Link("Пользовательского соглашения", destination: url)
+            Button(action: { router.push(.webView) }) {
+                Text("Пользовательского соглашения")
                     .font(.footnoteRegular13)
                     .foregroundColor(.ypBlue)
+                    .underline()
             }
+            .buttonStyle(.plain)
         }
     }
     
