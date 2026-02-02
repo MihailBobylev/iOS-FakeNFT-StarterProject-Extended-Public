@@ -64,6 +64,16 @@ struct BasketView: View {
                     await viewModel?.loadItems()
                 }
             }
+            .onChange(of: router.path.count) { _, newCount in
+                if newCount == 0, viewModel != nil {
+                    Task { await viewModel?.loadItems() }
+                }
+            }
+            .onChange(of: router.selectedTab) { _, newTab in
+                if newTab == .basket, viewModel != nil {
+                    Task { await viewModel?.loadItems() }
+                }
+            }
         }
     }
     

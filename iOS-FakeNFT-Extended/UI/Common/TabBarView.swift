@@ -10,19 +10,25 @@ struct TabBarView: View {
     }
     
     var body: some View {
-        TabView {
+        TabView(selection: Binding(
+            get: { router.selectedTab },
+            set: { router.selectedTab = $0 }
+        )) {
             ProfileView()
                 .tabItem {
                     Label(Constants.profilePrompt, image: .icProfile)
                 }
+                .tag(AppTab.profile)
             CatalogView()
                 .tabItem {
                     Label(Constants.catalogPrompt, image: .icCatalog)
                 }
+                .tag(AppTab.catalog)
             BasketView()
                 .tabItem {
                     Label(Constants.basketPrompt, image: .icBasket)
                 }
+                .tag(AppTab.basket)
         }
         .overlay {
             if let deleteItem = router.deleteConfirmationItem {

@@ -8,10 +8,15 @@
 import Observation
 import SwiftUI
 
+enum AppTab: Int {
+    case profile = 0, catalog, basket
+}
+
 @Observable
 final class NavigationRouter {
 
     var path = NavigationPath()
+    var selectedTab: AppTab = .catalog
     var sheet: AppRoute?
     var deleteConfirmationItem: (nft: Nft, onDelete: () -> Void)?
     var sortPopupItem: (currentSort: BasketSortOption, onSelect: (BasketSortOption) -> Void)?

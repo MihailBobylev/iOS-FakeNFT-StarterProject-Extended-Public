@@ -9,7 +9,8 @@ import SwiftUI
 
 struct PaymentSuccessView: View {
     @Environment(NavigationRouter.self) private var router
-    
+    @Environment(ServicesAssembly.self) private var services
+
     private enum Constants {
         static let successText = "Успех! Оплата прошла,\nпоздравляем с покупкой!"
         static let buttonText = "Вернуться в корзину"
@@ -59,6 +60,9 @@ struct PaymentSuccessView: View {
         .background(Color.ypWhite)
         .navigationBarBackButtonHidden(true)
         .toolbar(.hidden, for: .tabBar)
+        .task {
+            await services.basketService.clear()
+        }
     }
 }
 
@@ -67,4 +71,9 @@ struct PaymentSuccessView: View {
         PaymentSuccessView()
     }
     .environment(NavigationRouter())
+    .environment(ServicesAssembly(
+        networkClient: DefaultNetworkClient(),
+        nftStorage: NftStorageImpl(),
+        basketStorage: BasketStorageImpl()
+    ))
 }
