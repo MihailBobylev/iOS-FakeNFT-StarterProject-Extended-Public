@@ -20,12 +20,28 @@ actor DefaultNetworkClient: NetworkClient {
 
     init(
         session: URLSession = URLSession.shared,
-        decoder: JSONDecoder = JSONDecoder(),
+        decoder: JSONDecoder? = nil,
         encoder: JSONEncoder = JSONEncoder()
     ) {
         self.session = session
-        self.decoder = decoder
+        self.decoder = decoder ?? Self.makeDecoder()
         self.encoder = encoder
+    }
+
+    private static func makeDecoder() -> JSONDecoder {
+        let d = JSONDecoder()
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        d.dateDecodingStrategy = .custom { decoder in
+            let container = try decoder.singleValueContainer()
+            let dateString = try container.decode(String.self)
+            let cleaned = dateString.replacingOccurrences(of: "[GMT]", with: "")
+            guard let date = formatter.date(from: cleaned) else {
+                throw DecodingError.dataCorruptedError(in: container, debugDescription: "Cannot decode date: \(dateString)")
+            }
+            return date
+        }
+        return d
     }
 
     func send(request: NetworkRequest) async throws -> Data {

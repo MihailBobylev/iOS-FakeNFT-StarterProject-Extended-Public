@@ -62,9 +62,6 @@ struct BasketView: View {
                 if viewModel == nil {
                     viewModel = BasketViewModel(basketService: services.basketService)
                     await viewModel?.loadItems()
-                    if viewModel?.isEmpty == true {
-                        await viewModel?.addTestData()
-                    }
                 }
             }
         }

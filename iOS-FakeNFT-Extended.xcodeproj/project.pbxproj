@@ -47,6 +47,8 @@
 		ABC5E1F32C32092002B4068 /* PaymentService.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABC5E1F22C32092002B4068 /* PaymentService.swift */; };
 		C1D2E3F42F1A728000320863 /* CurrenciesRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1D2E3F42F1A728000320864 /* CurrenciesRequest.swift */; };
 		C1D2E3F42F1A728000320865 /* CurrencyService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1D2E3F42F1A728000320866 /* CurrencyService.swift */; };
+		D2E3F4A52F1A729000320863 /* OrderRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2E3F4A52F1A729000320864 /* OrderRequest.swift */; };
+		D2E3F4A52F1A729000320865 /* OrderService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2E3F4A52F1A729000320866 /* OrderService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -105,6 +107,8 @@
 		ABC5E1F22C32092002B4068 /* PaymentService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentService.swift; sourceTree = "<group>"; };
 		C1D2E3F42F1A728000320864 /* CurrenciesRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrenciesRequest.swift; sourceTree = "<group>"; };
 		C1D2E3F42F1A728000320866 /* CurrencyService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyService.swift; sourceTree = "<group>"; };
+		D2E3F4A52F1A729000320864 /* OrderRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderRequest.swift; sourceTree = "<group>"; };
+		D2E3F4A52F1A729000320866 /* OrderService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderService.swift; sourceTree = "<group>"; };
 		741E11222F1A727100320863 /* WebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebView.swift; sourceTree = "<group>"; };
 		741E11242F1A727200320863 /* TermsOfServiceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermsOfServiceView.swift; sourceTree = "<group>"; };
 		741E11262F1A727300320863 /* PaymentSuccessView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentSuccessView.swift; sourceTree = "<group>"; };
@@ -321,6 +325,7 @@
 				ABC5E1AA2C31FACD002B4068 /* NftService.swift */,
 				ABC5E1F02C32091002B4068 /* BasketService.swift */,
 				C1D2E3F42F1A728000320866 /* CurrencyService.swift */,
+				D2E3F4A52F1A729000320866 /* OrderService.swift */,
 				ABC5E1F22C32092002B4068 /* PaymentService.swift */,
 				ABC5E1B62C31FC70002B4068 /* ServicesAssembly.swift */,
 			);
@@ -332,6 +337,7 @@
 			children = (
 				ABC5E1B12C31FBD4002B4068 /* ExampleRequest.swift */,
 				C1D2E3F42F1A728000320864 /* CurrenciesRequest.swift */,
+				D2E3F4A52F1A729000320864 /* OrderRequest.swift */,
 				ABC5E1AD2C31FB7F002B4068 /* NftByIdRequest.swift */,
 				A1B2C3D4E5F6789012345679 /* PaymentRequest.swift */,
 				ABC5E1AF2C31FB90002B4068 /* RequestConstants.swift */,
@@ -501,6 +507,8 @@
 				C1D2E3F42F1A728000320865 /* CurrencyService.swift in Sources */,
 				ABC5E1F32C32092002B4068 /* PaymentService.swift in Sources */,
 				C1D2E3F42F1A728000320863 /* CurrenciesRequest.swift in Sources */,
+				D2E3F4A52F1A729000320863 /* OrderRequest.swift in Sources */,
+				D2E3F4A52F1A729000320865 /* OrderService.swift in Sources */,
 				ABC5E1B52C31FC57002B4068 /* TabBarView.swift in Sources */,
 				741E111E2F1A726D00320863 /* NavigationRouter.swift in Sources */,
 				741E11202F1A727000320863 /* DeleteConfirmationPopup.swift in Sources */,

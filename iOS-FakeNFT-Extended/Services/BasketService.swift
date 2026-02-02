@@ -19,13 +19,28 @@ protocol BasketService {
 @MainActor
 final class BasketServiceImpl: BasketService {
     private let storage: BasketStorage
+    private let orderService: OrderService
+    private let nftService: NftService
 
-    init(storage: BasketStorage) {
+    init(storage: BasketStorage, orderService: OrderService, nftService: NftService) {
         self.storage = storage
+        self.orderService = orderService
+        self.nftService = nftService
     }
 
     func loadItems() async -> [BasketItem] {
-        await storage.getItems()
+        do {
+            let order = try await orderService.loadOrder()
+            var items: [BasketItem] = []
+            let grouped = Dictionary(grouping: order.nfts) { $0 }
+            for (nftId, ids) in grouped {
+                guard let nft = try? await nftService.loadNft(id: nftId) else { continue }
+                items.append(BasketItem(id: nft.id, nft: nft, quantity: ids.count))
+            }
+            return items
+        } catch {
+            return []
+        }
     }
 
     func add(nft: Nft) async {
