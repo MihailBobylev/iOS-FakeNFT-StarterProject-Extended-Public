@@ -8,6 +8,10 @@
 import Kingfisher
 import SwiftUI
 
+private func formatPrice(_ price: Double) -> String {
+    (NumberFormatter.ethPrice.string(from: NSNumber(value: price)) ?? "0.00") + " ETH"
+}
+
 struct BasketView: View {
     @Environment(ServicesAssembly.self) private var services
     @Environment(NavigationRouter.self) private var router
@@ -171,7 +175,7 @@ struct BasketItemRow: View {
                             Text(Constants.priceLabel)
                                 .font(.footnoteRegular13)
                                 .foregroundColor(.ypBlack)
-                            Text(String(format: "%.2f ETH", item.nft.price))
+                            Text(formatPrice(item.nft.price))
                                 .font(.title3Bold)
                                 .foregroundColor(.ypBlack)
                         }
@@ -225,7 +229,7 @@ struct BasketBottomPanel: View {
                             .font(.footnoteRegular15)
                             .foregroundColor(.ypBlack)
                     }
-                    Text(String(format: "%.2f ETH", viewModel.totalPrice))
+                    Text(formatPrice(viewModel.totalPrice))
                         .font(.title3Bold)
                         .foregroundColor(.ypGreen)
                 }
@@ -247,27 +251,12 @@ struct BasketBottomPanel: View {
         }
         .padding(.vertical, 16)
         .background(Color.ypLightGray)
-        .cornerRadius(12, corners: [.topLeft, .topRight])
-    }
-}
-
-extension View {
-    func cornerRadius(_ radius: CGFloat, corners: UIRectCorner) -> some View {
-        clipShape(RoundedCorner(radius: radius, corners: corners))
-    }
-}
-
-struct RoundedCorner: Shape {
-    var radius: CGFloat = .infinity
-    var corners: UIRectCorner = .allCorners
-
-    func path(in rect: CGRect) -> Path {
-        let path = UIBezierPath(
-            roundedRect: rect,
-            byRoundingCorners: corners,
-            cornerRadii: CGSize(width: radius, height: radius)
-        )
-        return Path(path.cgPath)
+        .clipShape(UnevenRoundedRectangle(
+            topLeadingRadius: 12,
+            bottomLeadingRadius: 0,
+            bottomTrailingRadius: 0,
+            topTrailingRadius: 12
+        ))
     }
 }
 

@@ -141,7 +141,12 @@ struct PaymentView: View {
                 Color.ypPaymentBackground
                     .ignoresSafeArea(edges: [.bottom, .leading, .trailing])
             )
-            .cornerRadius(12, corners: [.topLeft, .topRight])
+            .clipShape(UnevenRoundedRectangle(
+                topLeadingRadius: 12,
+                bottomLeadingRadius: 0,
+                bottomTrailingRadius: 0,
+                topTrailingRadius: 12
+            ))
         }
         .disabled(viewModel.isLoading)
         .overlay {
