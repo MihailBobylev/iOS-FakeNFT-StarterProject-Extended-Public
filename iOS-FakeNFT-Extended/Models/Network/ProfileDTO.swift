@@ -9,7 +9,7 @@
 struct ProfileDTO: Codable, Equatable, Hashable {
     
     /// Уникальный идентификатор пользователя
-    let id: String?
+    let id: String
 
     /// Имя пользователя
     let name: String?

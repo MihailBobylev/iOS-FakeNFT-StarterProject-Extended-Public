@@ -3,7 +3,7 @@ import Foundation
 protocol NftServiceProtocol {
     func fetchProfile() async throws -> ProfileDTO
     func updateProfile(with profile: ProfileDTO) async throws
-    func updateLikedNFT(with ids: [String?]) async throws
+    func updateLikedNFT(with ids: [String]) async throws
     func fetchNFT(with id: String) async throws -> NftDTO
     func fetchNFTCollections(page: Int, size: Int, sortBy: NFTCollectionSort?) async throws -> [NFTCollectionDTO]
     func loadNfts(ids: [String]) async throws -> [NFTCatalogCellModel]
@@ -142,7 +142,7 @@ final class NftServiceImpl: NftServiceProtocol {
         await profileStorage.saveProfile(profile)
     }
     
-    func updateLikedNFT(with ids: [String?]) async throws {
+    func updateLikedNFT(with ids: [String]) async throws {
         let request = UpdateLikedNFTRequest(nftIds: ids)
         let profile: ProfileDTO = try await networkClient.send(request: request)
         await profileStorage.saveProfile(profile)

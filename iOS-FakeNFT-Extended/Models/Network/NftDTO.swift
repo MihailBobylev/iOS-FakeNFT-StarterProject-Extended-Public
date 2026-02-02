@@ -9,7 +9,7 @@
 struct NftDTO: Identifiable, Decodable, Equatable, Hashable {
     
     /// Уникальный идентификатор nft
-    let id: String?
+    let id: String
     
     /// Создан
     let createdAt: String?

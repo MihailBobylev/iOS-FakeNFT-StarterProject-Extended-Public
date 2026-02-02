@@ -19,8 +19,8 @@ final class MyNFTViewModel {
     var isLoading = false
     var requestError: ErrorType? = nil
     var nfts: [NftDTO] = []
-    var ids: [String?]
-    var likedIds: [String?]
+    var ids: [String]
+    var likedIds: [String]
     var sortType: SortType = .byPrice
     
     var sortedCells: [NftDTO] {
@@ -34,7 +34,7 @@ final class MyNFTViewModel {
         }
     }
     
-    init(ids: [String?], likedIds: [String?]) {
+    init(ids: [String], likedIds: [String]) {
         self.ids = ids
         self.likedIds = likedIds
     }

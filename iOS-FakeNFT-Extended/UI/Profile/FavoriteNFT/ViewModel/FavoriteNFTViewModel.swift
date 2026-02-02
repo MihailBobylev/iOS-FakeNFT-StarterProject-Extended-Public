@@ -15,9 +15,9 @@ final class FavoriteNFTViewModel {
     
     var nfts: [NftDTO] = []
     
-    var ids: [String?]
+    var ids: [String]
     
-    init(ids: [String?]) {
+    init(ids: [String]) {
         self.ids = ids
     }
     
@@ -39,7 +39,7 @@ extension FavoriteNFTViewModel {
         do {
             guard let servicesAssembly else { return }
             for id in ids {
-                let nft = try await servicesAssembly.nftService.fetchNFT(with: id ?? "")
+                let nft = try await servicesAssembly.nftService.fetchNFT(with: id)
                 self.nfts.append(nft)
             }
             isLoading = false

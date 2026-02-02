@@ -55,10 +55,6 @@ struct FavoriteNFTCellIconView: View {
         }
     }
     private var placeholder: some View {
-        Image(.nft)
-            .resizable()
-            .scaledToFill()
-            .frame(width: 80, height: 80)
-            .clipShape(RoundedRectangle(cornerRadius: 12))
+        Color.gray.opacity(0.2)
     }
 }

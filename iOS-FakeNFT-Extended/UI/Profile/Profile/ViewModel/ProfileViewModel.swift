@@ -15,7 +15,7 @@ final class ProfileViewModel: Identifiable {
     var isLoading = false
     var requestError: ErrorType? = nil
     var profile: ProfileDTO = ProfileDTO(
-        id: nil,
+        id: "",
         name: nil,
         avatar: nil,
         description: nil,
@@ -49,7 +49,7 @@ extension ProfileViewModel {
         requestError = .none
         
         profile = ProfileDTO(
-            id: nil,
+            id: "",
             name: nil,
             avatar: nil,
             description: nil,

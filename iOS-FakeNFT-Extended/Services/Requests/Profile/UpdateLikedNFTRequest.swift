@@ -8,18 +8,14 @@
 import Foundation
 
 struct UpdateLikedNFTRequest: NetworkRequest {
-    let nftIds: [String?]
+    let nftIds: [String]
     
     var endpoint: URL? {
         var components = URLComponents(
             string: "\(RequestConstants.baseURL)/api/v1/profile/1"
         )
         
-        var idsString = ""
-        for id in nftIds {
-            idsString += id ?? ""
-            idsString += ","
-        }
+        let idsString = nftIds.joined(separator: ",")
         let queryItems: [URLQueryItem] = [
             URLQueryItem(name: "likes", value: idsString)
         ]

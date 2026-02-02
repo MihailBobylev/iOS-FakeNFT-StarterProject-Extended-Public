@@ -6,19 +6,6 @@
 //
 
 import SwiftUI
-import WebKit
-
-struct WebViewProfile: UIViewRepresentable {
-    var viewModel: ProfileViewModel
-    
-    func makeUIView(context: Context) -> WKWebView {
-        let webView = WKWebView()
-        webView.load(URLRequest(url: URL(string: viewModel.profile.website ?? "")!))
-        return webView
-    }
-    
-    func updateUIView(_ uiView: WKWebView, context: Context) {}
-}
 
 struct ProfileView: View {
     @Environment(NavigationRouter.self) var router
@@ -26,6 +13,12 @@ struct ProfileView: View {
     @State var viewModel: ProfileViewModel
     @State private var showWebView = false
     private let profileStorage: ProfileStorage
+    
+    enum Constants {
+        static let com = ".com"
+        static let myNFT = "Мои NFT"
+        static let favoriteNFT = "Избранные NFT"
+    }
     
     init() {
         let viewModel = ProfileViewModel()
@@ -62,24 +55,33 @@ struct ProfileView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.top, 20)
                 
-                NavigationLink("\(viewModel.profile.name ?? "").com") {
-                    WebViewProfile(viewModel: viewModel)
+                if (viewModel.profile.name != nil) {
+                    Text("\(viewModel.profile.name ?? "")\(Constants.com)")
+                        .font(.footnoteRegular15)
+                        .foregroundStyle(.ypBlue)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.top, 8)
+                        .onTapGesture {
+                            if let url = URL(string: viewModel.profile.website ?? "") {
+                                router.push(
+                                    .webView(
+                                        url: url
+                                    )
+                                )
+                            }
+                        }
                 }
-                .font(.footnoteRegular15)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.top, 8)
-                
                 Button {
                     router.push(AppRoute.myNFT(profile: viewModel.profile))
                 } label: {
-                    ProfileListView(title: "Мои NFT (\(viewModel.profile.nfts.count))")
+                    ProfileListView(title: "\(Constants.myNFT) (\(viewModel.profile.nfts.count))")
                 }
                 .padding(.top, 58)
                 
                 Button {
                     router.push(AppRoute.favoriteNFT(profile: viewModel.profile))
                 } label: {
-                    ProfileListView(title: "Избранные NFT (\(viewModel.profile.likes.count))")
+                    ProfileListView(title: "\(Constants.favoriteNFT) (\(viewModel.profile.likes.count))")
                 }
                 .padding(.top, 26)
                 

@@ -17,7 +17,7 @@ actor ProfileStorage: ProfileStorageProtocol {
     // MARK: - Storage
     
     private var storage: ProfileDTO = ProfileDTO(
-        id: nil,
+        id: "",
         name: nil,
         avatar: nil,
         description: nil,

@@ -8,7 +8,7 @@
 import Foundation
 
 struct UpdateProfileRequest: NetworkRequest {
-    let id: String?
+    let id: String
     
     let name: String?
     let avatar: String?
@@ -21,7 +21,6 @@ struct UpdateProfileRequest: NetworkRequest {
         )
         
         let queryItems: [URLQueryItem] = [
-            URLQueryItem(name: "id", value: id),
             URLQueryItem(name: "name", value: name),
             URLQueryItem(name: "avatar", value: avatar),
             URLQueryItem(name: "description", value: description),

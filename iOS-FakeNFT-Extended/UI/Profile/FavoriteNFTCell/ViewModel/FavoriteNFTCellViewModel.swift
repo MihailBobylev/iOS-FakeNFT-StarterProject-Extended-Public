@@ -15,12 +15,12 @@ final class FavoriteNFTCellViewModel: Identifiable {
     var isLoading = false
     var requestError: ErrorType? = nil
     
-    var id: String?
-    var ids: [String?]
+    var id: String
+    var ids: [String]
     
     init(
         model: NftDTO,
-        with ids: [String?],
+        with ids: [String],
         mainViewModel: FavoriteNFTViewModel,
         servicesAssembly: ServicesAssembly
     ) {

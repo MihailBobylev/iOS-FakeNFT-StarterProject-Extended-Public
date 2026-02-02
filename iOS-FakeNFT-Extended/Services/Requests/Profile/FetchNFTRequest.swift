@@ -8,9 +8,9 @@
 import Foundation
 
 struct FetchNFTRequest: NetworkRequest {
-    let id: String?
+    let id: String
     
     var endpoint: URL? {
-        URL(string: "\(RequestConstants.baseURL)/api/v1/nft/\(id ?? "")")
+        URL(string: "\(RequestConstants.baseURL)/api/v1/nft/\(id)")
     }
 }
