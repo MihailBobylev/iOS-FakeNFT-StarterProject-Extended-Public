@@ -35,3 +35,23 @@ final class PaymentServiceImpl: PaymentService {
     }
 }
 
+// MARK: - Mock для тестирования без сети
+final class MockPaymentService: PaymentService {
+    var shouldSucceed = true
+    var delay: UInt64 = 500_000_000 // 0.5 секунды
+    
+    func pay(currencyId: String) async throws -> PaymentResponse {
+        try await Task.sleep(nanoseconds: delay)
+        
+        if shouldSucceed {
+            return PaymentResponse(
+                success: true,
+                orderId: "mock-order-1",
+                id: currencyId
+            )
+        } else {
+            throw PaymentError.failed
+        }
+    }
+}
+

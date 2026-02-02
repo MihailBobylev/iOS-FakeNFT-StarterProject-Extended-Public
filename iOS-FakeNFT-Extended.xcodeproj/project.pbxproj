@@ -10,6 +10,7 @@
 		741E10472F1A6B4C00320863 /* CatalogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 741E10462F1A6B4C00320863 /* CatalogView.swift */; };
 		741E11232F1A727100320863 /* WebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 741E11222F1A727100320863 /* WebView.swift */; };
 		741E11252F1A727200320863 /* TermsOfServiceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 741E11242F1A727200320863 /* TermsOfServiceView.swift */; };
+		741E11272F1A727300320863 /* PaymentSuccessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 741E11262F1A727300320863 /* PaymentSuccessView.swift */; };
 		741E10492F1A6B6C00320863 /* BasketView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 741E10482F1A6B6C00320863 /* BasketView.swift */; };
 		741E104B2F1A6B7F00320863 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 741E104A2F1A6B7F00320863 /* ProfileView.swift */; };
 		741E104F2F1A6B9000320863 /* BasketViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 741E104E2F1A6B9000320863 /* BasketViewModel.swift */; };
@@ -102,6 +103,7 @@
 		ABC5E1F22C32092002B4068 /* PaymentService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentService.swift; sourceTree = "<group>"; };
 		741E11222F1A727100320863 /* WebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebView.swift; sourceTree = "<group>"; };
 		741E11242F1A727200320863 /* TermsOfServiceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermsOfServiceView.swift; sourceTree = "<group>"; };
+		741E11262F1A727300320863 /* PaymentSuccessView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentSuccessView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -163,6 +165,7 @@
 			children = (
 				91906E58D61843EDBF9B41D5 /* PaymentView.swift */,
 				91906E68D61843EDBF9B41D5 /* PaymentViewModel.swift */,
+				741E11262F1A727300320863 /* PaymentSuccessView.swift */,
 			);
 			path = Payment;
 			sourceTree = "<group>";
@@ -512,6 +515,7 @@
 				ABC5E1B02C31FB90002B4068 /* RequestConstants.swift in Sources */,
 				741E11232F1A727100320863 /* WebView.swift in Sources */,
 				741E11252F1A727200320863 /* TermsOfServiceView.swift in Sources */,
+				741E11272F1A727300320863 /* PaymentSuccessView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

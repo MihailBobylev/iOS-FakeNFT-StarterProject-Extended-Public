@@ -56,8 +56,13 @@ struct PaymentView: View {
             if viewModel == nil {
                 viewModel = PaymentViewModel(
                     currencies: currencies,
-                    paymentService: services.paymentService
+                    paymentService: MockPaymentService() // Заменить на services.paymentService для сети
                 )
+            }
+        }
+        .onChange(of: viewModel?.paymentSuccess) { _, newValue in
+            if newValue == true {
+                router.push(.paymentSuccess)
             }
         }
     }
