@@ -16,7 +16,7 @@ enum AppTab: Int {
 final class NavigationRouter {
 
     var path = NavigationPath()
-    var selectedTab: AppTab = .catalog
+    var selectedTab: AppTab = .profile
     var sheet: AppRoute?
     var deleteConfirmationItem: (nft: Nft, onDelete: () -> Void)?
     var sortPopupItem: (currentSort: BasketSortOption, onSelect: (BasketSortOption) -> Void)?
