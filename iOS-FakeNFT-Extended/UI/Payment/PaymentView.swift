@@ -12,7 +12,7 @@ struct PaymentView: View {
     @Environment(NavigationRouter.self) private var router
     @Environment(\.dismiss) private var dismiss
     @State private var viewModel: PaymentViewModel?
-    let currencies: [Currency]
+    @State private var currencies: [Currency] = []
     
     private enum Constants {
         static let navigationTitle = "Выберите способ оплаты"
@@ -53,12 +53,18 @@ struct PaymentView: View {
         .toolbar(.hidden, for: .tabBar)
         .background(bottomPanelBackground)
         .task {
-            if viewModel == nil {
-                viewModel = PaymentViewModel(
-                    currencies: currencies,
-                    paymentService: MockPaymentService() // Заменить на services.paymentService для сети
-                )
+            guard viewModel == nil else { return }
+            if currencies.isEmpty {
+                do {
+                    currencies = try await services.currencyService.loadCurrencies()
+                } catch {
+                    currencies = Currency.mocks
+                }
             }
+            viewModel = PaymentViewModel(
+                currencies: currencies,
+                paymentService: MockPaymentService() // Заменить на services.paymentService для сети
+            )
         }
         .onChange(of: viewModel?.paymentSuccess) { _, newValue in
             if newValue == true {
@@ -191,9 +197,7 @@ private struct CurrencyCell: View {
     var body: some View {
         Button(action: onSelect) {
             HStack(spacing: 12) {
-                Image(iconName(for: currency.ticker))
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
+                currencyImageView
                     .frame(width: Constants.iconSize, height: Constants.iconSize)
                     .clipShape(RoundedRectangle(cornerRadius: 12))
                 
@@ -222,6 +226,26 @@ private struct CurrencyCell: View {
         .buttonStyle(.plain)
     }
     
+    @ViewBuilder
+    private var currencyImageView: some View {
+        AsyncImage(url: currency.imageURL) { phase in
+            switch phase {
+            case .success(let image):
+                image
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+            case .failure:
+                Image(iconName(for: currency.ticker))
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+            default:
+                Image(iconName(for: currency.ticker))
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+            }
+        }
+    }
+    
     private func iconName(for ticker: String) -> String {
         switch ticker.uppercased() {
         case "BTC":
@@ -248,7 +272,7 @@ private struct CurrencyCell: View {
 
 #Preview {
     return NavigationStack {
-        PaymentView(currencies: Currency.mocks)
+        PaymentView()
     }
     .environment(ServicesAssembly(
         networkClient: DefaultNetworkClient(),

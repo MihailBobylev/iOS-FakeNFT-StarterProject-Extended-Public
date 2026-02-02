@@ -45,6 +45,8 @@
 		ABC5E1EF2C32090002B4068 /* BasketStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABC5E1EE2C32090002B4068 /* BasketStorage.swift */; };
 		ABC5E1F12C32091002B4068 /* BasketService.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABC5E1F02C32091002B4068 /* BasketService.swift */; };
 		ABC5E1F32C32092002B4068 /* PaymentService.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABC5E1F22C32092002B4068 /* PaymentService.swift */; };
+		C1D2E3F42F1A728000320863 /* CurrenciesRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1D2E3F42F1A728000320864 /* CurrenciesRequest.swift */; };
+		C1D2E3F42F1A728000320865 /* CurrencyService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1D2E3F42F1A728000320866 /* CurrencyService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -101,6 +103,8 @@
 		ABC5E1EE2C32090002B4068 /* BasketStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasketStorage.swift; sourceTree = "<group>"; };
 		ABC5E1F02C32091002B4068 /* BasketService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasketService.swift; sourceTree = "<group>"; };
 		ABC5E1F22C32092002B4068 /* PaymentService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentService.swift; sourceTree = "<group>"; };
+		C1D2E3F42F1A728000320864 /* CurrenciesRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrenciesRequest.swift; sourceTree = "<group>"; };
+		C1D2E3F42F1A728000320866 /* CurrencyService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyService.swift; sourceTree = "<group>"; };
 		741E11222F1A727100320863 /* WebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebView.swift; sourceTree = "<group>"; };
 		741E11242F1A727200320863 /* TermsOfServiceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermsOfServiceView.swift; sourceTree = "<group>"; };
 		741E11262F1A727300320863 /* PaymentSuccessView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentSuccessView.swift; sourceTree = "<group>"; };
@@ -316,6 +320,7 @@
 				ABC5E1AC2C31FB6C002B4068 /* Requests */,
 				ABC5E1AA2C31FACD002B4068 /* NftService.swift */,
 				ABC5E1F02C32091002B4068 /* BasketService.swift */,
+				C1D2E3F42F1A728000320866 /* CurrencyService.swift */,
 				ABC5E1F22C32092002B4068 /* PaymentService.swift */,
 				ABC5E1B62C31FC70002B4068 /* ServicesAssembly.swift */,
 			);
@@ -326,6 +331,7 @@
 			isa = PBXGroup;
 			children = (
 				ABC5E1B12C31FBD4002B4068 /* ExampleRequest.swift */,
+				C1D2E3F42F1A728000320864 /* CurrenciesRequest.swift */,
 				ABC5E1AD2C31FB7F002B4068 /* NftByIdRequest.swift */,
 				A1B2C3D4E5F6789012345679 /* PaymentRequest.swift */,
 				ABC5E1AF2C31FB90002B4068 /* RequestConstants.swift */,
@@ -492,7 +498,9 @@
 				ABC5E19D2C31F6A6002B4068 /* NftStorage.swift in Sources */,
 				ABC5E1EF2C32090002B4068 /* BasketStorage.swift in Sources */,
 				ABC5E1F12C32091002B4068 /* BasketService.swift in Sources */,
+				C1D2E3F42F1A728000320865 /* CurrencyService.swift in Sources */,
 				ABC5E1F32C32092002B4068 /* PaymentService.swift in Sources */,
+				C1D2E3F42F1A728000320863 /* CurrenciesRequest.swift in Sources */,
 				ABC5E1B52C31FC57002B4068 /* TabBarView.swift in Sources */,
 				741E111E2F1A726D00320863 /* NavigationRouter.swift in Sources */,
 				741E11202F1A727000320863 /* DeleteConfirmationPopup.swift in Sources */,

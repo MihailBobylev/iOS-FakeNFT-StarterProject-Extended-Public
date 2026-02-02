@@ -47,7 +47,7 @@ final class NavigationRouter {
         case .catalogDetails:
             EmptyView()
         case .payment:
-            PaymentView(currencies: Currency.mocks)
+            PaymentView()
         case .paymentSuccess:
             PaymentSuccessView()
         case .editProfile:
