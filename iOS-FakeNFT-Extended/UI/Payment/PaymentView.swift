@@ -65,6 +65,22 @@ struct PaymentView: View {
                 router.push(.paymentSuccess)
             }
         }
+        .alert(
+            "Не удалось произвести оплату",
+            isPresented: Binding(
+                get: { viewModel?.showErrorAlert ?? false },
+                set: { if !$0 { viewModel?.dismissError() } }
+            )
+        ) {
+            Button("Отмена", role: .cancel) {
+                viewModel?.dismissError()
+            }
+            Button("Повторить") {
+                Task {
+                    await viewModel?.pay()
+                }
+            }
+        }
     }
     
     private var bottomPanelBackground: some View {

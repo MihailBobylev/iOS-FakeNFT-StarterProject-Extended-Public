@@ -28,6 +28,14 @@ final class PaymentViewModel {
         return currencies.first { $0.id == id }
     }
     
+    var showErrorAlert: Bool {
+        paymentError != nil
+    }
+    
+    func dismissError() {
+        paymentError = nil
+    }
+    
     func selectCurrency(id: String) {
         selectedCurrencyID = id
     }
