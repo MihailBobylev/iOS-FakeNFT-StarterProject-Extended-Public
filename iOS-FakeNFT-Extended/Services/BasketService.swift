@@ -44,24 +44,44 @@ final class BasketServiceImpl: BasketService {
     }
 
     func add(nft: Nft) async {
-        await storage.add(nft)
+        do {
+            let order = try await orderService.loadOrder()
+            var nfts = order.nfts
+            nfts.append(nft.id)
+            _ = try await orderService.updateOrder(nfts: nfts)
+        } catch {
+            // при ошибке сети операция не выполняется
+        }
     }
 
     func remove(id: String) async {
-        await storage.remove(id: id)
+        do {
+            let order = try await orderService.loadOrder()
+            var nfts = order.nfts
+            if let index = nfts.firstIndex(of: id) {
+                nfts.remove(at: index)
+                _ = try await orderService.updateOrder(nfts: nfts)
+            }
+        } catch {
+          
+        }
     }
 
     func clear() async {
-        await storage.clear()
+        do {
+            _ = try await orderService.updateOrder(nfts: [])
+        } catch {
+           
+        }
     }
 
     func totalCount() async -> Int {
-        let items = await storage.getItems()
+        let items = await loadItems()
         return items.reduce(0) { $0 + $1.quantity }
     }
 
     func totalPrice() async -> Double {
-        let items = await storage.getItems()
+        let items = await loadItems()
         return items.reduce(0) { $0 + ($1.nft.price * Double($1.quantity)) }
     }
 }
