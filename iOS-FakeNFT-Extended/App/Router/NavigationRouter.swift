@@ -36,6 +36,13 @@ final class NavigationRouter {
             EmptyView()
         case let .webView(url):
             WebViewScreen(url: url)
+            
+        case .myNFT(let profile):
+            MyNFTView(profile: profile)
+        case .favoriteNFT(let profile):
+            FavoriteNFTView(profile: profile)
+        case .profileEditing(let profile):
+            ProfileEditingView(profile: profile)
         }
     }
 }
