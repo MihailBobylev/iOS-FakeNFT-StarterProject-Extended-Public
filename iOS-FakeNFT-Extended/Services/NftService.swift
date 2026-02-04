@@ -137,10 +137,23 @@ final class NftServiceImpl: NftServiceProtocol {
     }
 
     func updateProfileNfts(profile: ProfileDTO, nfts: [String]) async throws {
-        let request = UpdateProfileNftsRequest(profile: profile, nfts: nfts)
+        do {
+            try await sendUpdateProfileNfts(profile: profile, nfts: nfts, nftsRepeated: true)
+        } catch NetworkClientError.httpStatusCode(400), NetworkClientError.httpStatusCode(415) {
+            try await sendUpdateProfileNfts(profile: profile, nfts: nfts, nftsRepeated: false)
+        } catch {
+            throw error
+        }
+    }
+
+    private func sendUpdateProfileNfts(profile: ProfileDTO, nfts: [String], nftsRepeated: Bool) async throws {
+        let request = UpdateProfileNftsRequest(profile: profile, nfts: nfts, nftsRepeated: nftsRepeated)
         do {
             let updated: ProfileDTO = try await networkClient.send(request: request)
             await profileStorage.saveProfile(updated)
+        } catch NetworkClientError.parsingError {
+            let fresh = try await fetchProfile()
+            await profileStorage.saveProfile(fresh)
         } catch {
             let fresh = try await fetchProfile()
             await profileStorage.saveProfile(fresh)

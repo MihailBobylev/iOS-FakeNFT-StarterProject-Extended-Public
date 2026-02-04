@@ -8,11 +8,12 @@
 import Foundation
 
 /// PUT профиля с обновлённым списком nfts. API принимает application/x-www-form-urlencoded в теле.
-/// Отправляется полный профиль (name, avatar, description, website, likes, nfts), чтобы бэкенд не затирал поля.
-/// nfts и likes — повторяющийся ключ: nfts=id1&nfts=id2, likes=id1&likes=id2.
+/// Отправляется полный профиль (name, avatar, description, website, likes, nfts).
+/// nftsRepeated: true = nfts=id1&nfts=id2, false = nfts=id1,id2 (один ключ).
 struct UpdateProfileNftsRequest: NetworkRequest {
     let profile: ProfileDTO
     let nfts: [String]
+    let nftsRepeated: Bool
 
     var httpMethod: HttpMethod { .put }
 
@@ -31,8 +32,12 @@ struct UpdateProfileNftsRequest: NetworkRequest {
         for like in profile.likes {
             items.append(URLQueryItem(name: "likes", value: like))
         }
-        for nft in nfts {
-            items.append(URLQueryItem(name: "nfts", value: nft))
+        if nftsRepeated {
+            for nft in nfts {
+                items.append(URLQueryItem(name: "nfts", value: nft))
+            }
+        } else {
+            items.append(URLQueryItem(name: "nfts", value: nfts.joined(separator: ",")))
         }
         components.queryItems = items
         guard let bodyString = components.percentEncodedQuery else { return "".data(using: .utf8) }
