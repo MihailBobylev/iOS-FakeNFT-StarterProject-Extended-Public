@@ -29,6 +29,7 @@ final class BasketServiceImpl: BasketService {
     }
 
     func loadItems() async throws -> [BasketItem] {
+        try await nftService.loadBasket()
         let order = try await orderService.loadOrder()
         var items: [BasketItem] = []
         let grouped = Dictionary(grouping: order.nfts) { $0 }
@@ -51,6 +52,7 @@ final class BasketServiceImpl: BasketService {
         if let index = nfts.firstIndex(of: id) {
             nfts.remove(at: index)
             _ = try await orderService.updateOrder(nfts: nfts)
+            try await nftService.loadBasket()
         }
     }
     

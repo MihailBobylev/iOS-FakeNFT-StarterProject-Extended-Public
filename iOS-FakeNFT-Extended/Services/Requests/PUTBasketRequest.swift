@@ -16,8 +16,11 @@ struct PUTBasketRequest: NetworkRequest {
         URL(string: "\(RequestConstants.baseURL)/api/v1/orders/1")
     }
     
-    /// API: form-urlencoded с повторяющимся ключом nfts=id1&nfts=id2&nfts=id3 (не nfts=id1,id2).
+    /// API: form-urlencoded с повторяющимся ключом nfts=id1&nfts=id2 (пустая корзина: тело "").
     var formEncodedBody: Data? {
+        if nfts.isEmpty {
+            return "".data(using: .utf8)
+        }
         var components = URLComponents()
         components.queryItems = nfts.map { URLQueryItem(name: "nfts", value: $0) }
         guard let bodyString = components.percentEncodedQuery else { return nil }
