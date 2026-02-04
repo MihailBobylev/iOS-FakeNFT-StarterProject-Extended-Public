@@ -5,19 +5,25 @@
 //  Created by Dmitry on 27.01.2026.
 //
 
+import Kingfisher
 import SwiftUI
 
 struct PaymentView: View {
     @Environment(ServicesAssembly.self) private var services
+    @Environment(NavigationRouter.self) private var router
     @Environment(\.dismiss) private var dismiss
     @State private var viewModel: PaymentViewModel?
-    let currencies: [Currency]
     
     private enum Constants {
         static let navigationTitle = "Выберите способ оплаты"
         static let currencyIconSize: CGFloat = 40
         static let payButtonWidth: CGFloat = 363
         static let payButtonHeight: CGFloat = 60
+        static let paymentErrorAlertTitle = "Не удалось произвести оплату"
+        static let alertCancelButton = "Отмена"
+        static let alertRetryButton = "Повторить"
+        static let agreementLinkText = "Пользовательского соглашения"
+        static let termsURLString = "https://yandex.ru/legal/practicum_termsofuse"
     }
     
     private static let currencyCellWidth: CGFloat = 168
@@ -32,7 +38,11 @@ struct PaymentView: View {
     var body: some View {
         Group {
             if let viewModel {
-                contentView(viewModel: viewModel)
+                if viewModel.loadCurrenciesError != nil {
+                    paymentLoadErrorView(viewModel: viewModel)
+                } else {
+                    contentView(viewModel: viewModel)
+                }
             } else {
                 ProgressView()
             }
@@ -52,13 +62,49 @@ struct PaymentView: View {
         .toolbar(.hidden, for: .tabBar)
         .background(bottomPanelBackground)
         .task {
-            if viewModel == nil {
-                viewModel = PaymentViewModel(
-                    currencies: currencies,
-                    paymentService: services.paymentService
-                )
+            guard viewModel == nil else { return }
+            viewModel = PaymentViewModel(
+                currencyService: services.currencyService,
+                paymentService: services.paymentService
+            )
+            await viewModel?.loadCurrencies()
+        }
+        .onChange(of: viewModel?.paymentSuccess) { _, newValue in
+            if newValue == true {
+                router.push(.paymentSuccess)
             }
         }
+        .alert(
+            Constants.paymentErrorAlertTitle,
+            isPresented: Binding(
+                get: { viewModel?.showErrorAlert ?? false },
+                set: { if !$0 { viewModel?.dismissError() } }
+            )
+        ) {
+            Button(Constants.alertCancelButton, role: .cancel) {
+                viewModel?.dismissError()
+            }
+            Button(Constants.alertRetryButton) {
+                Task {
+                    await viewModel?.pay()
+                }
+            }
+        }
+    }
+    
+    private func paymentLoadErrorView(viewModel: PaymentViewModel) -> some View {
+        VStack(spacing: 16) {
+            Text("Не удалось загрузить способы оплаты")
+                .font(.title3Bold)
+                .foregroundColor(.ypBlack)
+                .multilineTextAlignment(.center)
+            if let error = viewModel.loadCurrenciesError {
+                Text(error.localizedDescription)
+                    .font(.footnoteRegular13)
+                    .foregroundColor(.ypBlack)
+            }
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
     
     private var bottomPanelBackground: some View {
@@ -112,7 +158,12 @@ struct PaymentView: View {
                 Color.ypPaymentBackground
                     .ignoresSafeArea(edges: [.bottom, .leading, .trailing])
             )
-            .cornerRadius(12, corners: [.topLeft, .topRight])
+            .clipShape(UnevenRoundedRectangle(
+                topLeadingRadius: 12,
+                bottomLeadingRadius: 0,
+                bottomTrailingRadius: 0,
+                topTrailingRadius: 12
+            ))
         }
         .disabled(viewModel.isLoading)
         .overlay {
@@ -128,11 +179,13 @@ struct PaymentView: View {
                 .font(.footnoteRegular13)
                 .foregroundColor(.ypBlack)
             
-            if let url = URL(string: "https://yandex.ru/legal/practicum_termsofuse") {
-                Link("Пользовательского соглашения", destination: url)
+            Button(action: { router.push(.webView) }) {
+                Text(Constants.agreementLinkText)
                     .font(.footnoteRegular13)
                     .foregroundColor(.ypBlue)
+                    .underline()
             }
+            .buttonStyle(.plain)
         }
     }
     
@@ -167,9 +220,7 @@ private struct CurrencyCell: View {
     var body: some View {
         Button(action: onSelect) {
             HStack(spacing: 12) {
-                Image(iconName(for: currency.ticker))
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
+                currencyImageView
                     .frame(width: Constants.iconSize, height: Constants.iconSize)
                     .clipShape(RoundedRectangle(cornerRadius: 12))
                 
@@ -198,6 +249,18 @@ private struct CurrencyCell: View {
         .buttonStyle(.plain)
     }
     
+    @ViewBuilder
+    private var currencyImageView: some View {
+        KFImage(currency.imageURL)
+            .placeholder {
+                Image(iconName(for: currency.ticker))
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+            }
+            .resizable()
+            .aspectRatio(contentMode: .fill)
+    }
+    
     private func iconName(for ticker: String) -> String {
         switch ticker.uppercased() {
         case "BTC":
@@ -224,7 +287,7 @@ private struct CurrencyCell: View {
 
 #Preview {
     return NavigationStack {
-        PaymentView(currencies: Currency.mocks)
+        PaymentView()
     }
     .environment(ServicesAssembly(
         networkClient: DefaultNetworkClient(),

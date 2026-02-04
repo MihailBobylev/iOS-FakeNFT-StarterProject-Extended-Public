@@ -20,12 +20,28 @@ actor DefaultNetworkClient: NetworkClient {
 
     init(
         session: URLSession = URLSession.shared,
-        decoder: JSONDecoder = JSONDecoder(),
+        decoder: JSONDecoder? = nil,
         encoder: JSONEncoder = JSONEncoder()
     ) {
         self.session = session
-        self.decoder = decoder
+        self.decoder = decoder ?? Self.makeDecoder()
         self.encoder = encoder
+    }
+
+    private static func makeDecoder() -> JSONDecoder {
+        let d = JSONDecoder()
+        d.dateDecodingStrategy = .custom { decoder in
+            let container = try decoder.singleValueContainer()
+            let dateString = try container.decode(String.self)
+            let cleaned = dateString.replacingOccurrences(of: "[GMT]", with: "")
+            let formatter = ISO8601DateFormatter()
+            formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+            guard let date = formatter.date(from: cleaned) else {
+                throw DecodingError.dataCorruptedError(in: container, debugDescription: "Cannot decode date: \(dateString)")
+            }
+            return date
+        }
+        return d
     }
 
     func send(request: NetworkRequest) async throws -> Data {
@@ -55,8 +71,11 @@ actor DefaultNetworkClient: NetworkClient {
         var urlRequest = URLRequest(url: endpoint)
         urlRequest.httpMethod = request.httpMethod.rawValue
 
-        if let dto = request.dto,
-           let dtoEncoded = try? encoder.encode(dto) {
+        if let formBody = request.formEncodedBody {
+            urlRequest.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+            urlRequest.httpBody = formBody
+        } else if let dto = request.dto,
+                  let dtoEncoded = try? encoder.encode(dto) {
             urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
             urlRequest.httpBody = dtoEncoded
         }

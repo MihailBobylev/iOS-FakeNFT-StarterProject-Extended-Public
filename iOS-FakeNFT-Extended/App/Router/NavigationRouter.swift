@@ -8,10 +8,15 @@
 import Observation
 import SwiftUI
 
+enum AppTab: Int {
+    case profile = 0, catalog, basket
+}
+
 @Observable
 final class NavigationRouter {
 
     var path = NavigationPath()
+    var selectedTab: AppTab = .profile
     var sheet: AppRoute?
     var deleteConfirmationItem: (nft: Nft, onDelete: () -> Void)?
     var sortPopupItem: (currentSort: BasketSortOption, onSelect: (BasketSortOption) -> Void)?
@@ -23,6 +28,10 @@ final class NavigationRouter {
     func pop() {
         guard !path.isEmpty else { return }
         path.removeLast()
+    }
+    
+    func popToRoot() {
+        path = NavigationPath()
     }
     
     func showDeleteConfirmation(nft: Nft, onDelete: @escaping () -> Void) {
@@ -47,13 +56,13 @@ final class NavigationRouter {
         case .catalogDetails:
             EmptyView()
         case .payment:
-            PaymentView(currencies: Currency.mocks)
+            PaymentView()
         case .paymentSuccess:
-            EmptyView()
+            PaymentSuccessView()
         case .editProfile:
             EmptyView()
         case .webView:
-            EmptyView()
+            TermsOfServiceView()
         }
     }
 }

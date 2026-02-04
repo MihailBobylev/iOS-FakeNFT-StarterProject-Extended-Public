@@ -51,6 +51,28 @@ struct Nft: Decodable, Identifiable, Sendable {
             author: "49",
             website: URL(string: "http://author.website") ?? URL(string: "https://example.com")!,
             createdAt: Date()
+        ),
+        Nft(
+            id: "4",
+            name: "Summer",
+            images: [URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Beige/April/1.png")!],
+            rating: 5,
+            description: "A 3D model of a mythical creature.",
+            price: 3.2,
+            author: "49",
+            website: URL(string: "https://example.com")!,
+            createdAt: Date()
+        ),
+        Nft(
+            id: "5",
+            name: "Winter",
+            images: [URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Beige/Greena/1.png")!],
+            rating: 4,
+            description: "A 3D model of a mythical creature.",
+            price: 0.9,
+            author: "49",
+            website: URL(string: "https://example.com")!,
+            createdAt: Date()
         )
     ]
 }

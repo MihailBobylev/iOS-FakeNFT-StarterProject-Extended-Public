@@ -13,6 +13,7 @@ final class BasketViewModel {
     
     var items: [BasketItem] = []
     var isLoading = false
+    var loadError: Error?
     var isEmpty: Bool {
         items.isEmpty && !isLoading
     }
@@ -40,10 +41,20 @@ final class BasketViewModel {
     
     func loadItems() async {
         isLoading = true
+        loadError = nil
         defer { isLoading = false }
         
-        items = await basketService.loadItems()
-        applySort()
+        do {
+            items = try await basketService.loadItems()
+            applySort()
+        } catch {
+            loadError = error
+            items = []
+        }
+    }
+    
+    func clearLoadError() {
+        loadError = nil
     }
     
     private func applySort() {
@@ -70,14 +81,22 @@ final class BasketViewModel {
     }
     
     func addTestData() async {
-        for nft in Nft.mocks {
-            await basketService.add(nft: nft)
+        do {
+            for nft in Nft.mocks {
+                try await basketService.add(nft: nft)
+            }
+            await loadItems()
+        } catch {
+            loadError = error
         }
-        await loadItems()
     }
     
     func removeItem(id: String) async {
-        await basketService.remove(id: id)
-        await loadItems()
+        do {
+            try await basketService.remove(id: id)
+            await loadItems()
+        } catch {
+            loadError = error
+        }
     }
 }

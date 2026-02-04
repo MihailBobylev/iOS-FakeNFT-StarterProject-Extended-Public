@@ -27,7 +27,9 @@ final class ServicesAssembly {
 
     var basketService: BasketService {
         BasketServiceImpl(
-            storage: basketStorage
+            storage: basketStorage,
+            orderService: orderService,
+            nftService: nftService
         )
     }
 
@@ -35,5 +37,13 @@ final class ServicesAssembly {
         PaymentServiceImpl(
             networkClient: networkClient
         )
+    }
+
+    var orderService: OrderService {
+        OrderServiceImpl(networkClient: networkClient)
+    }
+
+    var currencyService: CurrencyService {
+        CurrencyServiceImpl(networkClient: networkClient)
     }
 }

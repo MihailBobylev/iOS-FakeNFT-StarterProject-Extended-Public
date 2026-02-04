@@ -5,6 +5,7 @@
 //  Created by Dmitry on 25.01.2026.
 //
 
+import Kingfisher
 import SwiftUI
 
 struct DeleteConfirmationPopup: View {
@@ -30,21 +31,13 @@ struct DeleteConfirmationPopup: View {
     @ViewBuilder
     private var nftImageView: some View {
         if let url = nft.images.first {
-            AsyncImage(url: url) { phase in
-                switch phase {
-                case .empty:
+            KFImage(url)
+                .placeholder {
                     ProgressView()
                         .frame(width: Layout.nftImageSize, height: Layout.nftImageSize)
-                case .success(let image):
-                    image
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                case .failure:
-                    imagePlaceholder
-                @unknown default:
-                    EmptyView()
                 }
-            }
+                .resizable()
+                .aspectRatio(contentMode: .fill)
         } else {
             imagePlaceholder
         }

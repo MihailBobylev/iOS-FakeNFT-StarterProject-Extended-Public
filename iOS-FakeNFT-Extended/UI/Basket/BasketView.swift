@@ -5,7 +5,12 @@
 //  Created by Михаил Бобылев on 16.01.2026.
 //
 
+import Kingfisher
 import SwiftUI
+
+private func priceLabel(_ price: Double) -> String {
+    "\(price) ETH"
+}
 
 struct BasketView: View {
     @Environment(ServicesAssembly.self) private var services
@@ -62,9 +67,21 @@ struct BasketView: View {
                 if viewModel == nil {
                     viewModel = BasketViewModel(basketService: services.basketService)
                     await viewModel?.loadItems()
-                    if viewModel?.isEmpty == true {
-                        await viewModel?.addTestData()
-                    }
+                }
+            }
+            .onChange(of: router.path.count) { _, newCount in
+                if newCount == 0, viewModel != nil {
+                    Task { await viewModel?.loadItems() }
+                }
+            }
+            .onChange(of: router.selectedTab) { _, newTab in
+                if newTab == .basket, viewModel != nil {
+                    Task { await viewModel?.loadItems() }
+                }
+            }
+            .onAppear {
+                if router.path.isEmpty, viewModel != nil {
+                    Task { await viewModel?.loadItems() }
                 }
             }
         }
@@ -119,7 +136,7 @@ struct BasketItemRow: View {
         static let priceLabel = "Цена"
     }
     
-    private static func assetName(for nftName: String) -> String? {
+    private static func imageResource(for nftName: String) -> String? {
         switch nftName {
         case "April": return "nft_april"
         case "Greena": return "nft_greena"
@@ -134,28 +151,11 @@ struct BasketItemRow: View {
                 HStack(spacing: 20) {
                     Group {
                         if let url = item.nft.images.first {
-                            AsyncImage(url: url) { phase in
-                                switch phase {
-                                case .empty:
-                                    ProgressView()
-                                case .success(let image):
-                                    image
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fill)
-                                case .failure:
-                                    if let name = Self.assetName(for: item.nft.name) {
-                                        Image(name)
-                                            .resizable()
-                                            .aspectRatio(contentMode: .fill)
-                                    } else {
-                                        Image(systemName: "photo")
-                                            .foregroundColor(.gray)
-                                    }
-                                @unknown default:
-                                    EmptyView()
-                                }
-                            }
-                        } else if let name = Self.assetName(for: item.nft.name) {
+                            KFImage(url)
+                                .placeholder { ProgressView() }
+                                .resizable()
+                                .aspectRatio(contentMode: .fill)
+                        } else if let name = Self.imageResource(for: item.nft.name) {
                             Image(name)
                                 .resizable()
                                 .aspectRatio(contentMode: .fill)
@@ -180,7 +180,7 @@ struct BasketItemRow: View {
                             Text(Constants.priceLabel)
                                 .font(.footnoteRegular13)
                                 .foregroundColor(.ypBlack)
-                            Text(String(format: "%.2f ETH", item.nft.price))
+                            Text(priceLabel(item.nft.price))
                                 .font(.title3Bold)
                                 .foregroundColor(.ypBlack)
                         }
@@ -234,7 +234,7 @@ struct BasketBottomPanel: View {
                             .font(.footnoteRegular15)
                             .foregroundColor(.ypBlack)
                     }
-                    Text(String(format: "%.2f ETH", viewModel.totalPrice))
+                    Text(priceLabel(viewModel.totalPrice))
                         .font(.title3Bold)
                         .foregroundColor(.ypGreen)
                 }
@@ -256,27 +256,12 @@ struct BasketBottomPanel: View {
         }
         .padding(.vertical, 16)
         .background(Color.ypLightGray)
-        .cornerRadius(12, corners: [.topLeft, .topRight])
-    }
-}
-
-extension View {
-    func cornerRadius(_ radius: CGFloat, corners: UIRectCorner) -> some View {
-        clipShape(RoundedCorner(radius: radius, corners: corners))
-    }
-}
-
-struct RoundedCorner: Shape {
-    var radius: CGFloat = .infinity
-    var corners: UIRectCorner = .allCorners
-
-    func path(in rect: CGRect) -> Path {
-        let path = UIBezierPath(
-            roundedRect: rect,
-            byRoundingCorners: corners,
-            cornerRadii: CGSize(width: radius, height: radius)
-        )
-        return Path(path.cgPath)
+        .clipShape(UnevenRoundedRectangle(
+            topLeadingRadius: 12,
+            bottomLeadingRadius: 0,
+            bottomTrailingRadius: 0,
+            topTrailingRadius: 12
+        ))
     }
 }
 
