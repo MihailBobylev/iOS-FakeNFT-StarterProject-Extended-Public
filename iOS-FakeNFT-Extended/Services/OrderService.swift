@@ -10,6 +10,8 @@ import Foundation
 protocol OrderService {
     func loadOrder() async throws -> OrderDTO
     func updateOrder(nfts: [String]) async throws -> OrderDTO
+    /// POST orders/1 — выполнение заказа и очистка (по API).
+    func executeOrder() async throws -> OrderDTO
 }
 
 @MainActor
@@ -27,6 +29,11 @@ final class OrderServiceImpl: OrderService {
 
     func updateOrder(nfts: [String]) async throws -> OrderDTO {
         let request = OrderUpdateRequest(nfts: nfts)
+        return try await networkClient.send(request: request)
+    }
+
+    func executeOrder() async throws -> OrderDTO {
+        let request = OrderExecuteRequest()
         return try await networkClient.send(request: request)
     }
 }

@@ -8,6 +8,7 @@
 import Foundation
 
 protocol BasketService {
+    func loadOrder() async throws -> OrderDTO
     func loadItems() async throws -> [BasketItem]
     func remove(id: String) async throws
     func clear() async throws
@@ -22,7 +23,11 @@ final class BasketServiceImpl: BasketService {
         self.orderService = orderService
         self.nftService = nftService
     }
-    
+
+    func loadOrder() async throws -> OrderDTO {
+        try await orderService.loadOrder()
+    }
+
     func loadItems() async throws -> [BasketItem] {
         let order = try await orderService.loadOrder()
         var items: [BasketItem] = []
@@ -50,7 +55,7 @@ final class BasketServiceImpl: BasketService {
     }
     
     func clear() async throws {
-        _ = try await orderService.updateOrder(nfts: [])
+        _ = try await orderService.executeOrder()
     }
 }
 

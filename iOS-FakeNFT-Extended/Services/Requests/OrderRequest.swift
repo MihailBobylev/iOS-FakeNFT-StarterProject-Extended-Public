@@ -13,6 +13,9 @@ struct OrderRequest: NetworkRequest {
     }
 }
 
+/// PUT заказа. API принимает только application/x-www-form-urlencoded.
+/// Массив nfts передаётся как повторяющийся ключ: nfts=id1&nfts=id2 (не nfts=id1,id2).
+/// Пустая корзина: тело "" или "nfts=".
 struct OrderUpdateRequest: NetworkRequest {
     let nfts: [String]
 
@@ -21,4 +24,27 @@ struct OrderUpdateRequest: NetworkRequest {
     }
 
     var httpMethod: HttpMethod { .put }
+
+    var formEncodedBody: Data? {
+        if nfts.isEmpty {
+            return "".data(using: .utf8)
+        }
+        var components = URLComponents()
+        components.queryItems = nfts.map { URLQueryItem(name: "nfts", value: $0) }
+        guard let bodyString = components.percentEncodedQuery else { return nil }
+        return bodyString.data(using: .utf8)
+    }
+}
+
+/// POST /api/v1/orders/1 — выполнение заказа и очистка (по API-orders-curl.md).
+struct OrderExecuteRequest: NetworkRequest {
+    var endpoint: URL? {
+        URL(string: "\(RequestConstants.baseURL)/api/v1/orders/1")
+    }
+
+    var httpMethod: HttpMethod { .post }
+
+    var formEncodedBody: Data? {
+        "".data(using: .utf8)
+    }
 }
