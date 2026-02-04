@@ -95,6 +95,19 @@ struct ProfileView: View {
             viewModel.configure(servicesAssembly: servicesAssembly)
             await viewModel.loadProfile()
         }
+        .onChange(of: router.selectedTab) { _, newTab in
+            if newTab == .profile {
+                Task { await viewModel.loadProfile() }
+            }
+        }
+        .onChange(of: router.path.count) { oldCount, newCount in
+            if newCount < oldCount {
+                Task { await viewModel.loadProfile() }
+            }
+        }
+        .onAppear {
+            Task { await viewModel.loadProfile() }
+        }
     }
 }
 

@@ -33,13 +33,13 @@ struct PaymentSuccessView: View {
             defer { isClosing = false }
             let order = try? await services.basketService.loadOrder()
             let profile = try? await services.nftService.fetchProfile()
-            try? await services.basketService.clear()
-            try? await services.nftService.loadBasket()
             if let profile, let order, !order.nfts.isEmpty {
                 let mergedNfts = profile.nfts + order.nfts
                 let uniqueNfts = Array(Set(mergedNfts))
                 try? await services.nftService.updateProfileNfts(profile: profile, nfts: uniqueNfts)
             }
+            try? await services.basketService.clear()
+            try? await services.nftService.loadBasket()
             _ = try? await services.nftService.fetchProfile()
             router.popToRoot()
         }
@@ -86,18 +86,6 @@ struct PaymentSuccessView: View {
         .background(Color.ypWhite)
         .navigationBarBackButtonHidden(true)
         .toolbar(.hidden, for: .tabBar)
-        .task {
-            let order = try? await services.basketService.loadOrder()
-            let profile = try? await services.nftService.fetchProfile()
-            try? await services.basketService.clear()
-            try? await services.nftService.loadBasket()
-            if let profile, let order, !order.nfts.isEmpty {
-                let mergedNfts = profile.nfts + order.nfts
-                let uniqueNfts = Array(Set(mergedNfts))
-                try? await services.nftService.updateProfileNfts(profile: profile, nfts: uniqueNfts)
-            }
-            _ = try? await services.nftService.fetchProfile()
-        }
     }
 }
 
