@@ -9,6 +9,7 @@ protocol NftServiceProtocol {
     func fetchNFTCollections(page: Int, size: Int, sortBy: NFTCollectionSort?) async throws -> [NFTCollectionDTO]
     func loadNfts(ids: [String]) async throws -> [NFTCatalogCellModel]
     func loadNft(id: String) async throws -> NFTCatalogCellModel
+    func inBasket(id: String) async -> Bool
     func loadFavoriteNFTs() async throws
     func changeFavoriteNFT(id: String) async throws -> Bool
     func loadBasket() async throws
@@ -69,7 +70,11 @@ final class NftServiceImpl: NftServiceProtocol {
     }
 
     func loadNft(id: String) async throws -> NFTCatalogCellModel {
-        if let nft = await storage.getNft(with: id) {
+        if var nft = await storage.getNft(with: id) {
+            let inBasket = await nftBasketStorage.inBasket(id)
+            let isFavorite = await nftFavoriteStorage.isFavorite(id)
+            nft.inBasket = inBasket
+            nft.isFavorite = isFavorite
             return nft
         }
 
@@ -85,6 +90,10 @@ final class NftServiceImpl: NftServiceProtocol {
         )
         await storage.saveNft(nftModel)
         return nftModel
+    }
+
+    func inBasket(id: String) async -> Bool {
+        await nftBasketStorage.inBasket(id)
     }
     
     func loadFavoriteNFTs() async throws {

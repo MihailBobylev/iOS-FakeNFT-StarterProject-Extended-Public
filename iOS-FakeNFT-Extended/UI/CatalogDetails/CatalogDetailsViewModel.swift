@@ -79,4 +79,16 @@ final class CatalogDetailsViewModel {
             // Не ставим requestError — сетка картинок остаётся видимой
         }
     }
+
+    /// Обновляет статус «в корзине» по данным хранилища (после удаления из корзины на другом экране).
+    func refreshBasketState() async {
+        guard let servicesAssembly else { return }
+        for index in nfts.indices {
+            let id = nfts[index].id
+            let inBasket = await servicesAssembly.nftService.inBasket(id: id)
+            if nfts[index].inBasket != inBasket {
+                nfts[index].inBasket = inBasket
+            }
+        }
+    }
 }
