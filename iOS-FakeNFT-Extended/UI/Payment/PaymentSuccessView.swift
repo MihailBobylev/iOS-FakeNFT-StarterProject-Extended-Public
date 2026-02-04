@@ -31,16 +31,6 @@ struct PaymentSuccessView: View {
         isClosing = true
         Task { @MainActor in
             defer { isClosing = false }
-            let order = try? await services.basketService.loadOrder()
-            let profile = try? await services.nftService.fetchProfile()
-            if let order, !order.nfts.isEmpty {
-                await services.pendingPurchasedNfts.addPending(order.nfts)
-            }
-            if let profile, let order, !order.nfts.isEmpty {
-                let mergedNfts = profile.nfts + order.nfts
-                let uniqueNfts = Array(Set(mergedNfts))
-                try? await services.nftService.updateProfileNfts(profile: profile, nfts: uniqueNfts)
-            }
             try? await services.basketService.clear()
             try? await services.nftService.loadBasket()
             _ = try? await services.nftService.fetchProfile()

@@ -61,18 +61,15 @@ extension ProfileViewModel {
         do {
             guard let servicesAssembly else { return }
             let profile = try await servicesAssembly.nftService.fetchProfile()
-            let pending = await servicesAssembly.pendingPurchasedNfts.getPending()
-            let mergedNfts = Array(Set(profile.nfts + pending))
             self.profile = ProfileDTO(
                 id: profile.id,
                 name: profile.name,
                 avatar: profile.avatar,
                 description: profile.description,
                 website: profile.website,
-                nfts: mergedNfts,
+                nfts: profile.nfts,
                 likes: profile.likes
             )
-            await servicesAssembly.pendingPurchasedNfts.clearIncluded(in: profile.nfts)
             isLoading = false
         } catch {
             isLoading = false

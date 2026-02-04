@@ -10,7 +10,6 @@ final class ServicesAssembly {
     private let nftCollectionStorage: NFTCollectionStorageProtocol
     private let nftFavoriteStorage: NFTFavoriteStorageProtocol
     private let nftBasketStorage: NFTBasketStorageProtocol
-    private let pendingPurchasedNftsStorage: PendingPurchasedNftsStorageProtocol
     private let orderService: OrderService
     private let paymentServiceImpl: PaymentService
     private let currencyServiceImpl: CurrencyService
@@ -29,7 +28,6 @@ final class ServicesAssembly {
         self.nftCollectionStorage = nftCollectionStorage
         self.nftFavoriteStorage = nftFavoriteStorage
         self.nftBasketStorage = nftBasketStorage
-        self.pendingPurchasedNftsStorage = PendingPurchasedNftsStorage()
         self.orderService = OrderServiceImpl(networkClient: networkClient)
         self.paymentServiceImpl = PaymentServiceImpl(networkClient: networkClient)
         self.currencyServiceImpl = CurrencyServiceImpl(networkClient: networkClient)
@@ -51,10 +49,6 @@ final class ServicesAssembly {
             orderService: orderService,
             nftService: nftService
         )
-    }
-
-    var pendingPurchasedNfts: PendingPurchasedNftsStorageProtocol {
-        pendingPurchasedNftsStorage
     }
 
     var paymentService: PaymentService {

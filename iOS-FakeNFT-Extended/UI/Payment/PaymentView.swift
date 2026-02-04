@@ -71,7 +71,12 @@ struct PaymentView: View {
         }
         .onChange(of: viewModel?.paymentSuccess) { _, newValue in
             if newValue == true {
-                router.push(.paymentSuccess)
+                Task {
+                    try? await services.basketService.clear()
+                    await MainActor.run {
+                        router.push(.paymentSuccess)
+                    }
+                }
             }
         }
         .alert(

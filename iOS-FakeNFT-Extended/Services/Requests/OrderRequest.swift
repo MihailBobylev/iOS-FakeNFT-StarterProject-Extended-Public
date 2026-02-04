@@ -36,8 +36,10 @@ struct OrderUpdateRequest: NetworkRequest {
     }
 }
 
-/// POST /api/v1/orders/1 — выполнение заказа и очистка (по API-orders-curl.md).
+/// POST /api/v1/orders/1 — выполнение заказа: в теле те же nfts, что в корзине; бэкенд добавляет их в профиль и очищает заказ.
 struct OrderExecuteRequest: NetworkRequest {
+    let nfts: [String]
+
     var endpoint: URL? {
         URL(string: "\(RequestConstants.baseURL)/api/v1/orders/1")
     }
@@ -45,6 +47,12 @@ struct OrderExecuteRequest: NetworkRequest {
     var httpMethod: HttpMethod { .post }
 
     var formEncodedBody: Data? {
-        "".data(using: .utf8)
+        if nfts.isEmpty {
+            return "".data(using: .utf8)
+        }
+        var components = URLComponents()
+        components.queryItems = nfts.map { URLQueryItem(name: "nfts", value: $0) }
+        guard let bodyString = components.percentEncodedQuery else { return nil }
+        return bodyString.data(using: .utf8)
     }
 }
