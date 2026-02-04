@@ -1,0 +1,30 @@
+//
+//  FavoriteNFTCellDescriptionView.swift
+//  iOS-FakeNFT-Extended
+//
+//  Created by Александр Клопков on 17.01.2026.
+//
+
+import SwiftUI
+
+struct FavoriteNFTCellDescriptionView: View {
+    var viewModel: FavoriteNFTCellViewModel
+    private let maxRating: Int = 5
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text(viewModel.model.name ?? "")
+                .font(.title3Bold)
+                .foregroundStyle(.ypBlack)
+            HStack(spacing: 4) {
+                ForEach(1...maxRating, id: \.self) { index in
+                    Image(index <= viewModel.model.rating ?? 0 ? .icStarSelected : .icStarUnselected)
+                        .foregroundStyle(index <= viewModel.model.rating ?? 0 ? .ypYellow : .ypLightGray)
+                }
+            }
+            Text("\((viewModel.model.price ?? 0).formatted(.number.precision(.fractionLength(2)))) ETH")
+                .font(.footnoteRegular15)
+                .foregroundStyle(.ypBlack)
+        }
+    }
+}

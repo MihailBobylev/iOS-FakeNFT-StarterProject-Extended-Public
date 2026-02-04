@@ -60,9 +60,6 @@ struct PaymentSuccessView: View {
         .background(Color.ypWhite)
         .navigationBarBackButtonHidden(true)
         .toolbar(.hidden, for: .tabBar)
-        .task {
-            try? await services.basketService.clear()
-        }
     }
 }
 
@@ -71,9 +68,14 @@ struct PaymentSuccessView: View {
         PaymentSuccessView()
     }
     .environment(NavigationRouter())
-    .environment(ServicesAssembly(
-        networkClient: DefaultNetworkClient(),
-        nftStorage: NftStorageImpl(),
-        basketStorage: BasketStorageImpl()
-    ))
+    .environment(
+        ServicesAssembly(
+            networkClient: DefaultNetworkClient(),
+            nftStorage: NftStorageImpl(),
+            profileStorage: ProfileStorage(),
+            nftCollectionStorage: NFTCollectionStorage(),
+            nftFavoriteStorage: NFTFavoriteStorage(),
+            nftBasketStorage: NFTBasketStorage()
+        )
+    )
 }

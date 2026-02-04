@@ -3,6 +3,14 @@ import SwiftUI
 @main
 struct iOS_FakeNFT_ExtendedApp: App {
     @State private var router = NavigationRouter()
+    @State private var servicesAssembly = ServicesAssembly(
+        networkClient: DefaultNetworkClient(),
+        nftStorage: NftStorageImpl(),
+        profileStorage: ProfileStorage(),
+        nftCollectionStorage: NFTCollectionStorage(),
+        nftFavoriteStorage: NFTFavoriteStorage(),
+        nftBasketStorage: NFTBasketStorage()
+    )
     
     init() {
         setupTabBar()
@@ -12,13 +20,16 @@ struct iOS_FakeNFT_ExtendedApp: App {
         @Bindable var navigationRouter = router
         
         WindowGroup {
-            ContentView()
-                .environment(router)
-                .environment(ServicesAssembly(
-                    networkClient: DefaultNetworkClient(),
-                    nftStorage: NftStorageImpl(),
-                    basketStorage: BasketStorageImpl()
-                ))
+            NavigationStack(path: $navigationRouter.path) {
+                ContentView()
+                    .navigationDestination(for: AppRoute.self) { route in
+                        router.destination(
+                            for: route
+                        )
+                    }
+            }
+            .environment(router)
+            .environment(servicesAssembly)
         }
     }
     

@@ -8,93 +8,109 @@
 import Kingfisher
 import SwiftUI
 
-private func priceLabel(_ price: Double) -> String {
-    "\(price) ETH"
+private func priceLabel(_ price: Decimal) -> String {
+    "\(NSDecimalNumber(decimal: price).stringValue) ETH"
 }
 
 struct BasketView: View {
     @Environment(ServicesAssembly.self) private var services
     @Environment(NavigationRouter.self) private var router
     @State private var viewModel: BasketViewModel?
+    @State private var showSortSheet = false
     
     private enum Constants {
         static let emptyBasketText = "Корзина пуста"
         static let priceLabel = "Цена"
+        static let sortAlertTitle = "Сортировка"
+        static let priceSortTitle = "По цене"
+        static let ratingSortTitle = "По рейтингу"
+        static let nameSortTitle = "По названию"
+        static let cancelSortButtonTitle = "Закрыть"
+    }
+    
+    private func canChangeSort(_ viewModel: BasketViewModel) -> Bool {
+        !viewModel.isLoading
     }
     
     var body: some View {
-        @Bindable var bindableRouter = router
-        return NavigationStack(path: $bindableRouter.path) {
-            Group {
-                if let viewModel = viewModel {
-                    if viewModel.isLoading {
-                        ProgressView()
-                            .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    } else if viewModel.isEmpty {
-                        emptyStateView
-                    } else {
-                        contentView(viewModel: viewModel)
-                    }
-                } else {
+        Group {
+            if let viewModel = viewModel {
+                if viewModel.isLoading {
                     ProgressView()
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
+                } else if viewModel.isEmpty {
+                    emptyStateView
+                } else {
+                    contentView(viewModel: viewModel)
                 }
+            } else {
+                ProgressView()
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
-            .navigationTitle("")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: {
-                        if let viewModel {
-                            router.showSortPopup(
-                                currentSort: viewModel.currentSortOption,
-                                onSelect: { option in
-                                    viewModel.setSortOption(option)
-                                }
-                            )
-                        }
-                    }) {
-                        Image(.icSort)
-                            .renderingMode(.template)
-                            .foregroundColor(.ypBlack)
-                    }
-                }
+        }
+        .task {
+            if viewModel == nil {
+                viewModel = BasketViewModel(basketService: services.basketService)
+                await viewModel?.loadItems()
             }
-            .navigationDestination(for: AppRoute.self) { route in
-                router.destination(for: route)
+        }
+        .onChange(of: router.path.count) { _, newCount in
+            if newCount == 0, viewModel != nil {
+                Task { await viewModel?.loadItems() }
             }
-            .task {
-                if viewModel == nil {
-                    viewModel = BasketViewModel(basketService: services.basketService)
-                    await viewModel?.loadItems()
-                }
+        }
+        .onChange(of: router.selectedTab) { _, newTab in
+            if newTab == .basket, viewModel != nil {
+                Task { await viewModel?.loadItems() }
             }
-            .onChange(of: router.path.count) { _, newCount in
-                if newCount == 0, viewModel != nil {
-                    Task { await viewModel?.loadItems() }
-                }
-            }
-            .onChange(of: router.selectedTab) { _, newTab in
-                if newTab == .basket, viewModel != nil {
-                    Task { await viewModel?.loadItems() }
-                }
-            }
-            .onAppear {
-                if router.path.isEmpty, viewModel != nil {
-                    Task { await viewModel?.loadItems() }
-                }
+        }
+        .onAppear {
+            if router.path.isEmpty, viewModel != nil {
+                Task { await viewModel?.loadItems() }
             }
         }
     }
     
     private func contentView(viewModel: BasketViewModel) -> some View {
         VStack(spacing: 0) {
+            HStack {
+                Spacer()
+                Button {
+                    showSortSheet = true
+                } label: {
+                    Image(.icSort)
+                        .renderingMode(.template)
+                        .foregroundColor(.ypBlack)
+                }
+                .opacity(canChangeSort(viewModel) ? 1 : 0.4)
+                .disabled(!canChangeSort(viewModel))
+                .sortDialog(
+                    isPresented: $showSortSheet,
+                    dialog: SortConfirmationDialog(
+                        title: Constants.sortAlertTitle,
+                        options: [
+                            SortOption(title: Constants.priceSortTitle) {
+                                viewModel.setSortOption(.price)
+                            },
+                            SortOption(title: Constants.ratingSortTitle) {
+                                viewModel.setSortOption(.rating)
+                            },
+                            SortOption(title: Constants.nameSortTitle) {
+                                viewModel.setSortOption(.name)
+                            }
+                        ]
+                    ),
+                    cancelButtonTitle: Constants.cancelSortButtonTitle
+                )
+            }
+            .padding(.horizontal, 9)
+            
             List {
                 ForEach(viewModel.items) { item in
                     BasketItemRow(
                         item: item,
                         onDelete: {
-                            router.showDeleteConfirmation(nft: item.nft) {
+                            router.showDeleteConfirmation(item: item.nft) {
                                 Task {
                                     await viewModel.removeItem(id: item.id)
                                     router.hideDeleteConfirmation()
@@ -136,27 +152,15 @@ struct BasketItemRow: View {
         static let priceLabel = "Цена"
     }
     
-    private static func imageResource(for nftName: String) -> String? {
-        switch nftName {
-        case "April": return "nft_april"
-        case "Greena": return "nft_greena"
-        case "Spring": return "nft_spring"
-        default: return nil
-        }
-    }
-    
     var body: some View {
         HStack(spacing: 20) {
             Button(action: onSelect) {
                 HStack(spacing: 20) {
                     Group {
-                        if let url = item.nft.images.first {
+                        if let cover = item.nft.cover,
+                           let url = URL(string: cover) {
                             KFImage(url)
                                 .placeholder { ProgressView() }
-                                .resizable()
-                                .aspectRatio(contentMode: .fill)
-                        } else if let name = Self.imageResource(for: item.nft.name) {
-                            Image(name)
                                 .resizable()
                                 .aspectRatio(contentMode: .fill)
                         } else {
@@ -180,9 +184,11 @@ struct BasketItemRow: View {
                             Text(Constants.priceLabel)
                                 .font(.footnoteRegular13)
                                 .foregroundColor(.ypBlack)
-                            Text(priceLabel(item.nft.price))
-                                .font(.title3Bold)
-                                .foregroundColor(.ypBlack)
+                            if let priceDecimal = Decimal(string: item.nft.price) {
+                                Text(priceLabel(priceDecimal))
+                                    .font(.title3Bold)
+                                    .foregroundColor(.ypBlack)
+                            }
                         }
                     }
                     
@@ -267,9 +273,14 @@ struct BasketBottomPanel: View {
 
 #Preview {
     BasketView()
-        .environment(ServicesAssembly(
-            networkClient: DefaultNetworkClient(),
-            nftStorage: NftStorageImpl(),
-            basketStorage: BasketStorageImpl()
-        ))
+        .environment(
+            ServicesAssembly(
+                networkClient: DefaultNetworkClient(),
+                nftStorage: NftStorageImpl(),
+                profileStorage: ProfileStorage(),
+                nftCollectionStorage: NFTCollectionStorage(),
+                nftFavoriteStorage: NFTFavoriteStorage(),
+                nftBasketStorage: NFTBasketStorage()
+            )
+        )
 }

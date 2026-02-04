@@ -13,11 +13,6 @@ struct OrderRequest: NetworkRequest {
     }
 }
 
-struct OrderDTO: Decodable {
-    let id: String
-    let nfts: [String]
-}
-
 struct OrderUpdateRequest: NetworkRequest {
     let nfts: [String]
 
@@ -26,9 +21,4 @@ struct OrderUpdateRequest: NetworkRequest {
     }
 
     var httpMethod: HttpMethod { .put }
-
-    var formEncodedBody: Data? {
-        let encoded = nfts.map { "nfts=\($0.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? $0)" }
-        return encoded.joined(separator: "&").data(using: .utf8)
-    }
 }

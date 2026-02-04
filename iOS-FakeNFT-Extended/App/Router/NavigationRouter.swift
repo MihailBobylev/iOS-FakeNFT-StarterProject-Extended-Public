@@ -18,7 +18,7 @@ final class NavigationRouter {
     var path = NavigationPath()
     var selectedTab: AppTab = .profile
     var sheet: AppRoute?
-    var deleteConfirmationItem: (nft: Nft, onDelete: () -> Void)?
+    var deleteConfirmationItem: (item: NFTCatalogCellModel, onDelete: () -> Void)?
     var sortPopupItem: (currentSort: BasketSortOption, onSelect: (BasketSortOption) -> Void)?
     
     func push(_ route: AppRoute) {
@@ -34,8 +34,8 @@ final class NavigationRouter {
         path = NavigationPath()
     }
     
-    func showDeleteConfirmation(nft: Nft, onDelete: @escaping () -> Void) {
-        deleteConfirmationItem = (nft: nft, onDelete: onDelete)
+    func showDeleteConfirmation(item: NFTCatalogCellModel, onDelete: @escaping () -> Void) {
+        deleteConfirmationItem = (item: item, onDelete: onDelete)
     }
     
     func hideDeleteConfirmation() {
@@ -53,16 +53,23 @@ final class NavigationRouter {
     @ViewBuilder
     func destination(for route: AppRoute) -> some View {
         switch route {
-        case .catalogDetails:
-            EmptyView()
+        case let .catalogDetails(nftCollection):
+            CatalogDetailsView(nftCollection: nftCollection)
         case .payment:
             PaymentView()
         case .paymentSuccess:
             PaymentSuccessView()
         case .editProfile:
             EmptyView()
-        case .webView:
-            TermsOfServiceView()
+        case let .webView(url):
+            WebViewScreen(url: url)
+        case let .myNFT(profile):
+            MyNFTView(profile: profile)
+        case let .favoriteNFT(profile):
+            FavoriteNFTView(profile: profile)
+        case let .profileEditing(profile):
+            ProfileEditingView(profile: profile)
         }
     }
 }
+

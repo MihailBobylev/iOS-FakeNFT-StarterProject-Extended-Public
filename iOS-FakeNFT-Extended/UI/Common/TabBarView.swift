@@ -33,7 +33,7 @@ struct TabBarView: View {
         .overlay {
             if let deleteItem = router.deleteConfirmationItem {
                 DeleteConfirmationPopup(
-                    nft: deleteItem.nft,
+                    item: deleteItem.item,
                     onDelete: {
                         deleteItem.onDelete()
                     },
@@ -57,6 +57,81 @@ struct TabBarView: View {
                 )
                 .zIndex(1001)
             }
+        }
+    }
+}
+
+struct DeleteConfirmationPopup: View {
+    let item: NFTCatalogCellModel
+    let onDelete: () -> Void
+    let onCancel: () -> Void
+    
+    var body: some View {
+        ZStack {
+            Color.black.opacity(0.4)
+                .ignoresSafeArea()
+            VStack(spacing: 16) {
+                Text("Удалить NFT из корзины?")
+                    .font(.footnoteRegular13)
+                    .multilineTextAlignment(.center)
+                HStack(spacing: 12) {
+                    Button(action: onDelete) {
+                        Text("Удалить")
+                            .font(.bodyRegular)
+                            .foregroundColor(.ypRed)
+                            .frame(maxWidth: .infinity, minHeight: 44)
+                            .background(Color.ypBlack)
+                            .cornerRadius(12)
+                    }
+                    Button(action: onCancel) {
+                        Text("Отмена")
+                            .font(.bodyRegular)
+                            .foregroundColor(.ypWhite)
+                            .frame(maxWidth: .infinity, minHeight: 44)
+                            .background(Color.ypBlack)
+                            .cornerRadius(12)
+                    }
+                }
+            }
+            .padding(16)
+            .background(Color.ypWhite)
+            .cornerRadius(16)
+            .padding(.horizontal, 32)
+        }
+    }
+}
+
+struct SortPopup: View {
+    let currentSort: BasketSortOption
+    let onSelect: (BasketSortOption) -> Void
+    let onClose: () -> Void
+    
+    var body: some View {
+        ZStack {
+            Color.ypModalOverlay
+                .ignoresSafeArea()
+                .onTapGesture { onClose() }
+            
+            VStack(spacing: 8) {
+                Button("По цене") {
+                    onSelect(.price)
+                }
+                Button("По рейтингу") {
+                    onSelect(.rating)
+                }
+                Button("По названию") {
+                    onSelect(.name)
+                }
+                Button("Закрыть") {
+                    onClose()
+                }
+            }
+            .font(.title3Regular)
+            .foregroundColor(.ypBlue)
+            .padding()
+            .background(Color.ypWhite)
+            .cornerRadius(16)
+            .padding(.horizontal, 32)
         }
     }
 }

@@ -179,7 +179,11 @@ struct PaymentView: View {
                 .font(.footnoteRegular13)
                 .foregroundColor(.ypBlack)
             
-            Button(action: { router.push(.webView) }) {
+            Button(action: {
+                if let url = URL(string: Constants.termsURLString) {
+                    router.push(.webView(url: url))
+                }
+            }) {
                 Text(Constants.agreementLinkText)
                     .font(.footnoteRegular13)
                     .foregroundColor(.ypBlue)
@@ -289,10 +293,15 @@ private struct CurrencyCell: View {
     return NavigationStack {
         PaymentView()
     }
-    .environment(ServicesAssembly(
-        networkClient: DefaultNetworkClient(),
-        nftStorage: NftStorageImpl(),
-        basketStorage: BasketStorageImpl()
-    ))
+    .environment(
+        ServicesAssembly(
+            networkClient: DefaultNetworkClient(),
+            nftStorage: NftStorageImpl(),
+            profileStorage: ProfileStorage(),
+            nftCollectionStorage: NFTCollectionStorage(),
+            nftFavoriteStorage: NFTFavoriteStorage(),
+            nftBasketStorage: NFTBasketStorage()
+        )
+    )
 }
 

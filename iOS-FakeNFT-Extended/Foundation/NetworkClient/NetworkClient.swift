@@ -70,14 +70,20 @@ actor DefaultNetworkClient: NetworkClient {
 
         var urlRequest = URLRequest(url: endpoint)
         urlRequest.httpMethod = request.httpMethod.rawValue
-
+        
         if let formBody = request.formEncodedBody {
+            // Для OrderUpdateRequest и других form-url-encoded запросов
             urlRequest.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
             urlRequest.httpBody = formBody
         } else if let dto = request.dto,
                   let dtoEncoded = try? encoder.encode(dto) {
+            // Для JSON-запросов
+            urlRequest.setValue("application/json", forHTTPHeaderField: "Accept")
             urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
             urlRequest.httpBody = dtoEncoded
+        } else {
+            // GET без тела
+            urlRequest.setValue("application/json", forHTTPHeaderField: "Accept")
         }
         urlRequest.addValue(RequestConstants.token, forHTTPHeaderField: "X-Practicum-Mobile-Token")
 

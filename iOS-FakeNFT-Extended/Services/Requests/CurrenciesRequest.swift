@@ -31,3 +31,10 @@ extension CurrencyDTO {
         )
     }
 }
+
+struct Currency: Identifiable, Sendable {
+    let id: String
+    let name: String
+    let ticker: String
+    let imageURL: URL
+}
