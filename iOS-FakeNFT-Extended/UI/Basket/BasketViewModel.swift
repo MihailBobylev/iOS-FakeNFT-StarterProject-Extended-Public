@@ -76,6 +76,7 @@ final class BasketViewModel {
     
     func setSortOption(_ option: BasketSortOption) {
         currentSortOption = option
+        applySort()
     }
     
     var totalCount: Int {
