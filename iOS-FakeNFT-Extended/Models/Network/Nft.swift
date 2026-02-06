@@ -1,3 +1,10 @@
+//
+//  Nft.swift
+//  NFT Market
+//
+//  Created by Dmitry on 21.01.2026.
+//
+
 import Foundation
 
 struct Nft: Codable {

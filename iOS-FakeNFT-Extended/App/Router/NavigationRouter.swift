@@ -8,11 +8,18 @@
 import Observation
 import SwiftUI
 
+enum AppTab: Int {
+    case profile = 0, catalog, basket
+}
+
 @Observable
 final class NavigationRouter {
 
     var path = NavigationPath()
+    var selectedTab: AppTab = .profile
     var sheet: AppRoute?
+    var deleteConfirmationItem: (item: NFTCatalogCellModel, onDelete: () -> Void)?
+    var sortPopupItem: (currentSort: BasketSortOption, onSelect: (BasketSortOption) -> Void)?
     
     func push(_ route: AppRoute) {
         path.append(route)
@@ -23,26 +30,46 @@ final class NavigationRouter {
         path.removeLast()
     }
     
+    func popToRoot() {
+        path = NavigationPath()
+    }
+    
+    func showDeleteConfirmation(item: NFTCatalogCellModel, onDelete: @escaping () -> Void) {
+        deleteConfirmationItem = (item: item, onDelete: onDelete)
+    }
+    
+    func hideDeleteConfirmation() {
+        deleteConfirmationItem = nil
+    }
+    
+    func showSortPopup(currentSort: BasketSortOption, onSelect: @escaping (BasketSortOption) -> Void) {
+        sortPopupItem = (currentSort: currentSort, onSelect: onSelect)
+    }
+    
+    func hideSortPopup() {
+        sortPopupItem = nil
+    }
+    
     @ViewBuilder
     func destination(for route: AppRoute) -> some View {
         switch route {
         case let .catalogDetails(nftCollection):
             CatalogDetailsView(nftCollection: nftCollection)
         case .payment:
-            EmptyView()
+            PaymentView()
         case .paymentSuccess:
-            EmptyView()
+            PaymentSuccessView()
         case .editProfile:
             EmptyView()
         case let .webView(url):
             WebViewScreen(url: url)
-            
-        case .myNFT(let profile):
+        case let .myNFT(profile):
             MyNFTView(profile: profile)
-        case .favoriteNFT(let profile):
+        case let .favoriteNFT(profile):
             FavoriteNFTView(profile: profile)
-        case .profileEditing(let profile):
+        case let .profileEditing(profile):
             ProfileEditingView(profile: profile)
         }
     }
 }
+

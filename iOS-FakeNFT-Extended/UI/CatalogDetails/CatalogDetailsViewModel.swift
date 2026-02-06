@@ -50,13 +50,14 @@ final class CatalogDetailsViewModel {
             guard let servicesAssembly,
                   try await servicesAssembly.nftService.changeFavoriteNFT(id: id),
                   let index = nfts.firstIndex(where: { $0.id == id }) else {
+                isLoading = false
                 return
             }
             nfts[index].isFavorite.toggle()
             isLoading = false
         } catch {
-            requestError = .serverError
             isLoading = false
+            // Не ставим requestError — сетка картинок остаётся видимой
         }
     }
     
@@ -68,13 +69,15 @@ final class CatalogDetailsViewModel {
             guard let servicesAssembly,
                   try await servicesAssembly.nftService.changeBasketNFT(id: id),
                   let index = nfts.firstIndex(where: { $0.id == id }) else {
+                isLoading = false
                 return
             }
             nfts[index].inBasket.toggle()
             isLoading = false
         } catch {
-            requestError = .serverError
             isLoading = false
+            // Не ставим requestError — сетка картинок остаётся видимой
         }
     }
+
 }

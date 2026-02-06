@@ -3,6 +3,7 @@ import Foundation
 protocol NftServiceProtocol {
     func fetchProfile() async throws -> ProfileDTO
     func updateProfile(with profile: ProfileDTO) async throws
+    func updateProfileNfts(profile: ProfileDTO, nfts: [String]) async throws
     func updateLikedNFT(with ids: [String], with id: String) async throws
     func fetchNFT(with id: String) async throws -> NftDTO
     func fetchNFTCollections(page: Int, size: Int, sortBy: NFTCollectionSort?) async throws -> [NFTCollectionDTO]
@@ -68,7 +69,11 @@ final class NftServiceImpl: NftServiceProtocol {
     }
 
     func loadNft(id: String) async throws -> NFTCatalogCellModel {
-        if let nft = await storage.getNft(with: id) {
+        if var nft = await storage.getNft(with: id) {
+            let isFavorite = await nftFavoriteStorage.isFavorite(id)
+            let inBasket = await nftBasketStorage.inBasket(id)
+            nft.isFavorite = isFavorite
+            nft.inBasket = inBasket
             return nft
         }
 
@@ -85,7 +90,7 @@ final class NftServiceImpl: NftServiceProtocol {
         await storage.saveNft(nftModel)
         return nftModel
     }
-    
+
     func loadFavoriteNFTs() async throws {
         let request = FetchProfileRequest()
         let profile: ProfileDTO = try await networkClient.send(request: request)
@@ -97,10 +102,10 @@ final class NftServiceImpl: NftServiceProtocol {
         guard await storage.changeFavoriteNFT(with: id) else { return false }
         await nftFavoriteStorage.toggleFavorite(id)
         let favorites = await nftFavoriteStorage.getFavorites()
-        let request = UpdateFavoritesRequest(
-            likes: favorites
-        )
-        let _ = try await networkClient.send(request: request)
+        let profile = try await fetchProfile()
+        let request = UpdateFavoritesRequest(profile: profile, likes: favorites)
+        let updated: ProfileDTO = try await networkClient.send(request: request)
+        await profileStorage.saveProfile(updated)
         return true
     }
     
@@ -130,24 +135,43 @@ final class NftServiceImpl: NftServiceProtocol {
     }
     
     func updateProfile(with profile: ProfileDTO) async throws {
-        let request = UpdateProfileRequest(
-            id: profile.id,
-            name: profile.name,
-            avatar: profile.avatar,
-            description: profile.description,
-            website: profile.website
-        )
-        
-        let profile: ProfileDTO = try await networkClient.send(request: request)
-        await profileStorage.saveProfile(profile)
+        let request = UpdateProfileRequest(profile: profile)
+        let updated: ProfileDTO = try await networkClient.send(request: request)
+        await profileStorage.saveProfile(updated)
     }
-    
+
+    func updateProfileNfts(profile: ProfileDTO, nfts: [String]) async throws {
+        do {
+            try await sendUpdateProfileNfts(profile: profile, nfts: nfts, nftsRepeated: true)
+        } catch NetworkClientError.httpStatusCode(400), NetworkClientError.httpStatusCode(415) {
+            try await sendUpdateProfileNfts(profile: profile, nfts: nfts, nftsRepeated: false)
+        } catch {
+            throw error
+        }
+    }
+
+    private func sendUpdateProfileNfts(profile: ProfileDTO, nfts: [String], nftsRepeated: Bool) async throws {
+        let request = UpdateProfileNftsRequest(profile: profile, nfts: nfts, nftsRepeated: nftsRepeated)
+        do {
+            let updated: ProfileDTO = try await networkClient.send(request: request)
+            await profileStorage.saveProfile(updated)
+        } catch NetworkClientError.parsingError {
+            let fresh = try await fetchProfile()
+            await profileStorage.saveProfile(fresh)
+        } catch {
+            let fresh = try await fetchProfile()
+            await profileStorage.saveProfile(fresh)
+            throw error
+        }
+    }
+
     func updateLikedNFT(with ids: [String], with id: String) async throws {
-        let request = UpdateLikedNFTRequest(nftIds: ids)
-        let profile: ProfileDTO = try await networkClient.send(request: request)
-        await profileStorage.saveProfile(profile)
+        let profile = try await fetchProfile()
+        let request = UpdateFavoritesRequest(profile: profile, likes: ids)
+        let updated: ProfileDTO = try await networkClient.send(request: request)
+        await profileStorage.saveProfile(updated)
         let _ = await storage.changeFavoriteNFT(with: id)
-        await nftFavoriteStorage.saveFavorite(profile.likes)
+        await nftFavoriteStorage.saveFavorite(updated.likes)
     }
     
     func fetchNFT(with id: String) async throws -> NftDTO {

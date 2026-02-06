@@ -39,8 +39,8 @@ final class FavoriteNFTCellViewModel: Identifiable {
         } else {
             ids.append(id)
         }
-        
-        if (ids.isEmpty) {
+
+        if ids.isEmpty {
             ids = ["null"]
         }
         
