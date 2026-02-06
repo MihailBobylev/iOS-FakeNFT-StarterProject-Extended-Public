@@ -31,21 +31,7 @@ final class BasketViewModel {
     }
     
     private let basketService: BasketService
-    private let sortOptionKey = "BasketSortOption"
-    
-    var currentSortOption: BasketSortOption {
-        get {
-            if let rawValue = UserDefaults.standard.string(forKey: sortOptionKey),
-               let option = BasketSortOption(rawValue: rawValue) {
-                return option
-            }
-            return .name // По умолчанию для корзины по названию
-        }
-        set {
-            UserDefaults.standard.set(newValue.rawValue, forKey: sortOptionKey)
-            applySort()
-        }
-    }
+    private var currentSortOption: BasketSortOption = .name
     
     init(basketService: BasketService) {
         self.basketService = basketService

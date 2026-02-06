@@ -10,7 +10,7 @@ import SwiftUI
 struct PaymentSuccessView: View {
     @Environment(NavigationRouter.self) private var router
     @Environment(ServicesAssembly.self) private var services
-    @State private var isClosing = false
+    @State private var viewModel: PaymentSuccessViewModel?
 
     private enum Constants {
         static let successText = "Успех! Оплата прошла,\nпоздравляем с покупкой!"
@@ -24,18 +24,6 @@ struct PaymentSuccessView: View {
         static let buttonWidth: CGFloat = 343
         static let buttonHeight: CGFloat = 60
         static let buttonBottomPadding: CGFloat = 34
-    }
-    
-    private func closeAndRefresh() {
-        guard !isClosing else { return }
-        isClosing = true
-        Task { @MainActor in
-            defer { isClosing = false }
-            try? await services.basketService.clear()
-            try? await services.nftService.loadBasket()
-            _ = try? await services.nftService.fetchProfile()
-            router.popToRoot()
-        }
     }
     
     var body: some View {
@@ -57,9 +45,13 @@ struct PaymentSuccessView: View {
             
             Spacer()
             
-            Button(action: closeAndRefresh) {
+            Button(action: {
+                Task {
+                    await viewModel?.closeAndRefresh()
+                }
+            }) {
                 Group {
-                    if isClosing {
+                    if viewModel?.isClosing == true {
                         ProgressView()
                             .tint(.ypWhite)
                     } else {
@@ -72,13 +64,18 @@ struct PaymentSuccessView: View {
                 .background(Color.ypBlack)
                 .cornerRadius(16)
             }
-            .disabled(isClosing)
+            .disabled(viewModel?.isClosing == true)
             .padding(.bottom, Layout.buttonBottomPadding)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color.ypWhite)
         .navigationBarBackButtonHidden(true)
         .toolbar(.hidden, for: .tabBar)
+        .task {
+            if viewModel == nil {
+                viewModel = PaymentSuccessViewModel(services: services, router: router)
+            }
+        }
     }
 }
 

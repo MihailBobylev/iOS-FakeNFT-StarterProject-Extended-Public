@@ -61,15 +61,7 @@ extension ProfileViewModel {
         do {
             guard let servicesAssembly else { return }
             let profile = try await servicesAssembly.nftService.fetchProfile()
-            self.profile = ProfileDTO(
-                id: profile.id,
-                name: profile.name,
-                avatar: profile.avatar,
-                description: profile.description,
-                website: profile.website,
-                nfts: profile.nfts,
-                likes: profile.likes
-            )
+            self.profile = profile
             isLoading = false
         } catch {
             isLoading = false

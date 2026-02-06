@@ -23,6 +23,7 @@ struct PaymentView: View {
         static let alertCancelButton = "Отмена"
         static let alertRetryButton = "Повторить"
         static let agreementLinkText = "Пользовательского соглашения"
+        static let agreementText = "Совершая покупку, вы соглашаетесь с условиями"
         static let termsURLString = "https://yandex.ru/legal/practicum_termsofuse"
     }
     
@@ -53,9 +54,8 @@ struct PaymentView: View {
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
                 Button(action: { dismiss() }) {
-                    Image(systemName: "chevron.left")
-                        .font(.system(size: 17, weight: .regular))
-                        .foregroundColor(.ypBlack)
+                    Image(.icBack)
+                        .renderingMode(.original)
                 }
             }
         }
@@ -99,7 +99,7 @@ struct PaymentView: View {
     
     private func paymentLoadErrorView(viewModel: PaymentViewModel) -> some View {
         VStack(spacing: 16) {
-            Text("Не удалось загрузить способы оплаты")
+            Text(Constants.paymentErrorAlertTitle)
                 .font(.title3Bold)
                 .foregroundColor(.ypBlack)
                 .multilineTextAlignment(.center)
@@ -113,15 +113,7 @@ struct PaymentView: View {
     }
     
     private var bottomPanelBackground: some View {
-        GeometryReader { geo in
-            VStack(spacing: 0) {
-                Spacer()
-                Color.ypPaymentBackground
-                    .frame(height: max(200, geo.safeAreaInsets.bottom + 150))
-                    .frame(maxWidth: .infinity)
-            }
-            .ignoresSafeArea(edges: [.bottom, .leading, .trailing])
-        }
+        Color.clear
     }
     
     private func contentView(viewModel: PaymentViewModel) -> some View {
@@ -180,7 +172,7 @@ struct PaymentView: View {
     
     private var agreementLink: some View {
         VStack(alignment: .leading, spacing: 4) {
-            Text("Совершая покупку, вы соглашаетесь с условиями")
+            Text(Constants.agreementText)
                 .font(.footnoteRegular13)
                 .foregroundColor(.ypBlack)
             
@@ -208,7 +200,7 @@ struct PaymentView: View {
                 .font(.title3Bold)
                 .foregroundColor(viewModel.selectedCurrencyID != nil ? .ypWhite : .ypBlack)
                 .frame(width: Constants.payButtonWidth, height: Constants.payButtonHeight)
-                .background(viewModel.selectedCurrencyID != nil ? Color.ypBlack : Color.ypButtonDisabled)
+                .background(viewModel.selectedCurrencyID != nil ? .ypBlack : .ypButtonDisabled)
                 .cornerRadius(16)
         }
         .disabled(viewModel.selectedCurrencyID == nil || viewModel.isLoading)
@@ -262,35 +254,12 @@ private struct CurrencyCell: View {
     private var currencyImageView: some View {
         KFImage(currency.imageURL)
             .placeholder {
-                Image(iconName(for: currency.ticker))
+                Image(.icCatalog)
                     .resizable()
                     .aspectRatio(contentMode: .fill)
             }
             .resizable()
             .aspectRatio(contentMode: .fill)
-    }
-    
-    private func iconName(for ticker: String) -> String {
-        switch ticker.uppercased() {
-        case "BTC":
-            return "Bitcoin"
-        case "DOGE":
-            return "Dogecoin"
-        case "USDT":
-            return "Tether"
-        case "ETH":
-            return "Ethereum"
-        case "SOL":
-            return "Solana"
-        case "APE":
-            return "ApeCoin"
-        case "ADA":
-            return "Cardano"
-        case "SHIB":
-            return "ShibaInu"
-        default:
-            return "ic_catalog"
-        }
     }
 }
 

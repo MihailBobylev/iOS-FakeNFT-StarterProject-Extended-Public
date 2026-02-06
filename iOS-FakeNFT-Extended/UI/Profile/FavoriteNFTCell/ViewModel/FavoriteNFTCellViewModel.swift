@@ -39,6 +39,10 @@ final class FavoriteNFTCellViewModel: Identifiable {
         } else {
             ids.append(id)
         }
+
+        if ids.isEmpty {
+            ids = ["null"]
+        }
         
         await updateLikeNFT(with: id)
         
