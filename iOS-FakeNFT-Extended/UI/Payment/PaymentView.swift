@@ -25,6 +25,7 @@ struct PaymentView: View {
         static let agreementLinkText = "Пользовательского соглашения"
         static let agreementText = "Совершая покупку, вы соглашаетесь с условиями"
         static let termsURLString = "https://yandex.ru/legal/practicum_termsofuse"
+        static let bottomPanelHeight: CGFloat = 186
     }
     
     private static let horizontalPadding: CGFloat = 16
@@ -118,7 +119,8 @@ struct PaymentView: View {
     
     private func contentView(viewModel: PaymentViewModel) -> some View {
         GeometryReader { geo in
-            VStack(spacing: 0) {
+            let panelHeight = Constants.bottomPanelHeight + geo.safeAreaInsets.bottom
+            ZStack(alignment: .bottom) {
                 ScrollView {
                     LazyVGrid(columns: currencyColumns, spacing: 6) {
                         ForEach(viewModel.currencies) { currency in
@@ -135,15 +137,13 @@ struct PaymentView: View {
                     .padding(.top, 16)
                     .padding(.bottom, 16)
                 }
-                .frame(maxHeight: .infinity)
                 .contentShape(Rectangle())
                 .onTapGesture {
                     if viewModel.selectedCurrencyID != nil {
                         viewModel.deselectCurrency()
                     }
                 }
-                
-                Spacer().frame(height: 20)
+                .padding(.bottom, panelHeight + 20)
                 
                 VStack(spacing: 16) {
                     agreementLink
@@ -151,8 +151,9 @@ struct PaymentView: View {
                 }
                 .padding(.horizontal, Self.horizontalPadding)
                 .padding(.top, 16)
-                .padding(.bottom, 50 + geo.safeAreaInsets.bottom)
-                .frame(maxWidth: .infinity)
+                .padding(.bottom, 16 + geo.safeAreaInsets.bottom)
+                .frame(maxWidth: .infinity, alignment: .top)
+                .frame(height: panelHeight)
                 .background(
                     Color.ypPaymentBackground
                         .ignoresSafeArea(edges: [.bottom, .leading, .trailing])
@@ -165,6 +166,7 @@ struct PaymentView: View {
                 ))
             }
         }
+        .ignoresSafeArea(edges: .bottom)
         .disabled(viewModel.isLoading)
         .overlay {
             if viewModel.isLoading {
