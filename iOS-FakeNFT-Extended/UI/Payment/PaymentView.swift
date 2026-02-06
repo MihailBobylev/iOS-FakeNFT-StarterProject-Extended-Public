@@ -27,12 +27,12 @@ struct PaymentView: View {
         static let termsURLString = "https://yandex.ru/legal/practicum_termsofuse"
     }
     
-    private static let currencyCellWidth: CGFloat = 168
+    private static let horizontalPadding: CGFloat = 16
     private static let columnSpacing: CGFloat = 8
     private var currencyColumns: [GridItem] {
         [
-            GridItem(.fixed(Self.currencyCellWidth), spacing: Self.columnSpacing),
-            GridItem(.fixed(Self.currencyCellWidth))
+            GridItem(.flexible(), spacing: Self.columnSpacing),
+            GridItem(.flexible())
         ]
     }
     
@@ -117,50 +117,53 @@ struct PaymentView: View {
     }
     
     private func contentView(viewModel: PaymentViewModel) -> some View {
-        VStack(spacing: 0) {
-            ScrollView {
-                LazyVGrid(columns: currencyColumns, spacing: 6) {
-                    ForEach(viewModel.currencies) { currency in
-                        CurrencyCell(
-                            currency: currency,
-                            isSelected: viewModel.selectedCurrencyID == currency.id,
-                            onSelect: {
-                                viewModel.selectCurrency(id: currency.id)
-                            }
-                        )
+        GeometryReader { geo in
+            VStack(spacing: 0) {
+                ScrollView {
+                    LazyVGrid(columns: currencyColumns, spacing: 6) {
+                        ForEach(viewModel.currencies) { currency in
+                            CurrencyCell(
+                                currency: currency,
+                                isSelected: viewModel.selectedCurrencyID == currency.id,
+                                onSelect: {
+                                    viewModel.selectCurrency(id: currency.id)
+                                }
+                            )
+                        }
+                    }
+                    .padding(.horizontal, Self.horizontalPadding)
+                    .padding(.top, 16)
+                    .padding(.bottom, 16)
+                }
+                .frame(maxHeight: .infinity)
+                .contentShape(Rectangle())
+                .onTapGesture {
+                    if viewModel.selectedCurrencyID != nil {
+                        viewModel.deselectCurrency()
                     }
                 }
-                .padding(.horizontal, 16)
-                .padding(.top, 16)
-                .padding(.bottom, 16)
-            }
-            .contentShape(Rectangle())
-            .onTapGesture {
-                if viewModel.selectedCurrencyID != nil {
-                    viewModel.deselectCurrency()
+                
+                Spacer().frame(height: 20)
+                
+                VStack(spacing: 16) {
+                    agreementLink
+                    payButton(viewModel: viewModel)
                 }
+                .padding(.horizontal, Self.horizontalPadding)
+                .padding(.top, 16)
+                .padding(.bottom, 50 + geo.safeAreaInsets.bottom)
+                .frame(maxWidth: .infinity)
+                .background(
+                    Color.ypPaymentBackground
+                        .ignoresSafeArea(edges: [.bottom, .leading, .trailing])
+                )
+                .clipShape(UnevenRoundedRectangle(
+                    topLeadingRadius: 12,
+                    bottomLeadingRadius: 0,
+                    bottomTrailingRadius: 0,
+                    topTrailingRadius: 12
+                ))
             }
-            
-            Spacer().frame(height: 20)
-            
-            VStack(spacing: 16) {
-                agreementLink
-                payButton(viewModel: viewModel)
-            }
-            .padding(.horizontal, 16)
-            .padding(.top, 16)
-            .padding(.bottom, 50)
-            .frame(maxWidth: .infinity)
-            .background(
-                Color.ypPaymentBackground
-                    .ignoresSafeArea(edges: [.bottom, .leading, .trailing])
-            )
-            .clipShape(UnevenRoundedRectangle(
-                topLeadingRadius: 12,
-                bottomLeadingRadius: 0,
-                bottomTrailingRadius: 0,
-                topTrailingRadius: 12
-            ))
         }
         .disabled(viewModel.isLoading)
         .overlay {
@@ -214,7 +217,6 @@ private struct CurrencyCell: View {
     
     private enum Constants {
         static let iconSize: CGFloat = 40
-        static let cellWidth: CGFloat = 168
         static let cellHeight: CGFloat = 46
     }
     
@@ -239,7 +241,8 @@ private struct CurrencyCell: View {
             }
             .padding(.horizontal, 12)
             .padding(.vertical, 10)
-            .frame(width: Constants.cellWidth, height: Constants.cellHeight)
+            .frame(maxWidth: .infinity)
+            .frame(height: Constants.cellHeight)
             .background(Color.ypPaymentBackground)
             .cornerRadius(12)
             .overlay(
