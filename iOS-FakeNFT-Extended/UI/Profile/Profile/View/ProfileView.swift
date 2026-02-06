@@ -105,9 +105,6 @@ struct ProfileView: View {
                 Task { await viewModel.loadProfile() }
             }
         }
-        .onAppear {
-            Task { await viewModel.loadProfile() }
-        }
     }
 }
 

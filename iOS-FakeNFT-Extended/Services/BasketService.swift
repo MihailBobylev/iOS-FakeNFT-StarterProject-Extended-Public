@@ -59,6 +59,8 @@ final class BasketServiceImpl: BasketService {
     func clear() async throws {
         let order = try await orderService.loadOrder()
         _ = try await orderService.executeOrder(nfts: order.nfts)
+        _ = try await orderService.updateOrder(nfts: [])
+        try await nftService.loadBasket()
     }
 }
 

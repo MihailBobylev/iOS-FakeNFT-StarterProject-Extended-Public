@@ -26,7 +26,6 @@ final class PaymentSuccessViewModel {
         defer { isClosing = false }
         
         try? await services.basketService.clear()
-        try? await services.nftService.loadBasket()
         _ = try? await services.nftService.fetchProfile()
         router.popToRoot()
     }

@@ -69,7 +69,11 @@ final class NftServiceImpl: NftServiceProtocol {
     }
 
     func loadNft(id: String) async throws -> NFTCatalogCellModel {
-        if let nft = await storage.getNft(with: id) {
+        if var nft = await storage.getNft(with: id) {
+            let isFavorite = await nftFavoriteStorage.isFavorite(id)
+            let inBasket = await nftBasketStorage.inBasket(id)
+            nft.isFavorite = isFavorite
+            nft.inBasket = inBasket
             return nft
         }
 

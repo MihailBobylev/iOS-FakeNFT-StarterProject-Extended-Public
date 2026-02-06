@@ -43,29 +43,18 @@ extension ProfileViewModel: @MainActor Hashable {
 
 extension ProfileViewModel {
     func loadProfile() async {
-        guard !isLoading else { return }
+        guard let servicesAssembly, !isLoading else { return }
         
         isLoading = true
         requestError = .none
         
-        profile = ProfileDTO(
-            id: "",
-            name: nil,
-            avatar: nil,
-            description: nil,
-            website: nil,
-            nfts: [],
-            likes: []
-        )
-        
         do {
-            guard let servicesAssembly else { return }
             let profile = try await servicesAssembly.nftService.fetchProfile()
             self.profile = profile
-            isLoading = false
         } catch {
-            isLoading = false
             requestError = .serverError
         }
+        
+        isLoading = false
     }
 }
